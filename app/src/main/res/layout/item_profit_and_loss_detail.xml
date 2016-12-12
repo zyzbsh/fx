@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
+    android:layout_marginTop="6dp"
+    android:paddingBottom="2dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="2dp"
+    android:background="#e7e7e7">
+
+    <ImageView
+        android:id="@+id/item_profit_and_loss_im"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/item_profit_and_loss_im"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/item_profit_and_loss_operate_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="14sp"
+            android:textColor="@color/gray_9" />
+
+        <TextView
+            android:id="@+id/item_profit_and_loss_num_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="14sp"
+            android:textColor="@color/gray_9" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/item_profit_and_loss_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray_6"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/item_profit_and_loss_account_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/account_num"
+            android:textColor="@color/gray_6"
+            android:textSize="14sp" />
+    </LinearLayout>
+</RelativeLayout>

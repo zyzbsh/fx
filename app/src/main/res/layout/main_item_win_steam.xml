@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/main_item_height">
+
+    <ImageView
+        android:id="@+id/main_item_win_tag_im"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"/>
+
+    <fxtrader.com.app.view.CircleImageView
+        android:id="@+id/main_item_win_avatar_im"
+        android:layout_width="@dimen/main_item_avatar"
+        android:layout_height="@dimen/main_item_avatar"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:id="@+id/main_item_win_follow_tv"
+        style="@style/FollowTv"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+
+    <LinearLayout
+        android:id="@+id/main_item_win_icon_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_toLeftOf="@id/main_item_win_follow_tv"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true">
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/main_item_win_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/main_item_win_avatar_im"
+        android:layout_toLeftOf="@id/main_item_win_icon_layout"
+        android:singleLine="true"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_yellow">#eeba0c</color>
+    <color name="tv_cash_coupon_count">#f8b551</color>
+    <color name="bg_personal_layout">#fa5452</color>
+    <color name="black">#000000</color>
+    <color name="black_28">#282828</color>
+    <color name="black_33">#333333</color>
+    <color name="red_text">#e83743</color>
+    <color name="red_e63643">#e63643</color>
+    <color name="red_profit">#ff0000</color>
+    <color name="green_loss">#09cd29</color>
+    <color name="green">#09cd29</color>
+    <color name="gray_ac">#acacac</color>
+    <color name="gray_6">#666666</color>
+    <color name="gray_9">#999999</color>
+    <color name="gray_dc">#dcdcdc</color>
+    <color name="gray_ed">#ededed</color>
+    <color name="gray_e7">#e7e7e7</color>
+
+    <color name="color_ff">#F0F0F0</color>
+    <color name="color_00">#8A000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

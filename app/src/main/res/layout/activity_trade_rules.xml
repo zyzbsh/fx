@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout style="@style/TitleLayout">
+
+        <TextView
+            android:id="@id/title_back"
+            style="@style/TiTleBackTv" />
+
+        <TextView
+            android:id="@id/title_content_tv"
+            style="@style/TiTleContentTv"
+            android:text="@string/trade_rules" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/trade_rules_production_intro_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/production_intro_rules"
+            android:textColor="@color/gray_6"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/trade_rules_account_rules_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/account_rules"
+            android:textColor="@color/gray_6"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

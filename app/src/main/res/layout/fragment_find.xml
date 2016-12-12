@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/find_ad_im"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/im_ad_find" />
+
+    <FrameLayout
+        android:id="@+id/find_tab_layout"
+        android:layout_below="@id/find_ad_im"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:orientation="horizontal"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/find_tab_bg_win_stream"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shape_find_tab_bg"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/find_tab_bg_profit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shape_find_tab_bg"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/find_tab_bg_red_envelope"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shape_find_tab_bg"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/find_tab_win_stream_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_find_tab">
+
+                <RadioButton
+                    android:id="@+id/find_tab_win_stream_btn"
+                    style="@style/FindTab"
+                    android:clickable="false"
+                    android:drawableLeft="@drawable/sel_tab_win_stream"
+                    android:text="@string/win_stream_list" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/find_tab_profit_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_find_tab">
+
+                <RadioButton
+                    android:id="@+id/find_tab_profit_btn"
+                    style="@style/FindTab"
+                    android:clickable="false"
+                    android:drawableLeft="@drawable/sel_tab_profit"
+                    android:text="@string/profit_list" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/find_tab_red_envelope_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_find_tab">
+
+                <RadioButton
+                    android:id="@+id/find_tab_red_envelope_btn"
+                    style="@style/FindTab"
+                    android:clickable="false"
+                    android:drawableLeft="@drawable/sel_tab_red_envelope"
+                    android:text="@string/red_envelope_list" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/find_content_layout"
+        android:layout_below="@id/find_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"></FrameLayout>
+
+</RelativeLayout>

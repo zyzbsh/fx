@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout style="@style/TitleLayout">
+
+        <TextView
+            android:id="@id/title_back"
+            style="@style/TiTleBackTv" />
+
+        <TextView
+            android:id="@id/title_content_tv"
+            style="@style/TiTleContentTv"
+            android:text="@string/register" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <EditText
+                android:id="@+id/register_account_edt"
+                style="@style/RegisterEdt"
+                android:hint="@string/hint_account" />
+
+            <EditText
+                android:id="@+id/register_agent_edt"
+                style="@style/RegisterEdt"
+                android:layout_marginTop="15dp"
+                android:hint="@string/hint_agent" />
+
+            <EditText
+                android:id="@+id/register_nickname_edt"
+                style="@style/RegisterEdt"
+                android:layout_marginTop="15dp"
+                android:hint="@string/hint_nickname" />
+
+            <EditText
+                android:id="@+id/register_pwd_edt"
+                style="@style/RegisterEdt"
+                android:layout_marginTop="15dp"
+                android:hint="@string/hint_pwd_register" />
+
+            <EditText
+                android:id="@+id/register_pwd_again_edt"
+                style="@style/RegisterEdt"
+                android:layout_marginTop="15dp"
+                android:hint="@string/hint_pwd_register_again" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/register_graphical_verification_code_edt"
+                    style="@style/RegisterEdt"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="2"
+                    android:hint="@string/hint_graphical_verification_code" />
+
+                <fxtrader.com.app.view.ValidationCode
+                    android:id="@+id/register_graphical_verification_code_view"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:src="@color/red_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/register_verification_code_edt"
+                    style="@style/RegisterEdt"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="2"
+                    android:hint="@string/hint_verification_code" />
+
+                <TextView
+                    android:id="@+id/register_get_verification_code_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_blue_corner_5"
+                    android:gravity="center"
+                    android:text="@string/get_phone_verification_code"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/register_submit_tv"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="30dp"
+                android:textColor="@color/white"
+                android:text="@string/submit"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:background="@drawable/shape_sure"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

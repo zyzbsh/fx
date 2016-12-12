@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout style="@style/TitleLayout">
+
+        <TextView
+            android:id="@id/title_back"
+            style="@style/TiTleBackTv" />
+
+        <TextView
+            android:id="@id/title_content_tv"
+            style="@style/TiTleContentTv"
+            android:text="@string/experience_voucher" />
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/experience_voucher_rec"
+        android:layout_width="match_parent"
+        android:background="@color/gray_ed"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+
+
+</LinearLayout>

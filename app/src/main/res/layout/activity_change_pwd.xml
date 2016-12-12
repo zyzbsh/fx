@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout style="@style/TitleLayout">
+
+        <TextView
+            android:id="@id/title_back"
+            style="@style/TiTleBackTv" />
+
+        <TextView
+            android:id="@id/title_content_tv"
+            style="@style/TiTleContentTv"
+            android:text="@string/change_pwd" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/change_pwd_recharge_edt"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="45dp"
+        android:background="@drawable/shape_edt_change_pwd"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:hint="@string/hint_recharge_pwd"
+        android:textColor="@color/gray_6"
+        android:textColorHint="@color/gray_6" />
+
+    <EditText
+        android:id="@+id/change_pwd_new_edt"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/shape_edt_change_pwd"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:hint="@string/hint_recharge_pwd"
+        android:textColor="@color/gray_6"
+        android:textColorHint="@color/gray_6" />
+
+    <EditText
+        android:id="@+id/change_pwd_confirm_edt"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/shape_edt_change_pwd"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:hint="@string/hint_recharge_pwd"
+        android:textColor="@color/gray_6"
+        android:textColorHint="@color/gray_6" />
+
+    <TextView
+        android:id="@+id/change_pwd_confirm_tv"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="23dp"
+        android:layout_marginTop="34dp"
+        android:background="@drawable/shape_sure"
+        android:gravity="center"
+        android:text="@string/confirm_change"
+        android:textColor="@color/white" />
+
+
+</LinearLayout>

@@ -1,0 +1,36 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="title_height">45dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="person_avatar">54.24dp</dimen>
+    <dimen name="person_name_tv">13sp</dimen>
+    <dimen name="person_account_tv">12sp</dimen>
+    <dimen name="person_cash_coupon_tv">12sp</dimen>
+    <dimen name="main_item_padding_top">22.5dp</dimen>
+    <dimen name="main_item_avatar">27dp</dimen>
+    <dimen name="main_item_height">80dp</dimen>
+    <dimen name="dialog_buy_padding">12.4dp</dimen>
+    <dimen name="dialog_build_position">19dp</dimen>
+    <dimen name="shape_dialog_buy_padding">5.4dp</dimen>
+    <dimen name="item_personal_center_height">45dp</dimen>
+    <dimen name="avatar_item_normal">45dp</dimen>
+
+    <dimen name="dp_066">0.66dp</dimen>
+    <dimen name="dp_4">4dp</dimen>
+    <dimen name="dp_6">6dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_14">14dp</dimen>
+    <dimen name="dp_18">18dp</dimen>
+    <dimen name="dp_22">22dp</dimen>
+    <dimen name="dp_36">36dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_60">60dp</dimen>
+    <dimen name="dp_72">72dp</dimen>
+
+    <dimen name="sp_12">12sp</dimen>
+    <dimen name="sp_14">14sp</dimen>
+    <dimen name="sp_16">16sp</dimen>
+
+    <dimen name="textandiconmargin">10dp</dimen>
+</resources>

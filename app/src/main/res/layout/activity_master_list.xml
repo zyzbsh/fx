@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout style="@style/TitleLayout">
+
+        <TextView
+            android:id="@id/title_back"
+            style="@style/TiTleBackTv" />
+
+        <TextView
+            android:id="@id/title_content_tv"
+            style="@style/TiTleContentTv" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_ed"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_white_with_black_stroke"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/master_list_title_tv"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@drawable/shape_red_half_corner_3"
+                android:gravity="center"
+                android:text="@string/master_list"
+                android:textColor="@color/white" />
+
+            <fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView
+                android:id="@+id/position_list_rec"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/shape_white_corner_3"></fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

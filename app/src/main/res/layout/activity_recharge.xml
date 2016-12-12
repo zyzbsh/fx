@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout style="@style/TitleLayout">
+
+        <TextView
+            android:id="@id/title_back"
+            style="@style/TiTleBackTv" />
+
+        <TextView
+            android:id="@id/title_content_tv"
+            style="@style/TiTleContentTv"
+            android:text="@string/recharge" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/recharge_personal_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_personal_layout"
+        android:paddingBottom="7.3dp"
+        android:paddingLeft="12.4dp"
+        android:paddingRight="12.4dp"
+        android:paddingTop="14.7dp">
+
+        <RelativeLayout
+            android:id="@+id/recharge_person_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <fxtrader.com.app.view.CircleImageView
+                android:id="@+id/recharge_person_avatar_im"
+                android:layout_width="@dimen/person_avatar"
+                android:layout_height="@dimen/person_avatar"
+                android:layout_marginLeft="15.8dp"
+                android:src="@mipmap/avatar_mine" />
+
+            <RelativeLayout
+                android:id="@+id/recharge_cash_coupon_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="56dp">
+
+                <ImageView
+                    android:id="@+id/recharge_cash_coupon_icon_im"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_cash_coupon" />
+
+                <TextView
+                    android:id="@+id/recharge_cash_coupon_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/recharge_cash_coupon_icon_im"
+                    android:text="@string/cash_coupon"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/person_cash_coupon_tv" />
+
+                <TextView
+                    android:id="@+id/recharge_cash_coupon_count_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/recharge_cash_coupon_icon_im"
+                    android:layout_alignLeft="@id/recharge_cash_coupon_count_tv"
+                    android:layout_toRightOf="@id/recharge_cash_coupon_icon_im"
+                    android:textColor="@color/tv_cash_coupon_count"
+                    android:textSize="@dimen/person_cash_coupon_tv" />
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toLeftOf="@id/recharge_cash_coupon_layout"
+                android:layout_toRightOf="@id/recharge_person_avatar_im"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/recharge_name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/person_name_tv" />
+
+                <TextView
+                    android:id="@+id/recharge_account_balance_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/balance_num"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/person_account_tv" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@id/recharge_person_info_layout"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_white_corner_3"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/receive_money"
+                android:textColor="@color/black_33"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/recharge_receive_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/receive_money"
+                android:textColor="@color/red_text"
+
+                android:textSize="15sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_ed">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/black_33" />
+
+            <EditText
+                android:id="@+id/recharge_edt"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_edt_recharge"
+                android:gravity="center"
+                android:text="@string/hint_recharge"
+                android:textColor="@color/gray_6"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/recharge_100_tv"
+                    style="@style/RechargeTv"
+                    android:text="￥100" />
+
+                <TextView
+                    android:id="@+id/recharge_500_tv"
+                    style="@style/RechargeTv"
+                    android:layout_marginLeft="30dp"
+                    android:text="￥500" />
+
+                <TextView
+                    android:id="@+id/recharge_1000_tv"
+                    style="@style/RechargeTv"
+                    android:layout_marginLeft="30dp"
+                    android:text="￥1000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/recharge_2000_tv"
+                    style="@style/RechargeTv"
+                    android:text="￥2000" />
+
+                <TextView
+                    android:id="@+id/recharge_3000_tv"
+                    style="@style/RechargeTv"
+                    android:layout_marginLeft="30dp"
+                    android:text="￥3000" />
+
+                <TextView
+                    android:id="@+id/recharge_5000_tv"
+                    style="@style/RechargeTv"
+                    android:layout_marginLeft="30dp"
+                    android:text="￥5000" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/black_33" />
+
+            <TextView
+                android:id="@+id/recharge_remind_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="#dadada"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="10dp"
+                android:text="每笔最少20元，每笔限额5000元，每天限额两万元\n微信支付绑卡的银行卡限额说明\n银联在线支付各支持银行的限额说明"
+                android:textSize="14sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/recharge_wx_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/shape_red_corner_5"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/recharge_wx_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@mipmap/icon_wx"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:drawablePadding="5dp"
+                        android:text="中信银行支付" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:text="（微信支付）"/>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/icon_recharge_recommend"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/recharge_yh_layout"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_height="40dp"
+                android:background="@drawable/shape_recharge_yl">
+                <TextView
+                    android:id="@+id/recharge_yh_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_yl"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:drawablePadding="5dp"
+                    android:text="@string/recharge_yh" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

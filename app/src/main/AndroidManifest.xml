@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fxtrader.com.app">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:name=".AppApplication"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".login.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.CustomDialog"></activity>
+
+        <activity
+            android:name=".homepage.OrderDetailActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".homepage.PositionListActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".homepage.MasterListActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".homepage.WinStreamListActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".homepage.ProfitListActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".homepage.RedEnvelopListActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".mine.PersonalInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".mine.BindPhoneActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".mine.ChangePwdActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".mine.ExperienceVoucherActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".mine.ProfitAndLossDetailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".mine.AnnouncementActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".mine.TradeHistoryActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".mine.TradeRulesActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".mine.WithdrawActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".login.RegisterActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".mine.RedEnvelopeActivity"
+            android:screenOrientation="portrait" />
+
+    </application>
+
+</manifest>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+
+    <fxtrader.com.app.view.NewMAChartView
+        android:id="@+id/view_new_machart"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_weight="1"
+        android:background="#dcdddd"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_timeline"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/time_line"
+            android:textColor="@drawable/sel_btn_data_line"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_kline5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/five_min"
+            android:textColor="@drawable/sel_btn_data_line"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_kline15"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/ten_min"
+            android:textColor="@drawable/sel_btn_data_line"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_kline30"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/half_hour"
+            android:textColor="@drawable/sel_btn_data_line"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_kline60"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/one_hour"
+            android:textColor="@drawable/sel_btn_data_line"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

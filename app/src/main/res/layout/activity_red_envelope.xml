@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout style="@style/TitleLayout">
+
+        <TextView
+            android:id="@id/title_back"
+            style="@style/TiTleBackTv" />
+
+        <TextView
+            android:id="@id/title_content_tv"
+            style="@style/TiTleContentTv"
+            android:text="@string/my_red_envelope"/>
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/red_envelope_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
+        android:background="#e7e7e7"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/red_envelope_receive_btn"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:background="@null"
+            android:button="@null"
+            android:textColor="@drawable/sel_btn_red_envelope"
+            android:text="@string/red_envelope_receive"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="3dp"
+            android:background="#bfbfbf"
+            android:layout_marginBottom="3dp"/>
+        <RadioButton
+            android:id="@+id/red_envelope_send_btn"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:background="@null"
+            android:button="@null"
+            android:textColor="@drawable/sel_btn_red_envelope"
+            android:layout_height="match_parent"
+            android:text="@string/red_envelope_send"
+            android:layout_weight="1"/>
+
+    </RadioGroup>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/red_envelope_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+</LinearLayout>

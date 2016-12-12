@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout style="@style/TitleLayout">
+
+        <TextView
+            android:id="@id/title_back"
+            style="@style/TiTleBackTv" />
+
+        <TextView
+            android:id="@id/title_content_tv"
+            style="@style/TiTleContentTv" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:paddingLeft="5.6dp"
+        android:paddingRight="5.6dp"
+        android:paddingTop="7.9dp">
+
+
+        <RelativeLayout
+            android:id="@+id/position_list_bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="17dp"
+            android:background="@color/gray_e7"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/position_list_total_break_even_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/total_break_even"
+                android:textColor="@color/gray_6"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/position_list_break_even_num_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/position_list_total_break_even_tv"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/position_list_size_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/position_list_num"
+                android:textColor="@color/gray_6"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView
+            android:id="@+id/position_list_rec"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/position_list_bottom_layout"
+            android:layout_marginTop="8dp"
+            android:background="@color/white"></fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView>
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/main_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="bottom"
+            android:background="@color/black_33"
+            android:orientation="horizontal"></LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/main_tab_bg_homepage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@mipmap/tab_bg_red" />
+
+            <View
+                android:id="@+id/main_tab_bg_protection"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@mipmap/tab_bg_red"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/main_tab_bg_find"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@mipmap/tab_bg_red"
+                android:visibility="invisible" />
+
+            <View
+                android:id="@+id/main_tab_bg_mine"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@mipmap/tab_bg_red"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/main_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="bottom"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/main_tab_homepage_btn"
+                style="@style/TabBtn"
+                android:drawableTop="@mipmap/tab_icon_homepage"
+                android:text="@string/homepage" />
+
+            <RadioButton
+                android:id="@+id/main_tab_protection_btn"
+                style="@style/TabBtn"
+                android:drawableTop="@mipmap/tab_icon_protection"
+                android:text="@string/protection" />
+
+            <RadioButton
+                android:id="@+id/main_tab_find_btn"
+                style="@style/TabBtn"
+                android:drawableTop="@mipmap/tab_icon_find"
+                android:text="@string/find" />
+
+            <RadioButton
+                android:id="@+id/main_tab_min_btn"
+                style="@style/TabBtn"
+                android:drawableTop="@mipmap/tab_icon_mine"
+                android:text="@string/mine" />
+
+        </RadioGroup>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/main_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/main_bottom_layout"></FrameLayout>
+
+
+</RelativeLayout>

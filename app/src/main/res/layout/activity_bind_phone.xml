@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <RelativeLayout style="@style/TitleLayout">
+
+        <TextView
+            android:id="@id/title_back"
+            style="@style/TiTleBackTv" />
+
+        <TextView
+            android:id="@id/title_content_tv"
+            style="@style/TiTleContentTv"
+            android:text="@string/bind_phone" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center"
+        android:layout_marginRight="23dp"
+        android:layout_marginLeft="23dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="18.5dp"
+        android:text="@string/remind_bind_phone"
+        android:background="@drawable/shape_sure"/>
+
+    <EditText
+        android:id="@+id/bind_phone_phone_edt"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center"
+        android:layout_marginRight="23dp"
+        android:layout_marginLeft="23dp"
+        android:textColor="@color/gray_6"
+        android:layout_marginTop="18.5dp"
+        android:textColorHint="@color/gray_6"
+        android:hint="@string/hint_phone"
+        android:background="@drawable/shape_edt_bind_phone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginRight="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="18.5dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/bind_phone_code_edt"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_edt_bind_phone"
+            android:hint="@string/hint_verify_code"
+            android:gravity="center"
+            android:textColorHint="@color/gray_6"
+            android:textColor="@color/gray_6"
+            android:layout_weight="4"/>
+
+        <TextView
+            android:id="@+id/bind_phone_get_code_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="9dp"
+            android:gravity="center"
+            android:text="@string/get_verify_code"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_edt_get_verify_code"
+            android:layout_weight="3"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/bind_phone_confirm_tv"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center"
+        android:layout_marginRight="23dp"
+        android:layout_marginLeft="23dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="23dp"
+        android:text="@string/confirm_change"
+        android:background="@drawable/shape_sure"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/agreement"
+        android:textColor="#424242"
+        android:layout_marginTop="42dp"
+        android:textSize="14sp"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>
