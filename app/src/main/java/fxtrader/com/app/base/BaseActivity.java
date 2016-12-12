@@ -21,6 +21,8 @@ public abstract class BaseActivity extends FragmentActivity {
 
     private TextView mTitleContentTv;
 
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
