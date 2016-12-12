@@ -16,8 +16,17 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import fxtrader.com.app.R;
+import fxtrader.com.app.entity.CommonResponse;
+import fxtrader.com.app.entity.ContractInfoEntity;
+import fxtrader.com.app.http.ParamsUtil;
+import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.api.ContractApi;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 买涨(跌)
@@ -49,18 +58,73 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
                     mNum++;
                     mSeekBar.setProgress(mNum * 10);
                 }
-
+                break;
+            case R.id.dialog_buy_build_position_tv:
+                buildPosition();
                 break;
             default:
                 break;
         }
     }
 
+    private void buildPosition(){
+        ContractApi api = RetrofitUtils.createApi(ContractApi.class);
+        Call<CommonResponse> respon = api.buildPosition(ParamsUtil.getToken(), getBuildPositionParams());
+        respon.enqueue(new Callback<CommonResponse>() {
+            @Override
+            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+                setPosition();
+            }
+
+            @Override
+            public void onFailure(Call<CommonResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String, String> getBuildPositionParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.storage.open");
+        params.put("dealCount", "");
+        params.put("dealDirection", "");
+        params.put("code", "");
+        params.put("ticketId", "");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    private void setPosition(){
+        ContractApi api = RetrofitUtils.createApi(ContractApi.class);
+        Call<CommonResponse> respon = api.setPosition(ParamsUtil.getToken(), getSetPositionParams());
+        respon.enqueue(new Callback<CommonResponse>() {
+            @Override
+            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<CommonResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String, String> getSetPositionParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.storage.open");
+        params.put("storageId", "");
+        params.put("profit", "");
+        params.put("loss", "");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
     public interface BuildPositionListener {
         public void buildPosition();
     }
 
-    public BuyDialog(Context context, boolean up) {
+    public BuyDialog(Context context, ContractInfoEntity entity, boolean up) {
         super(context, R.style.BuyDialogTheme);
         mIsUp = up;
         this.setCanceledOnTouchOutside(false);
@@ -80,13 +144,13 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
 
 
     public void setBuildPositionListener(final BuildPositionListener listener) {
-        mOkTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                listener.buildPosition();
-            }
-        });
+//        mOkTv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dismiss();
+//                listener.buildPosition();
+//            }
+//        });
     }
 
 
@@ -103,6 +167,7 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
 
     private void initOkTv() {
         mOkTv = (TextView) findViewById(R.id.dialog_buy_build_position_tv);
+        mOkTv.setOnClickListener(this);
     }
 
 

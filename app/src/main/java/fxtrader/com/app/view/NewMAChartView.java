@@ -3,6 +3,7 @@ package fxtrader.com.app.view;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -15,6 +16,7 @@ import android.graphics.PathEffect;
 import android.graphics.PixelFormat;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -24,6 +26,8 @@ import fxtrader.com.app.entity.OHLCEntity;
 
 import fxtrader.com.app.config.Config;
 //import fxtrader.com.app.request.DataRequest;
+import fxtrader.com.app.http.ParamsUtil;
+import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.DataLineApi;
 import fxtrader.com.app.tools.DateTools;
 import fxtrader.com.app.tools.DecimalTools;
@@ -83,6 +87,8 @@ public class NewMAChartView extends SurfaceView implements Callback {
 
 	private DataLineApi mDataLineApi;
 
+	private String mContractName = "";
+
 	public NewMAChartView(Context context) {
 		super(context);
 		initView();
@@ -100,6 +106,10 @@ public class NewMAChartView extends SurfaceView implements Callback {
 
 	public void setOnTop(boolean top) {
 		setZOrderOnTop(top);
+	}
+
+	public void setContractName(String name) {
+		mContractName = name;
 	}
 
 	private void initView() {
@@ -135,12 +145,12 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		mPaintNegative.setColor(Color_Green);
 		mPaintNegative.setStrokeWidth(1.5f * RATIO);
 
-		Retrofit retrofit = new Retrofit.Builder()
-				.baseUrl("http://quota.ht.ifxeasy.com/")
-				.addConverterFactory(GsonConverterFactory.create())
-				.build();
-		mDataLineApi = retrofit.create(DataLineApi.class);
-
+//		Retrofit retrofit = new Retrofit.Builder()
+//				.baseUrl("http://quota.ht.ifxeasy.com/")
+//				.addConverterFactory(GsonConverterFactory.create())
+//				.build();
+//		mDataLineApi = retrofit.create(DataLineApi.class);
+		mDataLineApi = RetrofitUtils.createApi(DataLineApi.class);
 		getHolder().addCallback(this);
 	}
 
@@ -593,8 +603,73 @@ public class NewMAChartView extends SurfaceView implements Callback {
 	}
 
 	private void requestTimeLine() {
-		Call<DataVo> repos = mDataLineApi.listTimeLine("AG", "60");
-		repos.enqueue(new retrofit2.Callback<DataVo>() {
+		if (TextUtils.isEmpty(mContractName)) {
+			return;
+		}
+//		Call<DataVo> repos = mDataLineApi.listTimeLine("AG", "60");
+//		repos.enqueue(new retrofit2.Callback<DataVo>() {
+//			@Override
+//			public void onResponse(Call<DataVo> call, Response<DataVo> response) {
+//				DataVo data = response.body();
+//				handleData(data);
+//				Log.i("zyu", data.toString());
+//				flag = true;
+//			}
+//			@Override
+//			public void onFailure(Call<DataVo> call, Throwable t) {
+//				flag = true;
+//				t.printStackTrace();
+//			}
+//		});
+		Call<DataVo> respon = mDataLineApi.listTLine(getTLineParams());
+		respon.enqueue(new retrofit2.Callback<DataVo>() {
+			@Override
+			public void onResponse(Call<DataVo> call, Response<DataVo> response) {
+				DataVo data = response.body();
+				handleData(data);
+//				Log.i("zyu", data.toString());
+				flag = true;
+			}
+			@Override
+			public void onFailure(Call<DataVo> call, Throwable t) {
+				flag = true;
+				t.printStackTrace();
+			}
+		});
+	}
+
+	private Map<String, String> getTLineParams() {
+		final Map<String, String> params = ParamsUtil.getCommonParams();
+		params.put("method", "gdiex.market.timeLine");
+		params.put("contract", mContractName);
+		params.put("number", "180");
+		params.put("quotedate", "");
+		params.put("sign", ParamsUtil.sign(params));
+		return params;
+	}
+
+
+	private void requestCandleLine(String type) {
+		if (TextUtils.isEmpty(mContractName)) {
+			return;
+		}
+//		Call<DataVo> repos = mDataLineApi.listCandleLine("AG", type, "60");
+//		repos.enqueue(new retrofit2.Callback<DataVo>() {
+//			@Override
+//			public void onResponse(Call<DataVo> call, Response<DataVo> response) {
+//				DataVo data = response.body();
+//				handleData(data);
+//				Log.i("zyu", data.toString());
+//				flag = true;
+//			}
+//			@Override
+//			public void onFailure(Call<DataVo> call, Throwable t) {
+//				flag = true;
+//				t.printStackTrace();
+//			}
+//		});
+		Call<DataVo> respon = mDataLineApi.listKLine(getKLineParams(type));
+		respon.enqueue(new retrofit2.Callback<DataVo>() {
 			@Override
 			public void onResponse(Call<DataVo> call, Response<DataVo> response) {
 				DataVo data = response.body();
@@ -610,22 +685,14 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		});
 	}
 
-	private void requestCandleLine(String type) {
-		Call<DataVo> repos = mDataLineApi.listCandleLine("AG", type, "60");
-		repos.enqueue(new retrofit2.Callback<DataVo>() {
-			@Override
-			public void onResponse(Call<DataVo> call, Response<DataVo> response) {
-				DataVo data = response.body();
-				handleData(data);
-				Log.i("zyu", data.toString());
-				flag = true;
-			}
-			@Override
-			public void onFailure(Call<DataVo> call, Throwable t) {
-				flag = true;
-				t.printStackTrace();
-			}
-		});
+	private Map<String, String> getKLineParams(String type) {
+		final Map<String, String> params = ParamsUtil.getCommonParams();
+		params.put("method", "gdiex.market.kLine");
+		params.put("contract", mContractName);
+		params.put("number", "180");
+		params.put("type", type);
+		params.put("sign", ParamsUtil.sign(params));
+		return params;
 	}
 
 

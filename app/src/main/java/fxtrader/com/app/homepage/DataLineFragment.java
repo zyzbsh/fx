@@ -1,5 +1,6 @@
 package fxtrader.com.app.homepage;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -55,6 +56,18 @@ public class DataLineFragment extends BaseFragment{
 
     private ContractInfoEntity mContact;
 
+    private String mContractName = "";
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        mContact = (ContractInfoEntity) bundle.getSerializable(IntentItem.CONTARCT_INFO);
+        if (mContact != null) {
+            mContractName = mContact.getName();
+        }
+        LogZ.i("contractName = " + mContractName);
+    }
 
     @Nullable
     @Override
@@ -73,11 +86,7 @@ public class DataLineFragment extends BaseFragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Bundle bundle = getArguments();
-        mContact = (ContractInfoEntity) bundle.getSerializable(IntentItem.CONTARCT_INFO);
-        if (mContact != null) {
 
-        }
     }
 
     private void initContractLayout(View view) {
@@ -92,6 +101,8 @@ public class DataLineFragment extends BaseFragment{
 
     private void initChartView(View view) {
         mChartView = (NewMAChartView) view.findViewById(R.id.view_new_machart);
+        LogZ.i("contractName -----------" + mContractName);
+        mChartView.setContractName(mContractName);
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mChartView.getLayoutParams();
         int screenWidth = UIUtil.getScreenWidth(AppApplication.getInstance().getActivity());
         int pad = UIUtil.dip2px(getContext(), 35);
@@ -113,7 +124,10 @@ public class DataLineFragment extends BaseFragment{
     }
 
 
-    public void setPriceTvs(String data) {
+    public void setPriceTvs(Activity activity, String data) {
+        if (activity == null) {
+            return;
+        }
         try {
             String[] a = data.split(",");
             String latestPrice = a[0];
@@ -122,14 +136,18 @@ public class DataLineFragment extends BaseFragment{
             String highestPrice = a[3];
             String lowestPrice = a[4];
             boolean isMarketOpen = Boolean.parseBoolean(a[5]);
-            mContractProfitTv.setText(latestPrice);
-            mTodayOpenTv.setText(getString(R.string.today_open_num, openPrice));
-            mYesterdayCloseTv.setText(getString(R.string.yesterday_close_num, lastClosePrice));
-            mHighestTv.setText(getString(R.string.highest_num, highestPrice));
-            mLowestTv.setText(getString(R.string.lowest_num, lowestPrice));
+            mContractTv.setText(activity.getString(R.string.contract_price_num, mContractName, latestPrice));
+            mTodayOpenTv.setText(activity.getString(R.string.today_open_num, openPrice));
+            mYesterdayCloseTv.setText(activity.getString(R.string.yesterday_close_num, lastClosePrice));
+            mHighestTv.setText(activity.getString(R.string.highest_num, highestPrice));
+            mLowestTv.setText(activity.getString(R.string.lowest_num, lowestPrice));
         } catch(Exception e) {
             LogZ.e(e);
         }
+    }
+
+    public ContractInfoEntity getContract(){
+        return mContact;
     }
 
 }

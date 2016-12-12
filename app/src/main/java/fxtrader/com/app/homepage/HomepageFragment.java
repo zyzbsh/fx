@@ -90,6 +90,10 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private boolean mExpect;
 
+    private List<ContractInfoEntity> mContractList;
+
+    private ContractInfoEntity mCurrentContract;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
@@ -109,7 +113,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             return;
         }
         if (requestCode == REQUEST_LOGIN) {
-            showBuyDialog(mExpect);
+            showBuyDialog(mCurrentContract, mExpect);
         }
     }
 
@@ -164,8 +168,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         params.height = height;
         mViewPager.setLayoutParams(params);
         List<Fragment> fragments = new ArrayList<>();
-//        fragments.add(new DataLineFragment());
-//        fragments.add(new DataLineFragment());
         FragmentAdapter adapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), fragments);
         mViewPager.setAdapter(adapter);
         getContactList();
@@ -191,13 +193,13 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onResponse(Call<ContractListEntity> call, Response<ContractListEntity> response) {
                 ContractListEntity entity = response.body();
-                List<ContractInfoEntity> list = entity.getObject();
-                if (list == null || list.isEmpty()) {
+                mContractList = entity.getObject();
+                if (mContractList == null || mContractList.isEmpty()) {
                     LogZ.i("合约列表没有数据。");
                     return;
                 }
                 List<Fragment> fragments = new ArrayList<>();
-                for (ContractInfoEntity info : list){
+                for (ContractInfoEntity info : mContractList){
                     DataLineFragment fragment = new DataLineFragment();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(IntentItem.CONTARCT_INFO, info);
@@ -206,7 +208,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 }
                 FragmentAdapter adapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), fragments);
                 mViewPager.setAdapter(adapter);
-                mViewPager.setOffscreenPageLimit(list.size() - 1);
+                mViewPager.setOffscreenPageLimit(mContractList.size() - 1);
 //                mContractTv.setText(list.get(0).getName());
                 startDataTimer();
             }
@@ -255,7 +257,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 if (mCurDataLineFragment != null) {
                     String dataType = mCurDataLineFragment.getDataType();
                     String data = vo.getData(dataType);
-                    mCurDataLineFragment.setPriceTvs(data);
+                    mCurDataLineFragment.setPriceTvs(getActivity(), data);
                 }
             }
 
@@ -304,8 +306,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         });
     }
 
-    private void showBuyDialog(boolean up) {
-        BuyDialog dialog = new BuyDialog(getActivity(), up);
+    private void showBuyDialog(ContractInfoEntity entity, boolean up) {
+        BuyDialog dialog = new BuyDialog(getActivity(), entity, up);
         dialog.show();
         dialog.setBuildPositionListener(new BuyDialog.BuildPositionListener() {
             @Override
@@ -364,7 +366,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private void expect(boolean raise) {
         mExpect = raise;
         if (isLogin()) {
-            showBuyDialog(raise);
+            showBuyDialog(mCurDataLineFragment.getContract(), raise);
         }else {
             openActivityForResult(LoginActivity.class, REQUEST_LOGIN);
         }
