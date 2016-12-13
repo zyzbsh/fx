@@ -1,6 +1,10 @@
 package fxtrader.com.app.entity;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
+
+import fxtrader.com.app.http.HttpConstant;
 
 /**
  * Created by zhangyuzhu on 2016/12/9.
@@ -29,6 +33,8 @@ public class ContractInfoEntity implements Serializable{
     private int plUnit;
     private int specification;
     private String unit;
+    private String baseUnit = "";
+    private String baseNum = "";
 
     public String getCode() {
         return code;
@@ -110,9 +116,25 @@ public class ContractInfoEntity implements Serializable{
         this.unit = unit;
     }
 
+    public String getBaseUnit() {
+        return baseUnit;
+    }
+
+    public void setBaseUnit(String baseUnit) {
+        this.baseUnit = baseUnit;
+    }
+
+    public String getBaseNum() {
+        return baseNum;
+    }
+
+    public void setBaseNum(String baseNum) {
+        this.baseNum = baseNum;
+    }
+
     @Override
     public String toString() {
-        return "ObjectBean{" +
+        return "ContractInfoEntity{" +
                 "code='" + code + '\'' +
                 ", dataType='" + dataType + '\'' +
                 ", dealLimit=" + dealLimit +
@@ -123,6 +145,8 @@ public class ContractInfoEntity implements Serializable{
                 ", plUnit=" + plUnit +
                 ", specification=" + specification +
                 ", unit='" + unit + '\'' +
+                ", baseUnit='" + baseUnit + '\'' +
+                ", baseNum='" + baseNum + '\'' +
                 '}';
     }
 }

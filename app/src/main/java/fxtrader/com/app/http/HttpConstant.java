@@ -5,6 +5,11 @@ package fxtrader.com.app.http;
  */
 public final class HttpConstant {
 
+    public static class ContractUnit{
+        public static final String KG = "kg";
+        public static final String T = "t";
+    }
+
     /**
      * 交易类型
      */

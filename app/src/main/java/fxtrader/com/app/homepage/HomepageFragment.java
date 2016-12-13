@@ -5,20 +5,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -26,9 +28,9 @@ import java.util.TimerTask;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseFragment;
-import fxtrader.com.app.config.Config;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.ContractListEntity;
 import fxtrader.com.app.entity.MarketEntity;
@@ -36,13 +38,10 @@ import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.login.LoginActivity;
-import fxtrader.com.app.tools.DateTools;
 import fxtrader.com.app.tools.LogZ;
-import fxtrader.com.app.tools.NetTools;
-import fxtrader.com.app.tools.StringUtil;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.BuildPositionDialog;
-import fxtrader.com.app.view.BuyDialog;
+import fxtrader.com.app.view.BuildDialog;
 import fxtrader.com.app.view.ProfitListPop;
 import fxtrader.com.app.view.ctr.MainTitleProfitCtr;
 import retrofit2.Call;
@@ -81,8 +80,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private DataLineFragment getmCurDataLineFragment;
 
-    private final static int[] LINE_ID = { R.id.btn_timeline, R.id.btn_kline5,
-            R.id.btn_kline15, R.id.btn_kline30, R.id.btn_kline60 };
+    private final static int[] LINE_ID = {R.id.btn_timeline, R.id.btn_kline5,
+            R.id.btn_kline15, R.id.btn_kline30, R.id.btn_kline60};
 
     private Button[] btnLineType = new Button[LINE_ID.length];
 
@@ -92,7 +91,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private List<ContractInfoEntity> mContractList;
 
-    private ContractInfoEntity mCurrentContract;
+    private ContractEntity mCurrentContract;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -113,7 +112,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             return;
         }
         if (requestCode == REQUEST_LOGIN) {
-            showBuyDialog(mCurrentContract, mExpect);
+            showBuyDialog(mExpect);
         }
     }
 
@@ -159,7 +158,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         view.findViewById(R.id.homepage_master_more_tv).setOnClickListener(this);
     }
 
-    private void initViewPager(View view){
+    private void initViewPager(View view) {
         mViewPager = (ViewPager) view.findViewById(R.id.homepage_view_pager);
         ViewGroup.LayoutParams params = mViewPager.getLayoutParams();
         int width = UIUtil.getScreenWidth(getActivity()) - UIUtil.dip2px(getContext(), 26) * 2;
@@ -182,11 +181,12 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
 
+    private LinkedHashMap<String, ContractEntity> mContractMap;
 
     /**
      * 获取合约列表
      */
-    private void getContactList(){
+    private void getContactList() {
         ContractApi contractApi = RetrofitUtils.createApi(ContractApi.class);
         Call<ContractListEntity> repos = contractApi.list(getContractListParams());
         repos.enqueue(new Callback<ContractListEntity>() {
@@ -198,18 +198,37 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                     LogZ.i("合约列表没有数据。");
                     return;
                 }
+
+                if (mContractMap == null) {
+                    mContractMap = new LinkedHashMap<String, ContractEntity>();
+                }
+
+                for (ContractInfoEntity info : mContractList) {
+                    String dataType = info.getDataType();
+                    if (mContractMap.containsKey(dataType)) {
+                        ContractEntity contract = mContractMap.get(dataType);
+                        contract.add(info);
+                    } else {
+                        ContractEntity contract = new ContractEntity(dataType);
+                        contract.add(info);
+                        mContractMap.put(dataType, contract);
+                    }
+                }
+
+
                 List<Fragment> fragments = new ArrayList<>();
-                for (ContractInfoEntity info : mContractList){
+                for (String type : mContractMap.keySet()) {
+                    ContractEntity contract = mContractMap.get(type);
                     DataLineFragment fragment = new DataLineFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(IntentItem.CONTARCT_INFO, info);
+                    bundle.putString(IntentItem.CONTRACT_NAME, contract.getName());
+                    bundle.putString(IntentItem.CONTRACT_TYPE, contract.getType());
                     fragment.setArguments(bundle);
                     fragments.add(fragment);
                 }
                 FragmentAdapter adapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), fragments);
                 mViewPager.setAdapter(adapter);
                 mViewPager.setOffscreenPageLimit(mContractList.size() - 1);
-//                mContractTv.setText(list.get(0).getName());
                 startDataTimer();
             }
 
@@ -246,7 +265,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         dataTimer.schedule(dataTimerTask, 0, REFRESH_TIME);
     }
 
-    private void getMarketPrice(){
+    private void getMarketPrice() {
         ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
         Call<MarketEntity> response = dataApi.rates(getMarketParams());
         response.enqueue(new Callback<MarketEntity>() {
@@ -286,7 +305,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-
     private void showBuildPositionDialog() {
         BuildPositionDialog dialog = new BuildPositionDialog(getActivity());
         dialog.show();
@@ -306,10 +324,12 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         });
     }
 
-    private void showBuyDialog(ContractInfoEntity entity, boolean up) {
-        BuyDialog dialog = new BuyDialog(getActivity(), entity, up);
+    private void showBuyDialog(boolean up) {
+        String dataType = mCurDataLineFragment.getDataType();
+        ContractEntity entity = mContractMap.get(dataType);
+        BuildDialog dialog = new BuildDialog(getActivity(), entity, up);
         dialog.show();
-        dialog.setBuildPositionListener(new BuyDialog.BuildPositionListener() {
+        dialog.setBuildPositionListener(new BuildDialog.BuildPositionListener() {
             @Override
             public void buildPosition() {
                 showBuildPositionDialog();
@@ -347,7 +367,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    private void recharge(){
+    private void recharge() {
         if (isLogin()) {
 
         } else {
@@ -366,8 +386,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private void expect(boolean raise) {
         mExpect = raise;
         if (isLogin()) {
-            showBuyDialog(mCurDataLineFragment.getContract(), raise);
-        }else {
+
+            showBuyDialog(raise);
+        } else {
             openActivityForResult(LoginActivity.class, REQUEST_LOGIN);
         }
     }
@@ -389,7 +410,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    private boolean isLogin(){
+    private boolean isLogin() {
         return LoginConfig.getInstance().isLogin();
     }
 
@@ -398,7 +419,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (mCurDataLineFragment != null) {
-            if(hidden) {
+            if (hidden) {
             }
         }
 
@@ -410,7 +431,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
         public FragmentAdapter(FragmentManager fm, List<Fragment> fragments) {
             super(fm);
-            mFragments=fragments;
+            mFragments = fragments;
         }
 
         @Override

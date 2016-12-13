@@ -54,19 +54,17 @@ public class DataLineFragment extends BaseFragment{
 
     private NewMAChartView mChartView;
 
-    private ContractInfoEntity mContact;
-
     private String mContractName = "";
+
+    private String mContractType = "";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        mContact = (ContractInfoEntity) bundle.getSerializable(IntentItem.CONTARCT_INFO);
-        if (mContact != null) {
-            mContractName = mContact.getName();
-        }
-        LogZ.i("contractName = " + mContractName);
+        mContractName = bundle.getString(IntentItem.CONTRACT_NAME);
+        mContractType = bundle.getString(IntentItem.CONTRACT_TYPE);
+        LogZ.i("contractName = " + mContractName + ", contractType = " + mContractType);
     }
 
     @Nullable
@@ -101,7 +99,6 @@ public class DataLineFragment extends BaseFragment{
 
     private void initChartView(View view) {
         mChartView = (NewMAChartView) view.findViewById(R.id.view_new_machart);
-        LogZ.i("contractName -----------" + mContractName);
         mChartView.setContractName(mContractName);
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mChartView.getLayoutParams();
         int screenWidth = UIUtil.getScreenWidth(AppApplication.getInstance().getActivity());
@@ -113,10 +110,7 @@ public class DataLineFragment extends BaseFragment{
     }
 
     public String getDataType(){
-        if (mContact == null) {
-            return "";
-        }
-        return mContact.getDataType();
+        return mContractType;
     }
 
     public void setLineType(int lineType) {
@@ -125,6 +119,7 @@ public class DataLineFragment extends BaseFragment{
 
 
     public void setPriceTvs(Activity activity, String data) {
+        LogZ.i(data);
         if (activity == null) {
             return;
         }
@@ -144,10 +139,6 @@ public class DataLineFragment extends BaseFragment{
         } catch(Exception e) {
             LogZ.e(e);
         }
-    }
-
-    public ContractInfoEntity getContract(){
-        return mContact;
     }
 
 }

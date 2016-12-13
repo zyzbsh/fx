@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 public final class UIUtil {
 
     private static int sScreenWidth = 0;
+    private static int sScreenHeight = 0;
 
     public static int getScreenWidth(Activity activity) {
         if (sScreenWidth == 0) {
@@ -19,6 +20,15 @@ public final class UIUtil {
             sScreenWidth = displayMetrics.widthPixels;
         }
         return sScreenWidth;
+    }
+
+    public static int getScreenHeight(Activity activity) {
+        if (sScreenHeight == 0) {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            sScreenHeight = displayMetrics.heightPixels;
+        }
+        return sScreenHeight;
     }
 
     public static int dip2px(Context context, float dpValue) {

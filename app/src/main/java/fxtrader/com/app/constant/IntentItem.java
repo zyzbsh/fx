@@ -6,4 +6,6 @@ package fxtrader.com.app.constant;
 public final class IntentItem {
     public static final String LOGIN = "login";
     public static final String CONTARCT_INFO = "contract_info";
+    public static final String CONTRACT_NAME = "contract_name";
+    public static final String CONTRACT_TYPE = "contract_type";
 }

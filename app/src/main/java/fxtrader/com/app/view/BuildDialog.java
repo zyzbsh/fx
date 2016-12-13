@@ -5,12 +5,15 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -18,21 +21,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
+import fxtrader.com.app.adapter.FullyGridLayoutManager;
 import fxtrader.com.app.entity.CommonResponse;
+import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.ContractApi;
+import fxtrader.com.app.tools.UIUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * 买涨(跌)
+ * 建仓
  * Created by pc on 2016/11/19.
  */
-public class BuyDialog extends Dialog implements View.OnClickListener{
+public class BuildDialog extends Dialog implements View.OnClickListener{
 
     private boolean mIsUp;
 
@@ -41,6 +48,8 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
     private TextView mOkTv;
 
     private SeekBar mSeekBar;
+
+    private ContractEntity mContract;
 
     private int mNum = 0;
 
@@ -124,16 +133,24 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
         public void buildPosition();
     }
 
-    public BuyDialog(Context context, ContractInfoEntity entity, boolean up) {
+    public BuildDialog(Context context, ContractEntity entity, boolean up) {
         super(context, R.style.BuyDialogTheme);
         mIsUp = up;
         this.setCanceledOnTouchOutside(false);
+        mContract = entity;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_buy);
+        setContentView(R.layout.dialog_build);
+        NestedScrollView layout = (NestedScrollView) findViewById(R.id.dialog_build_layout);
+        ViewGroup.LayoutParams params = layout.getLayoutParams();
+        int w = UIUtil.dip2px(getContext(), 18);
+        int h = UIUtil.dip2px(getContext(), 50);
+        params.width = UIUtil.getScreenWidth(AppApplication.getInstance().getActivity()) - w;
+        params.height = UIUtil.getScreenHeight(AppApplication.getInstance().getActivity()) - h;
+        layout.setLayoutParams(params);
         setBuyTitle();
         initOkTv();
         setCancelTv();
@@ -182,13 +199,19 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
 
     private void setInfoRec() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.dialog_buy_rec);
+        ViewGroup.LayoutParams mParams = recyclerView.getLayoutParams();
+        int raw = getData().size() / 2 + getData().size() % 2;
+        mParams.height = UIUtil.dip2px(getContext(), 70) * raw;
+        recyclerView.setLayoutParams(mParams);
         final CustomAdapter adapter = new CustomAdapter(getContext(), getData());
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        FullyGridLayoutManager manager = new FullyGridLayoutManager(getContext(), 2);
+        manager.setOrientation(GridLayoutManager.VERTICAL);
+        recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new CustomAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, TestInfo data, int position) {
+            public void onItemClick(View view, ContractInfoEntity data, int position) {
 //data为内容，position为点击的位置              ToastUtil.getShortToastByString(MainActivity.this,"data: "+data+",position: "+position);
             }
         });
@@ -247,16 +270,16 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
 
     static class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
         private Context context;
-        private List<TestInfo> data;
+        private List<ContractInfoEntity> data;
         private OnRecyclerViewItemClickListener mOnItemClickListener;
         private MyViewHolder holder;
         private int layoutPosition;
 
         public interface OnRecyclerViewItemClickListener {
-            void onItemClick(View view, TestInfo data, int position);
+            void onItemClick(View view, ContractInfoEntity data, int position);
         }
 
-        public CustomAdapter(Context context, List<TestInfo> data) {
+        public CustomAdapter(Context context, List<ContractInfoEntity> data) {
             this.context = context;
             this.data = data;
         }
@@ -267,7 +290,7 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
 
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(context).inflate(R.layout.item_dialog_buy, parent, false);
+            View itemView = LayoutInflater.from(context).inflate(R.layout.item_dialog_build, parent, false);
             holder = new MyViewHolder(itemView);
             return holder;
         }
@@ -275,13 +298,10 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
         @Override
 
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
-            TestInfo info = data.get(position);
-            holder.unitTv.setText(info.getUnit());
-            holder.priceTv.setText(info.getPrice());
-            String profit = this.context.getString(R.string.dialog_buy_profit_num, info.getProfit());
-            holder.profitTv.setText(profit);
-            String fee = this.context.getString(R.string.dialog_buy_fee_num, info.getFee());
-            holder.feeTv.setText(fee);
+            ContractInfoEntity info = data.get(position);
+            holder.feeTv.setText(String.valueOf(info.getHandingCharge()));
+            holder.specTv.setText(info.getBaseNum() + info.getBaseUnit());
+            holder.numTv.setText(String.valueOf(info.getHandingCharge() * 10));
             holder.itemView.setTag(info);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -289,27 +309,17 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
                     //获取当前点击的位置
                     layoutPosition = holder.getLayoutPosition();
                     notifyDataSetChanged();
-                    mOnItemClickListener.onItemClick(holder.itemView, (TestInfo) holder.itemView.getTag(), layoutPosition);
+                    mOnItemClickListener.onItemClick(holder.itemView, (ContractInfoEntity) holder.itemView.getTag(), layoutPosition);
                 }
             });
 
             //更改状态
             if (position == layoutPosition) {
-                holder.itemLayout.setBackgroundResource(R.drawable.shape_dialog_buy_item_select);
                 int selectColor = Color.parseColor("#ffffff");
-                holder.unitTv.setTextColor(selectColor);
-                holder.priceTv.setTextColor(selectColor);
-                holder.profitTv.setTextColor(selectColor);
                 holder.feeTv.setTextColor(selectColor);
-                holder.feeUnitTv.setTextColor(selectColor);
             } else {
-                holder.itemLayout.setBackgroundResource(R.drawable.shape_dialog_buy_item);
                 int defaultColor = Color.parseColor("#282828");
-                holder.unitTv.setTextColor(defaultColor);
-                holder.priceTv.setTextColor(defaultColor);
-                holder.profitTv.setTextColor(defaultColor);
                 holder.feeTv.setTextColor(defaultColor);
-                holder.feeUnitTv.setTextColor(defaultColor);
             }
         }
 
@@ -324,85 +334,21 @@ public class BuyDialog extends Dialog implements View.OnClickListener{
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
-            private LinearLayout itemLayout;
-            private TextView unitTv;
-            private TextView priceTv;
-            private TextView profitTv;
             private TextView feeTv;
-            private TextView feeUnitTv;
+            private TextView specTv;
+            private TextView numTv;
 
             public MyViewHolder(View itemView) {
                 super(itemView);
-                itemLayout = (LinearLayout) itemView.findViewById(R.id.item_dialog_layout);
-                unitTv = (TextView) itemView.findViewById(R.id.item_dialog_unit_tv);
-                priceTv = (TextView) itemView.findViewById(R.id.item_dialog_price_tv);
-                profitTv = (TextView) itemView.findViewById(R.id.item_dialog_profit_tv);
-                feeTv = (TextView) itemView.findViewById(R.id.item_dialog_fee_tv);
-                feeUnitTv = (TextView) itemView.findViewById(R.id.item_dialog_fee_unit_tv);
+                feeTv = (TextView) itemView.findViewById(R.id.item_dialog_build_fee_tv);
+                specTv = (TextView) itemView.findViewById(R.id.item_dialog_build_spec_tv);
+                numTv = (TextView) itemView.findViewById(R.id.item_dialog_build_num_tv);
             }
         }
     }
 
-    private List<TestInfo> getData() {
-        List<TestInfo> data = new ArrayList<>();
-        TestInfo info1 = new TestInfo("0.1t", "10", "0.02", "1");
-        TestInfo info2 = new TestInfo("5t", "200", "0.5", "20");
-        TestInfo info3 = new TestInfo("10t", "500", "2", "75");
-        TestInfo info4 = new TestInfo("40t", "2000", "2", "75");
-
-        data.add(info1);
-        data.add(info2);
-        data.add(info3);
-        data.add(info4);
-
-        return data;
-    }
-
-
-    private class TestInfo {
-        private String unit = "";
-        private String price = "";
-        private String profit = "";
-        private String fee = "";
-
-        public TestInfo(String unit, String price, String profit, String fee) {
-            this.unit = unit;
-            this.price = price;
-            this.profit = profit;
-            this.fee = fee;
-        }
-
-        public String getUnit() {
-            return unit;
-        }
-
-        public void setUnit(String unit) {
-            this.unit = unit;
-        }
-
-        public String getPrice() {
-            return price;
-        }
-
-        public void setPrice(String price) {
-            this.price = price;
-        }
-
-        public String getProfit() {
-            return profit;
-        }
-
-        public void setProfit(String profit) {
-            this.profit = profit;
-        }
-
-        public String getFee() {
-            return fee;
-        }
-
-        public void setFee(String fee) {
-            this.fee = fee;
-        }
+    private List<ContractInfoEntity> getData() {
+        return mContract.getData();
     }
 
 }

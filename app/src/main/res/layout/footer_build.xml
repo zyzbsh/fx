@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dialog_buy_padding"
+        android:layout_marginRight="@dimen/dialog_buy_padding"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:text="@string/remind_buy"
+        android:textColor="@color/red_text"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/dialog_buy_trade_num_tv"
+        style="@style/BuyDialogTv"
+        android:text="@string/trade_num" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/dialog_buy_minus_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/icon_minus" />
+
+        <Button
+            android:id="@+id/dialog_buy_plus_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/icon_plus" />
+
+        <SeekBar
+            android:id="@+id/dialog_buy_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/dialog_buy_plus_btn"
+            android:layout_toRightOf="@id/dialog_buy_minus_btn"
+            android:progressDrawable="@mipmap/seek_bar_progress"
+            android:thumb="@mipmap/seek_bar_thum" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/shape_dialog_buy_padding"
+        android:layout_marginRight="@dimen/shape_dialog_buy_padding"
+        android:layout_marginTop="15dp"
+        android:background="@color/white"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp">
+
+        <CheckBox
+            android:id="@+id/dialog_buy_use_coupon_cb"
+            style="@style/BuyDialogTv"
+            android:button="@null"
+            android:checked="false"
+            android:text="@string/use_coupon" />
+
+        <TextView
+            style="@style/BuyDialogTv"
+            android:layout_alignBottom="@id/dialog_buy_use_coupon_cb"
+            android:layout_alignParentRight="true"
+            android:text="@string/num_remain"
+
+            />
+
+        <TextView
+            android:id="@+id/dialog_buy_deposit_tv"
+            style="@style/BuyDialogTv"
+            android:layout_below="@id/dialog_buy_use_coupon_cb"
+            android:layout_marginTop="12.43dp"
+            android:text="@string/deposit_num" />
+
+        <TextView
+            android:id="@+id/dialog_buy_fee_tv"
+            style="@style/BuyDialogTv"
+            android:layout_alignBottom="@id/dialog_buy_deposit_tv"
+            android:layout_alignParentRight="true"
+            android:text="@string/fee_num" />
+
+        <TextView
+            android:id="@+id/dialog_buy_market_price_tv"
+            style="@style/BuyDialogTv"
+            android:layout_below="@id/dialog_buy_deposit_tv"
+            android:layout_marginTop="12.43dp"
+            android:text="@string/market_price_num" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="19dp"
+        android:orientation="horizontal"
+        android:paddingBottom="13.5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/dialog_buy_build_position_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_sure"
+            android:gravity="center"
+            android:text="@string/build_position"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/dialog_buy_cancel_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_cancel"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</LinearLayout>
