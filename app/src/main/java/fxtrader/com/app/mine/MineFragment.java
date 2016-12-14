@@ -12,6 +12,7 @@ import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.UserEntity;
+import fxtrader.com.app.homepage.RedEnvelopListActivity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.UserApi;
@@ -60,6 +61,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         view.findViewById(R.id.mine_share_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_my_gift_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_info_layout).setOnClickListener(this);
+        view.findViewById(R.id.mine_red_envelope_layout).setOnClickListener(this);
 
         mPersonalInfoView = (PersonalInfoView) view.findViewById(R.id.personal_info_view);
         mPersonalInfoView.setListener(new PersonalInfoView.OnPersonalInfoListener() {
@@ -125,7 +127,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 openActivity(ExperienceVoucherActivity.class);
                 break;
             case R.id.mine_info_layout: //个人资料
-                openActivity(RedEnvelopeActivity.class);
+                openActivity(PersonalInfoActivity.class);
+                break;
+            case R.id.mine_red_envelope_layout://我的红包
+                openActivity(RedEnvelopListActivity.class);
                 break;
             default:
                 break;

@@ -1,13 +1,12 @@
 package fxtrader.com.app.base;
 
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import fxtrader.com.app.R;
@@ -21,12 +20,19 @@ public abstract class BaseActivity extends FragmentActivity {
 
     private TextView mTitleContentTv;
 
+    private ProgressDialog mProgressDialog;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        this.dismissProgressDialog();
     }
 
     protected void setContentLayout(int layoutRes) {
@@ -61,6 +67,21 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected void openActivity(Class<?> clazz) {
         UIUtil.openActivity(this, clazz);
+    }
+
+    protected void showProgressDialog(){
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+        }
+        mProgressDialog.show();
+    }
+
+    protected void dismissProgressDialog(){
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 
 
