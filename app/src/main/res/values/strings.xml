@@ -52,12 +52,12 @@
     <string name="how_to_trade">如何交易</string>
     <string name="three_guarantees">三大保障</string>
     <string name="contract_name">合约名称：%1$s</string>
+    <string name="build_position_contract_name">合约名称&#160;&#160;&#160;&#160;%1$s</string>
     <string name="price_now">现价：%1$s</string>
-    <string name="remind_buy">您的本金可能会因市场变动而产生损失您应充分认识投资风险谨慎下单</string>
     <string name="use_coupon">使用体验券</string>
     <string name="num_remain">剩余数量%1$s张</string>
     <string name="deposit_num">保证金：%1$s</string>
-    <string name="fee_num">手续费  $1$s</string>
+    <string name="fee_num">手续费&#160;&#160;&#160;%1$s元/手</string>
     <string name="market_price_num">市场价：%1$s</string>
     <string name="build_position">建仓</string>
     <string name="cancel">取消</string>
@@ -66,6 +66,7 @@
     <string name="buying_num">买入数量：%1$s</string>
     <string name="stop_profit">止盈</string>
     <string name="stop_loss">止损</string>
+    <string name="remind_build_position_dialog">您正在进行的是一种高风险的现货投资，可能会引起本金损失\n请您充分意识到风险的存在</string>
     <string name="remind_build_position">投资有风险，交易需谨慎。最好止损，降低风险。\n注：1、暂不支持持仓过夜，收盘后将自动平仓。\n2、只能持仓一笔，平仓后才可建新单。</string>
     <string name="dialog_buy_profit_num">浮动盈亏：%1$s元</string>
     <string name="dialog_buy_fee_num">手续费：%1$s元/手</string>
@@ -127,6 +128,7 @@
     <string name="money_num">￥ %1$s</string>
     <string name="valid_from_to">有效期%1$s至%2$s</string>
     <string name="profit_and_loss_detail">收支明细</string>
+    <string name="profit_and_loss">浮动盈亏:</string>
     <string name="income_num">收入%1$s</string>
     <string name="pay_num">支出%1$s</string>
     <string name="account_num">金额：%1$d</string>
@@ -144,7 +146,8 @@
     <string name="withdraw_can_num">可提取金额：%1$s</string>
     <string name="remind_withdraw_account">（每笔至少10元；每笔收取2元手续费）</string>
     <string name="input_withdraw_account">输入体现金额</string>
-    <string name="trade_num">交易数量：%1$s</string>
+    <string name="trade_num">选择交易数量：%1$s</string>
+    <string name="select_trade_num">选择交易数量：</string>
     <string name="homepage">首页</string>
     <string name="protection">三大保障</string>
     <string name="find">发现</string>
@@ -200,4 +203,9 @@
     <string name="num_unit">个</string>
     <string name="red_envelope_num">红包数量：</string>
     <string name="open">拆开</string>
+    <string name="price_latest">现价</string>
+    <string name="price_target">目标价</string>
+    <string name="price_stop_loss">止损价</string>
+    <string name="remind_profit_and_loss">范围0-90%</string>
+    <string name="remind_build_position_send_red_envelope">我若盈利，将送出盈利的5%，分享给高手</string>
 </resources>

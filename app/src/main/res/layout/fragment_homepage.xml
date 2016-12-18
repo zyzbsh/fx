@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@mipmap/bg_homepage"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -159,75 +159,137 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:background="@drawable/shape_white_with_red_stroke"
             android:orientation="vertical">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/homepage_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/shape_white_with_yellow_stroke" />
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:background="#dcdddd"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="-1dp">
 
-                <Button
-                    android:id="@+id/btn_timeline"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:text="@string/time_line"
-                    android:textColor="@drawable/sel_btn_data_line"
-                    android:textSize="13sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="@drawable/shape_red_with_yellow_stroke">
 
-                <Button
-                    android:id="@+id/btn_kline5"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:text="@string/five_min"
-                    android:textColor="@drawable/sel_btn_data_line"
-                    android:textSize="13sp" />
+                </LinearLayout>
 
-                <Button
-                    android:id="@+id/btn_kline15"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:text="@string/ten_min"
-                    android:textColor="@drawable/sel_btn_data_line"
-                    android:textSize="13sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btn_kline30"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:text="@string/half_hour"
-                    android:textColor="@drawable/sel_btn_data_line"
-                    android:textSize="13sp" />
+                    <View
+                        android:id="@+id/bg_btn_timeline"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@mipmap/bg_data_line"
+                        android:visibility="invisible" />
 
-                <Button
-                    android:id="@+id/btn_kline60"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    <View
+                        android:id="@+id/bg_btn_kline5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@mipmap/bg_data_line"
+                        android:visibility="invisible" />
+
+                    <View
+                        android:id="@+id/bg_btn_kline15"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@mipmap/bg_data_line"
+                        android:visibility="invisible" />
+
+                    <View
+                        android:id="@+id/bg_btn_kline30"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@mipmap/bg_data_line"
+                        android:visibility="invisible" />
+
+                    <View
+                        android:id="@+id/bg_btn_kline60"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@mipmap/bg_data_line"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
                     android:layout_weight="1"
-                    android:background="@null"
-                    android:text="@string/one_hour"
-                    android:textColor="@drawable/sel_btn_data_line"
-                    android:textSize="13sp" />
-            </LinearLayout>
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_timeline"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:text="@string/time_line"
+                        android:textColor="@drawable/sel_btn_data_line"
+                        android:textSize="13sp" />
+
+                    <Button
+                        android:id="@+id/btn_kline5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:text="@string/five_min"
+                        android:textColor="@drawable/sel_btn_data_line"
+                        android:textSize="13sp" />
+
+                    <Button
+                        android:id="@+id/btn_kline15"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:text="@string/ten_min"
+                        android:textColor="@drawable/sel_btn_data_line"
+                        android:textSize="13sp" />
+
+                    <Button
+                        android:id="@+id/btn_kline30"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:text="@string/half_hour"
+                        android:textColor="@drawable/sel_btn_data_line"
+                        android:textSize="13sp" />
+
+                    <Button
+                        android:id="@+id/btn_kline60"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:text="@string/one_hour"
+                        android:textColor="@drawable/sel_btn_data_line"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </FrameLayout>
         </LinearLayout>
 
-        <TextView
+        <!--TextView
             android:id="@+id/homepage_sys_announcement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -239,12 +301,13 @@
             android:padding="5dp"
             android:textColor="#3e3a39"
             android:textSize="13sp" />
-
+        <!-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingLeft="25dp"
+            android:layout_marginTop="5dp"
             android:paddingRight="25dp">
 
             <LinearLayout
@@ -266,18 +329,16 @@
                     android:paddingBottom="20dp"
                     android:paddingTop="20dp">
 
-
-                    <TextView
-                        android:id="@+id/homepage_expect_raise_tv"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@mipmap/icon_raise"
-                        android:drawablePadding="3dp"
-                        android:gravity="center"
-                        android:text="@string/expect_raise"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
+                        android:src="@mipmap/icon_raise" />
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:src="@mipmap/icon_raise_text" />
 
                 </LinearLayout>
 
@@ -286,11 +347,11 @@
                     android:id="@+id/homepage_expect_raise_des_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:background="@mipmap/bg_homepage_buy"
+                    android:layout_marginTop="5dp"
+                    android:background="@mipmap/bg_homepage_buy_raise"
                     android:gravity="center"
                     android:text="@string/expect_raise_num"
-                    android:textColor="@color/white"
+                    android:textColor="@color/yellow_text"
                     android:textSize="10sp" />
 
             </LinearLayout>
@@ -299,7 +360,7 @@
                 android:id="@+id/homepage_expect_fall_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+                android:layout_marginLeft="30dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_green_corner_5"
                 android:gravity="center_horizontal"
@@ -316,16 +377,16 @@
                     android:paddingTop="20dp">
 
 
-                    <TextView
-                        android:id="@+id/homepage_expect_fall_tv"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@mipmap/icon_raise"
-                        android:drawablePadding="3dp"
-                        android:gravity="center"
-                        android:text="@string/expect_fall"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
+                        android:src="@mipmap/icon_fall" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:src="@mipmap/icon_fall_text" />
 
 
                 </LinearLayout>
@@ -335,11 +396,11 @@
                     android:id="@+id/homepage_expect_fall_des_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:background="@mipmap/bg_homepage_buy"
+                    android:layout_marginTop="5dp"
+                    android:background="@mipmap/bg_homepage_buy_fall"
                     android:gravity="center"
                     android:text="@string/expect_fall_num"
-                    android:textColor="@color/white"
+                    android:textColor="@color/yellow_text"
                     android:textSize="10sp" />
 
             </LinearLayout>
@@ -374,7 +435,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/shape_more"
+                    android:background="@mipmap/icon_more"
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
@@ -383,53 +444,77 @@
                     android:textSize="10sp" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/homepage_master_layout"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:background="#f6812e"/>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/shape_master"
-                android:padding="0.5dp">
+                android:orientation="vertical"
+                android:layout_marginTop="5dp"
+                android:background="@mipmap/bg_homepage_master">
 
                 <ImageView
-                    android:id="@+id/homepage_master_avatar_im"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@mipmap/avatar_master" />
-
-                <TextView
-                    android:id="@+id/homepage_master_name_tv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:layout_toRightOf="@id/homepage_master_avatar_im"
-                    android:text="NISHOLAS"
-                    android:textColor="@color/black_33"
-                    android:textSize="14sp" />
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/icon_homepage_master"/>
 
-                <TextView
-                    android:id="@+id/homepage_master_money_unit_tv"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/homepage_master_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:text="@string/money_unit"
-                    android:textColor="@color/black_33"
-                    android:textSize="14sp" />
+                    android:layout_marginLeft="-2dp"
+                    android:layout_marginRight="-2dp"
+                    android:layout_marginBottom="-2dp"
+                    android:background="@mipmap/bg_homepage_mastar_info">
 
-                <TextView
-                    android:id="@+id/homepage_master_profit_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@id/homepage_master_money_unit_tv"
-                    android:text="@string/profit_num"
-                    android:textColor="@color/red_text"
-                    android:textSize="14sp" />
-            </RelativeLayout>
+                    <RelativeLayout
+
+                        android:id="@+id/homepage_master_avatar_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:background="@mipmap/bg_homepage_master_avatar">
+                        <ImageView
+                            android:id="@+id/homepage_master_avatar_im"
+                            android:layout_width="30dp"
+                            android:layout_margin="10dp"
+                            android:layout_height="30dp"
+                            android:src="@mipmap/avatar_master" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/homepage_master_name_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@id/homepage_master_avatar_layout"
+                        android:text="NISHOLAS"
+                        android:textColor="@color/black_33"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/homepage_master_profit_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:text="@string/profit_num"
+                        android:textColor="@color/white"
+                        android:background="@mipmap/bg_homepage_master_money"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
 
         </LinearLayout>
 

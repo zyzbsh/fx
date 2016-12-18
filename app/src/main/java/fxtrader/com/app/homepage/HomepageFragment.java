@@ -34,6 +34,8 @@ import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.ContractListEntity;
 import fxtrader.com.app.entity.MarketEntity;
+import fxtrader.com.app.entity.PriceEntity;
+import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.ContractApi;
@@ -83,7 +85,12 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private final static int[] LINE_ID = {R.id.btn_timeline, R.id.btn_kline5,
             R.id.btn_kline15, R.id.btn_kline30, R.id.btn_kline60};
 
+    private final static int[] LINE_BG_ID = {R.id.bg_btn_timeline, R.id.bg_btn_kline5,
+            R.id.bg_btn_kline15, R.id.bg_btn_kline30, R.id.bg_btn_kline60};
+
     private Button[] btnLineType = new Button[LINE_ID.length];
+
+    private View[] btnLineBg = new View[LINE_BG_ID.length];
 
     private DataLineFragment mCurDataLineFragment;
 
@@ -92,6 +99,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private List<ContractInfoEntity> mContractList;
 
     private ContractEntity mCurrentContract;
+
+    private String mLatestPrice = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -139,8 +148,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initSystemBulletinLayout(View view) {
-        mSystemBulletinContentTv = (TextView) view.findViewById(R.id.homepage_sys_announcement);
-        mSystemBulletinContentTv.setText("系统公告：今日已有30374人参与交易");
+//        mSystemBulletinContentTv = (TextView) view.findViewById(R.id.homepage_sys_announcement);
+//        mSystemBulletinContentTv.setText("系统公告：今日已有30374人参与交易");
     }
 
     private void initExpectLayout(View view) {
@@ -177,7 +186,12 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             btnLineType[i] = (Button) view.findViewById(LINE_ID[i]);
             btnLineType[i].setOnClickListener(this);
         }
+        for (int i = 0; i < LINE_BG_ID.length; ++i) {
+            btnLineBg[i] = view.findViewById(LINE_BG_ID[i]);
+        }
+
         btnLineType[0].performClick();
+        btnLineBg[0].setVisibility(View.VISIBLE);
     }
 
 
@@ -204,7 +218,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 }
 
                 for (ContractInfoEntity info : mContractList) {
-                    String dataType = info.getDataType();
+                    String dataType = info.getQueryParam();
                     if (mContractMap.containsKey(dataType)) {
                         ContractEntity contract = mContractMap.get(dataType);
                         contract.add(info);
@@ -245,8 +259,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }
-
-    public final static long REFRESH_TIME = 2500;
     private Timer dataTimer = null;
     private TimerTask dataTimerTask = null;
 
@@ -262,7 +274,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 getMarketPrice();
             }
         };
-        dataTimer.schedule(dataTimerTask, 0, REFRESH_TIME);
+        dataTimer.schedule(dataTimerTask, 0, HttpConstant.REFRESH_TIME);
     }
 
     private void getMarketPrice() {
@@ -275,8 +287,13 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 vo.init();
                 if (mCurDataLineFragment != null) {
                     String dataType = mCurDataLineFragment.getDataType();
+                    if (dataType.equals("YDCL")) {
+                        dataType = "YDOIL";
+                    }
                     String data = vo.getData(dataType);
-                    mCurDataLineFragment.setPriceTvs(getActivity(), data);
+                    PriceEntity price = new PriceEntity(data);
+                    mLatestPrice = price.getLatestPrice();
+                    mCurDataLineFragment.setPriceTvs(getActivity(), price);
                 }
             }
 
@@ -327,7 +344,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private void showBuyDialog(boolean up) {
         String dataType = mCurDataLineFragment.getDataType();
         ContractEntity entity = mContractMap.get(dataType);
-        BuildDialog dialog = new BuildDialog(getActivity(), entity, up);
+        BuildDialog dialog = new BuildDialog(getActivity(), mLatestPrice, entity, up);
         dialog.show();
         dialog.setBuildPositionListener(new BuildDialog.BuildPositionListener() {
             @Override
@@ -398,14 +415,14 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             if (LINE_ID[i] == v.getId()) {
                 if (!btnLineType[i].isSelected()) {
                     btnLineType[i].setSelected(true);
-                    btnLineType[i].setBackgroundColor(getResources().getColor(R.color.red_text));
+                    btnLineBg[i].setVisibility(View.VISIBLE);
                     if (mCurDataLineFragment != null) {
                         mCurDataLineFragment.setLineType(i + 1);
                     }
                 }
             } else {
                 btnLineType[i].setSelected(false);
-                btnLineType[i].setBackgroundColor(getResources().getColor(R.color.transparent));
+                btnLineBg[i].setVisibility(View.INVISIBLE);
             }
         }
     }

@@ -26,6 +26,7 @@ import fxtrader.com.app.entity.OHLCEntity;
 
 import fxtrader.com.app.config.Config;
 //import fxtrader.com.app.request.DataRequest;
+import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.DataLineApi;
@@ -40,7 +41,6 @@ import fxtrader.com.app.entity.MAChartVO;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NewMAChartView extends SurfaceView implements Callback {
 
@@ -49,7 +49,6 @@ public class NewMAChartView extends SurfaceView implements Callback {
 	private final static String DATASERVICE = "DATASERVICE";
 
 	public final static float RATIO = PixelTools.getRatio();
-	public final static long REFRESH_TIME = 3000;
 	public final static long REFRESH_DRAW_TIME = 80;
 
 //	private final static int Color_Blue = Color.rgb(0, 144, 255);
@@ -87,7 +86,7 @@ public class NewMAChartView extends SurfaceView implements Callback {
 
 	private DataLineApi mDataLineApi;
 
-	private String mContractName = "";
+	private String mContractType = "";
 
 	public NewMAChartView(Context context) {
 		super(context);
@@ -108,15 +107,15 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		setZOrderOnTop(top);
 	}
 
-	public void setContractName(String name) {
-		mContractName = name;
+	public void setContractType(String type) {
+		mContractType = type;
 	}
 
 	private void initView() {
 		//解决拖动时，上下边界线出现黑色闪烁
-		setBackgroundColor(Color.WHITE);
+//		setBackgroundColor(Color.WHITE);
 //		setZOrderOnTop(true);
-		getHolder().setFormat(PixelFormat.TRANSPARENT);
+//		getHolder().setFormat(PixelFormat.TRANSPARENT);
 		Log.i("zyu", "NewMachartView");
 		textPaint = new Paint();
 		textPaint.setColor(Color_Red);
@@ -599,11 +598,11 @@ public class NewMAChartView extends SurfaceView implements Callback {
 				}
 			}
 		};
-		dataTimer.schedule(dataTimerTask, 0, REFRESH_TIME);
+		dataTimer.schedule(dataTimerTask, 0, HttpConstant.REFRESH_TIME);
 	}
 
 	private void requestTimeLine() {
-		if (TextUtils.isEmpty(mContractName)) {
+		if (TextUtils.isEmpty(mContractType)) {
 			return;
 		}
 //		Call<DataVo> repos = mDataLineApi.listTimeLine("AG", "60");
@@ -641,16 +640,16 @@ public class NewMAChartView extends SurfaceView implements Callback {
 	private Map<String, String> getTLineParams() {
 		final Map<String, String> params = ParamsUtil.getCommonParams();
 		params.put("method", "gdiex.market.timeLine");
-		params.put("contract", mContractName);
+		params.put("contract", mContractType);
 		params.put("number", "180");
-		params.put("quotedate", "");
+		params.put("quotedate", String.valueOf(System.currentTimeMillis()));
 		params.put("sign", ParamsUtil.sign(params));
 		return params;
 	}
 
 
 	private void requestCandleLine(String type) {
-		if (TextUtils.isEmpty(mContractName)) {
+		if (TextUtils.isEmpty(mContractType)) {
 			return;
 		}
 //		Call<DataVo> repos = mDataLineApi.listCandleLine("AG", type, "60");
@@ -688,7 +687,7 @@ public class NewMAChartView extends SurfaceView implements Callback {
 	private Map<String, String> getKLineParams(String type) {
 		final Map<String, String> params = ParamsUtil.getCommonParams();
 		params.put("method", "gdiex.market.kLine");
-		params.put("contract", mContractName);
+		params.put("contract", mContractType);
 		params.put("number", "180");
 		params.put("type", type);
 		params.put("sign", ParamsUtil.sign(params));

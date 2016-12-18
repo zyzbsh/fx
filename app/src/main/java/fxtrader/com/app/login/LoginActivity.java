@@ -15,7 +15,9 @@ import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.LoginResponseEntity;
+import fxtrader.com.app.entity.TicketListEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.UserApi;
@@ -108,8 +110,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 public void onResponse(Call<LoginResponseEntity> call, Response<LoginResponseEntity> response) {
                     LoginResponseEntity entity = response.body();
                     LoginConfig.getInstance().saveUser(account, entity.getAccess_token());
-                    setResult(RESULT_OK);
-                    finish();
+                    getTickets();
                 }
 
                 @Override
@@ -139,6 +140,56 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         byte[] base64 = Base64.encode(str.getBytes(), Base64.NO_WRAP);
         byte[] aes = EncryptionTool.aes(base64, ParamsUtil.CLIENT_SECRET.getBytes());
         params.put("subject", new String(Base64.encode(aes, Base64.NO_WRAP)));
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    private void getTickets() {
+        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
+        Call<TicketListEntity> repos = userApi.tickets(getTicketsParams());
+        repos.enqueue(new Callback<TicketListEntity>() {
+            @Override
+            public void onResponse(Call<TicketListEntity> call, Response<TicketListEntity> response) {
+                TicketListEntity entity = response.body();
+                getUserCoupon();
+            }
+
+            @Override
+            public void onFailure(Call<TicketListEntity> call, Throwable t) {
+                Log.e("zyu", t.getMessage());
+            }
+        });
+    }
+
+    private Map<String, String> getTicketsParams(){
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.tickets.list");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    private void getUserCoupon() {
+        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
+        String token = ParamsUtil.getToken();
+        Call<CouponListEntity> repos = userApi.coupons(token, getCouponParams());
+        repos.enqueue(new Callback<CouponListEntity>() {
+            @Override
+            public void onResponse(Call<CouponListEntity> call, Response<CouponListEntity> response) {
+                CouponListEntity entity = response.body();
+                setResult(RESULT_OK);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<CouponListEntity> call, Throwable t) {
+                Log.e("zyu", t.getMessage());
+            }
+        });
+    }
+
+    private Map<String, String> getCouponParams(){
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.coupon.users");
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

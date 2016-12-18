@@ -21,6 +21,7 @@
     <color name="gray_dc">#dcdcdc</color>
     <color name="gray_ed">#ededed</color>
     <color name="gray_e7">#e7e7e7</color>
+    <color name="yellow_text">#ffd800</color>
 
     <color name="color_ff">#F0F0F0</color>
     <color name="color_00">#8A000000</color>

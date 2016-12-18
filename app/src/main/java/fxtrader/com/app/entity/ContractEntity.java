@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fxtrader.com.app.http.HttpConstant;
+import fxtrader.com.app.tools.LogZ;
 
 /**
  * Created by pc on 2016/12/13.
@@ -26,17 +27,22 @@ public class ContractEntity {
             String unit = "";
             if (data.contains(HttpConstant.ContractUnit.KG)){
                 unit = HttpConstant.ContractUnit.KG;
-            } else if (this.name.contains(HttpConstant.ContractUnit.T)) {
+            } else if (data.contains(HttpConstant.ContractUnit.T)) {
                 unit = HttpConstant.ContractUnit.T;
             }
 
             String[] a = data.split(unit);
             String spec = a[0];
             this.name = a[1];
+            LogZ.i("data = " + data + ", spec = " + spec + ", name = " + name);
             entity.setBaseNum(spec);
             entity.setBaseUnit(unit);
         }
         list.add(entity);
+    }
+
+    public boolean hasData() {
+        return list != null && !list.isEmpty();
     }
 
     public List<ContractInfoEntity> getData() {

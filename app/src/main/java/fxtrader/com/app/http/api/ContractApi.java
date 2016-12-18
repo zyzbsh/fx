@@ -34,6 +34,6 @@ public interface ContractApi {
 
     @FormUrlEncoded
     @POST("/api/storages")
-    Call<CommonResponse> setPosition(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
+    Call<CommonResponse> setProfitAndLoss(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
 
 }

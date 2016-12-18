@@ -35,6 +35,7 @@ public class ContractInfoEntity implements Serializable{
     private String unit;
     private String baseUnit = "";
     private String baseNum = "";
+    private String queryParam = "";
 
     public String getCode() {
         return code;
@@ -132,6 +133,14 @@ public class ContractInfoEntity implements Serializable{
         this.baseNum = baseNum;
     }
 
+    public String getQueryParam() {
+        return queryParam;
+    }
+
+    public void setQueryParam(String queryParam) {
+        this.queryParam = queryParam;
+    }
+
     @Override
     public String toString() {
         return "ContractInfoEntity{" +
@@ -147,6 +156,7 @@ public class ContractInfoEntity implements Serializable{
                 ", unit='" + unit + '\'' +
                 ", baseUnit='" + baseUnit + '\'' +
                 ", baseNum='" + baseNum + '\'' +
+                ", queryParam=" + queryParam +
                 '}';
     }
 }

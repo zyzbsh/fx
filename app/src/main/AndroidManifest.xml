@@ -27,6 +27,12 @@
             android:theme="@style/Theme.CustomDialog"></activity>
 
         <activity
+            android:name=".homepage.BuildPositionActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.CustomDialog"></activity>
+
+        <activity
             android:name=".homepage.OrderDetailActivity"
             android:screenOrientation="portrait"></activity>
 
@@ -91,6 +97,8 @@
         <activity
             android:name=".mine.RedEnvelopeActivity"
             android:screenOrientation="portrait" />
+
+        <service android:name=".service.PriceService"/>
 
     </application>
 

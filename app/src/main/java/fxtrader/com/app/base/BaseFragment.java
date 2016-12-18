@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import fxtrader.com.app.tools.UIUtil;
+import fxtrader.com.app.view.DefaultProgressDialog;
 
 /**
  * Created by zhangyuzhu on 2016/12/1.
  */
 public abstract class BaseFragment extends Fragment {
+
+    private DefaultProgressDialog mLoadingProgress;
 
     protected void openActivity(Class<?> clazz) {
         UIUtil.openActivity(getActivity(), clazz);
@@ -17,6 +20,19 @@ public abstract class BaseFragment extends Fragment {
     protected void openActivityForResult(Class<?> clazz, int requestCode) {
         Intent intent = new Intent(getActivity(), clazz);
         getActivity().startActivityForResult(intent, requestCode);
+    }
+
+    protected void showLoadingProgress(){
+        if (mLoadingProgress == null) {
+            mLoadingProgress = new DefaultProgressDialog(getContext());
+        }
+        mLoadingProgress.show();
+    }
+
+    protected void dismissLoadingProgress(){
+        if (mLoadingProgress != null && mLoadingProgress.isShowing()){
+            mLoadingProgress.dismiss();
+        }
     }
 
 }

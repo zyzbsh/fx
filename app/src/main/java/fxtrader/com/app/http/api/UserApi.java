@@ -3,8 +3,10 @@ package fxtrader.com.app.http.api;
 import java.util.Map;
 
 import fxtrader.com.app.entity.CommonResponse;
+import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.CurrencyListEntity;
 import fxtrader.com.app.entity.LoginResponseEntity;
+import fxtrader.com.app.entity.TicketListEntity;
 import fxtrader.com.app.entity.UserEntity;
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
@@ -34,8 +36,11 @@ public interface UserApi {
     Call<UserEntity> info(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 
     @GET("/api/coupons")
-    Call<CommonResponse> coupons(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+    Call<CouponListEntity> coupons(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 
     @GET("/api/currency/details")
     Call<CurrencyListEntity> currencyDetail(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/tickets")
+    Call<TicketListEntity> tickets(@QueryMap Map<String, String> params);
 }

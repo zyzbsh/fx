@@ -5,6 +5,8 @@ package fxtrader.com.app.http;
  */
 public final class HttpConstant {
 
+    public final static long REFRESH_TIME = 25000;
+
     public static class ContractUnit{
         public static final String KG = "kg";
         public static final String T = "t";
@@ -26,5 +28,10 @@ public final class HttpConstant {
         public static final String WITHDRAWALS_SUCCESS = "WITHDRAWALS_SUCCESS";
         /**提现失败**/
         public static final String WITHDRAWALS_FAIL = "WITHDRAWALS_FAIL";
+    }
+
+    public static class DealDirection{
+        public static final String UP = "UP";
+        public static final String DROP = "DROP";
     }
 }

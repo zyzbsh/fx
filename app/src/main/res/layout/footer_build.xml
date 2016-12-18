@@ -11,7 +11,7 @@
         android:layout_marginRight="@dimen/dialog_buy_padding"
         android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
-        android:text="@string/remind_buy"
+        android:text="@string/remind_build_position_dialog"
         android:textColor="@color/red_text"
         android:textSize="13sp" />
 
@@ -47,7 +47,7 @@
             android:layout_toLeftOf="@id/dialog_buy_plus_btn"
             android:layout_toRightOf="@id/dialog_buy_minus_btn"
             android:progressDrawable="@mipmap/seek_bar_progress"
-            android:thumb="@mipmap/seek_bar_thum" />
+            android:thumb="@mipmap/seek_bar_thumb" />
     </RelativeLayout>
 
     <RelativeLayout

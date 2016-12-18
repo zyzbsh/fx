@@ -3,6 +3,7 @@ package fxtrader.com.app.entity;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  * 实时行情
  * Created by zhangyuzhu on 2016/12/6.
  */
-public class MarketEntity extends CommonResponse{
+public class MarketEntity extends CommonResponse implements Serializable{
 
     private Data object;
 
@@ -32,8 +33,8 @@ public class MarketEntity extends CommonResponse{
         if (data == null) {
             data = new HashMap<>();
         }
-        data.put("AG", object.AG);
-        data.put("CU", object.CU);
+        data.put("YDOIL", object.YDOIL);
+        data.put("YDHF", object.YDHF);
     }
 
     public String getData(String type) {
@@ -83,14 +84,14 @@ public class MarketEntity extends CommonResponse{
     }
 
     static class Data {
-        String CU;
-        String AG;
+        String YDOIL;
+        String YDHF;
 
         @Override
         public String toString() {
             return "Data{" +
-                    "CU='" + CU + '\'' +
-                    ", AG='" + AG + '\'' +
+                    "YDOIL='" + YDOIL + '\'' +
+                    ", YDHF='" + YDHF + '\'' +
                     '}';
         }
     }

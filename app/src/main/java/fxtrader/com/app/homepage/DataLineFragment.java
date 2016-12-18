@@ -20,6 +20,7 @@ import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.ContractListEntity;
 import fxtrader.com.app.entity.MarketEntity;
+import fxtrader.com.app.entity.PriceEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.ContractApi;
@@ -99,7 +100,7 @@ public class DataLineFragment extends BaseFragment{
 
     private void initChartView(View view) {
         mChartView = (NewMAChartView) view.findViewById(R.id.view_new_machart);
-        mChartView.setContractName(mContractName);
+        mChartView.setContractType(mContractType);
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mChartView.getLayoutParams();
         int screenWidth = UIUtil.getScreenWidth(AppApplication.getInstance().getActivity());
         int pad = UIUtil.dip2px(getContext(), 35);
@@ -118,24 +119,16 @@ public class DataLineFragment extends BaseFragment{
     }
 
 
-    public void setPriceTvs(Activity activity, String data) {
-        LogZ.i(data);
+    public void setPriceTvs(Activity activity, PriceEntity priceEntity) {
         if (activity == null) {
             return;
         }
         try {
-            String[] a = data.split(",");
-            String latestPrice = a[0];
-            String openPrice = a[1];
-            String lastClosePrice = a[2];
-            String highestPrice = a[3];
-            String lowestPrice = a[4];
-            boolean isMarketOpen = Boolean.parseBoolean(a[5]);
-            mContractTv.setText(activity.getString(R.string.contract_price_num, mContractName, latestPrice));
-            mTodayOpenTv.setText(activity.getString(R.string.today_open_num, openPrice));
-            mYesterdayCloseTv.setText(activity.getString(R.string.yesterday_close_num, lastClosePrice));
-            mHighestTv.setText(activity.getString(R.string.highest_num, highestPrice));
-            mLowestTv.setText(activity.getString(R.string.lowest_num, lowestPrice));
+            mContractTv.setText(activity.getString(R.string.contract_price_num, mContractName, priceEntity.getLatestPrice()));
+            mTodayOpenTv.setText(activity.getString(R.string.today_open_num, priceEntity.getOpenPrice()));
+            mYesterdayCloseTv.setText(activity.getString(R.string.yesterday_close_num, priceEntity.getLastClosePrice()));
+            mHighestTv.setText(activity.getString(R.string.highest_num, priceEntity.getHighestPrice()));
+            mLowestTv.setText(activity.getString(R.string.lowest_num, priceEntity.getLowestPrice()));
         } catch(Exception e) {
             LogZ.e(e);
         }

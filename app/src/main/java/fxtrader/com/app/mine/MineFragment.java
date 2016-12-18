@@ -10,7 +10,7 @@ import java.util.Map;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseFragment;
-import fxtrader.com.app.entity.CommonResponse;
+import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.homepage.RedEnvelopListActivity;
 import fxtrader.com.app.http.ParamsUtil;
@@ -165,14 +165,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     private void getCouponNum(){
         UserApi userApi = RetrofitUtils.createApi(UserApi.class);
         String token = ParamsUtil.getToken();
-        Call<CommonResponse> respo = userApi.coupons(token, getCouponsParams());
-        respo.enqueue(new Callback<CommonResponse>() {
+        Call<CouponListEntity> respo = userApi.coupons(token, getCouponsParams());
+        respo.enqueue(new Callback<CouponListEntity>() {
             @Override
-            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+            public void onResponse(Call<CouponListEntity> call, Response<CouponListEntity> response) {
             }
 
             @Override
-            public void onFailure(Call<CommonResponse> call, Throwable t) {
+            public void onFailure(Call<CouponListEntity> call, Throwable t) {
 
             }
         });
