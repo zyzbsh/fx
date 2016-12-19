@@ -5,7 +5,7 @@ package fxtrader.com.app.http;
  */
 public final class HttpConstant {
 
-    public final static long REFRESH_TIME = 25000;
+    public final static long REFRESH_TIME = 10000;
 
     public static class ContractUnit{
         public static final String KG = "kg";

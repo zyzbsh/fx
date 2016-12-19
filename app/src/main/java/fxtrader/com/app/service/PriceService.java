@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PriceEntity;
 import fxtrader.com.app.http.HttpConstant;
@@ -107,8 +108,8 @@ public class PriceService extends Service {
      */
     protected void sendContentBroadcast(MarketEntity price) {
         Intent intent=new Intent();
-        intent.setAction("fxtrader.com.app.price");
-        intent.putExtra("price", price);
+        intent.setAction(IntentItem.ACTION_PRICE);
+        intent.putExtra(IntentItem.PRICE, price);
         sendBroadcast(intent);
     }
 }

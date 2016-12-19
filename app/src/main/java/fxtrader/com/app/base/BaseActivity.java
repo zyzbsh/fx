@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
@@ -82,6 +83,10 @@ public abstract class BaseActivity extends FragmentActivity {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+
+    protected int getCompactColor(int resId) {
+        return ContextCompat.getColor(this, resId);
     }
 
 

@@ -1,7 +1,10 @@
 package fxtrader.com.app.homepage;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -40,6 +43,7 @@ import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.login.LoginActivity;
+import fxtrader.com.app.service.PriceService;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.BuildPositionDialog;
@@ -243,7 +247,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 FragmentAdapter adapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), fragments);
                 mViewPager.setAdapter(adapter);
                 mViewPager.setOffscreenPageLimit(mContractList.size() - 1);
-                startDataTimer();
+//                startDataTimer();
+                registerPriceReceiver();
+                getActivity().startService(new Intent(getActivity(), PriceService.class));
             }
 
             @Override
@@ -259,67 +265,67 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }
-    private Timer dataTimer = null;
-    private TimerTask dataTimerTask = null;
+//    private Timer dataTimer = null;
+//    private TimerTask dataTimerTask = null;
+//
+//    private void startDataTimer() {
+//        Log.i("zyu", "startDataTimer");
+//        if (null != dataTimer || null != dataTimerTask) {
+//            stopDataTimer();
+//        }
+//        dataTimer = new Timer();
+//        dataTimerTask = new TimerTask() {
+//            @Override
+//            public void run() {
+//                getMarketPrice();
+//            }
+//        };
+//        dataTimer.schedule(dataTimerTask, 0, HttpConstant.REFRESH_TIME);
+//    }
 
-    private void startDataTimer() {
-        Log.i("zyu", "startDataTimer");
-        if (null != dataTimer || null != dataTimerTask) {
-            stopDataTimer();
-        }
-        dataTimer = new Timer();
-        dataTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                getMarketPrice();
-            }
-        };
-        dataTimer.schedule(dataTimerTask, 0, HttpConstant.REFRESH_TIME);
-    }
+//    private void getMarketPrice() {
+//        ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
+//        Call<MarketEntity> response = dataApi.rates(getMarketParams());
+//        response.enqueue(new Callback<MarketEntity>() {
+//            @Override
+//            public void onResponse(Call<MarketEntity> call, Response<MarketEntity> response) {
+//                MarketEntity vo = response.body();
+//                vo.init();
+//                if (mCurDataLineFragment != null) {
+//                    String dataType = mCurDataLineFragment.getDataType();
+//                    if (dataType.equals("YDCL")) {
+//                        dataType = "YDOIL";
+//                    }
+//                    String data = vo.getData(dataType);
+//                    PriceEntity price = new PriceEntity(data);
+//                    mLatestPrice = price.getLatestPrice();
+//                    mCurDataLineFragment.setPriceTvs(getActivity(), price);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<MarketEntity> call, Throwable t) {
+//            }
+//        });
+//    }
 
-    private void getMarketPrice() {
-        ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
-        Call<MarketEntity> response = dataApi.rates(getMarketParams());
-        response.enqueue(new Callback<MarketEntity>() {
-            @Override
-            public void onResponse(Call<MarketEntity> call, Response<MarketEntity> response) {
-                MarketEntity vo = response.body();
-                vo.init();
-                if (mCurDataLineFragment != null) {
-                    String dataType = mCurDataLineFragment.getDataType();
-                    if (dataType.equals("YDCL")) {
-                        dataType = "YDOIL";
-                    }
-                    String data = vo.getData(dataType);
-                    PriceEntity price = new PriceEntity(data);
-                    mLatestPrice = price.getLatestPrice();
-                    mCurDataLineFragment.setPriceTvs(getActivity(), price);
-                }
-            }
+//    private Map<String, String> getMarketParams() {
+//        final Map<String, String> params = ParamsUtil.getCommonParams();
+//        params.put("method", "gdiex.market.rates");
+//        params.put("sign", ParamsUtil.sign(params));
+//        return params;
+//    }
 
-            @Override
-            public void onFailure(Call<MarketEntity> call, Throwable t) {
-            }
-        });
-    }
-
-    private Map<String, String> getMarketParams() {
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.market.rates");
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
-    }
-
-    private void stopDataTimer() {
-        if (null != dataTimer) {
-            dataTimer.cancel();
-            dataTimer = null;
-        }
-        if (null != dataTimerTask) {
-            dataTimerTask.cancel();
-            dataTimerTask = null;
-        }
-    }
+//    private void stopDataTimer() {
+//        if (null != dataTimer) {
+//            dataTimer.cancel();
+//            dataTimer = null;
+//        }
+//        if (null != dataTimerTask) {
+//            dataTimerTask.cancel();
+//            dataTimerTask = null;
+//        }
+//    }
 
 
     private void showBuildPositionDialog() {
@@ -344,14 +350,20 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private void showBuyDialog(boolean up) {
         String dataType = mCurDataLineFragment.getDataType();
         ContractEntity entity = mContractMap.get(dataType);
-        BuildDialog dialog = new BuildDialog(getActivity(), mLatestPrice, entity, up);
-        dialog.show();
-        dialog.setBuildPositionListener(new BuildDialog.BuildPositionListener() {
-            @Override
-            public void buildPosition() {
-                showBuildPositionDialog();
-            }
-        });
+//        BuildDialog dialog = new BuildDialog(getActivity(), mLatestPrice, entity, up);
+//        dialog.show();
+//        dialog.setBuildPositionListener(new BuildDialog.BuildPositionListener() {
+//            @Override
+//            public void buildPosition() {
+//                showBuildPositionDialog();
+//            }
+//        });
+        Intent intent = new Intent(getActivity(), BuildPositionActivity.class);
+        intent.putExtra(IntentItem.PRICE, mLatestPrice);
+        intent.putExtra(IntentItem.CONTARCT_INFO, entity);
+        intent.putExtra(IntentItem.EXCEPTION, up);
+        intent.putExtra(IntentItem.DATA_TYPE, mCurDataLineFragment.getDataType());
+        startActivity(intent);
     }
 
     @Override
@@ -465,6 +477,33 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
             mCurDataLineFragment = (DataLineFragment) object;
+        }
+    }
+
+    private BroadcastReceiver mPriceReceiver;
+
+    private void registerPriceReceiver() {
+        mPriceReceiver = new PriceReceiver();
+        IntentFilter filter = new IntentFilter(IntentItem.ACTION_PRICE);
+        getActivity().registerReceiver(mPriceReceiver, filter);
+    }
+
+
+    class PriceReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MarketEntity vo = (MarketEntity) intent.getSerializableExtra(IntentItem.PRICE);
+            vo.init();
+                if (mCurDataLineFragment != null) {
+                    String dataType = mCurDataLineFragment.getDataType();
+                    if (dataType.equals("YDCL")) {
+                        dataType = "YDOIL";
+                    }
+                    String data = vo.getData(dataType);
+                    PriceEntity price = new PriceEntity(data);
+                    mLatestPrice = price.getLatestPrice();
+                    mCurDataLineFragment.setPriceTvs(getActivity(), price);
+                }
         }
     }
 

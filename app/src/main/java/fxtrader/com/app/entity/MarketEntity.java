@@ -83,7 +83,7 @@ public class MarketEntity extends CommonResponse implements Serializable{
         return isMarketOpen;
     }
 
-    static class Data {
+    static class Data implements Serializable{
         String YDOIL;
         String YDHF;
 

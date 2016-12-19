@@ -2,6 +2,7 @@ package fxtrader.com.app.entity;
 
 import android.text.TextUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import fxtrader.com.app.tools.LogZ;
 /**
  * Created by pc on 2016/12/13.
  */
-public class ContractEntity {
+public class ContractEntity implements Serializable{
 
     private String type = "";
     private String name = "";

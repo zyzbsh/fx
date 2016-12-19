@@ -5,8 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import fxtrader.com.app.R;
-
 /**
  * Created by zhangyuzhu on 2016/12/14.
  */
@@ -23,6 +21,6 @@ public class DefaultProgressDialog extends Dialog{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.progress_dialog);
+//        setContentView(R.layout.progress_dialog);
     }
 }
