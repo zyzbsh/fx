@@ -30,7 +30,7 @@
             android:name=".homepage.BuildPositionActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.CustomDialog"></activity>
+            android:theme="@style/Theme.BuildDialog"></activity>
 
         <activity
             android:name=".homepage.OrderDetailActivity"

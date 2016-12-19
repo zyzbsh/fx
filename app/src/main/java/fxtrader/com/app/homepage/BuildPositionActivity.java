@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,18 +29,23 @@ import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.FullyGridLayoutManager;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.db.helper.TicketsHelper;
+import fxtrader.com.app.db.helper.UserCouponsHelper;
+import fxtrader.com.app.entity.BuildPositionResponseEntity;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
+import fxtrader.com.app.entity.CouponDetailEntity;
+import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.MarketEntity;
+import fxtrader.com.app.entity.PositionEntity;
 import fxtrader.com.app.entity.PriceEntity;
+import fxtrader.com.app.entity.TicketEntity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.ContractApi;
-import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
-import fxtrader.com.app.view.DefaultProgressDialog;
 import fxtrader.com.app.view.ProfitAndLossView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,6 +70,8 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
     private ContractInfoEntity mCurContractInfo;
 
     private int mTicketId = 1;
+
+    private TextView mContractNameTv;
 
     private TextView mSpecificationTv;
 
@@ -110,6 +118,8 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         } else {
             return;
         }
+        List<CouponDetailEntity> coupons = UserCouponsHelper.getInstance().getData();
+        List<TicketEntity> tickets = TicketsHelper.getInstance().getData();
         initParams();
         initTitle();
         initContractInfo();
@@ -158,6 +168,8 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
             buyTv.setText(R.string.buy_down);
             buyTv.setBackgroundColor(getCompactColor(R.color.green));
         }
+        mContractNameTv = (TextView) findViewById(R.id.dialog_build_contract_name_tv);
+        mContractNameTv.setText(getString(R.string.build_position_contract_name, mContract.getName()));
     }
 
     private void initContractInfo() {
@@ -220,7 +232,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
     }
 
     private void setPriceLayout(String price) {
-        if (mCurContractInfo == null) {
+        if (mCurContractInfo == null || TextUtils.isEmpty(price)) {
             return;
         }
         mLatestPriceTv.setText(price);
@@ -395,17 +407,26 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 //        if (mDealCount > 0 && mTicketCount > 0) {
 //            return;
 //        }
+        showProgressDialog();
         ContractApi api = RetrofitUtils.createApi(ContractApi.class);
-        Call<CommonResponse> respon = api.buildPosition(ParamsUtil.getToken(), getBuildPositionParams());
-        respon.enqueue(new Callback<CommonResponse>() {
+        Call<BuildPositionResponseEntity> respon = api.buildPosition(ParamsUtil.getToken(), getBuildPositionParams());
+        respon.enqueue(new Callback<BuildPositionResponseEntity>() {
             @Override
-            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
-                setProfitAndLoss();
+            public void onResponse(Call<BuildPositionResponseEntity> call, Response<BuildPositionResponseEntity> response) {
+                BuildPositionResponseEntity entity = response.body();
+                if (entity.isSuccess()) {
+                    PositionEntity positionEntity = entity.getObject();
+                    setProfitAndLoss(positionEntity.getId());
+                } else {
+                    dismissProgressDialog();
+                    showToastLong(entity.getMessage());
+                }
             }
 
             @Override
-            public void onFailure(Call<CommonResponse> call, Throwable t) {
-
+            public void onFailure(Call<BuildPositionResponseEntity> call, Throwable t) {
+                showToastLong("建仓失败，请重试。");
+                dismissProgressDialog();
             }
         });
     }
@@ -428,28 +449,43 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         return params;
     }
 
-    private void setProfitAndLoss(){
+    private void setProfitAndLoss(String storageId){
         ContractApi api = RetrofitUtils.createApi(ContractApi.class);
-        Call<CommonResponse> respon = api.setProfitAndLoss(ParamsUtil.getToken(), getSetPositionParams());
+        final Call<CommonResponse> respon = api.setProfitAndLoss(ParamsUtil.getToken(), getSetProfitAndLossParams(storageId));
         respon.enqueue(new Callback<CommonResponse>() {
             @Override
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
-
+                CommonResponse common = response.body();
+                if (common.isSuccess()) {
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                showToastLong(common.getMessage());
+                dismissProgressDialog();
             }
 
             @Override
             public void onFailure(Call<CommonResponse> call, Throwable t) {
-
+                showToastLong("设置止盈止损失败");
+                dismissProgressDialog();
             }
         });
     }
 
-    private Map<String, String> getSetPositionParams() {
+    private Map<String, String> getSetProfitAndLossParams(String storageId) {
         final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.storage.open");
-        params.put("storageId", "");
-        params.put("profit", "");
-        params.put("loss", "");
+        params.put("method", "gdiex.storage.updatePL");
+        params.put("storageId", storageId);
+        params.put("profit", "0." + mStopProfitView.getPercent());
+        int stopLossPercent = mStopLossView.getPercent();
+        String stop = "";
+        if (stopLossPercent == 0) {
+            stop = "-1.0";
+        } else {
+            int stopLoss = 1 - stopLossPercent;
+            stop = "-0." + stopLoss;
+        }
+        params.put("loss", stop);
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

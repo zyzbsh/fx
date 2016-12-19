@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.tools.UIUtil;
@@ -68,6 +69,18 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected void openActivity(Class<?> clazz) {
         UIUtil.openActivity(this, clazz);
+    }
+
+    protected void showToastLong(String msg) {
+        showToast(msg, Toast.LENGTH_LONG);
+    }
+
+    protected void showToastShort(String msg) {
+        showToast(msg, Toast.LENGTH_SHORT);
+    }
+
+    protected void showToast(String msg, int duration) {
+        Toast.makeText(this, msg, duration).show();
     }
 
     protected void showProgressDialog(){

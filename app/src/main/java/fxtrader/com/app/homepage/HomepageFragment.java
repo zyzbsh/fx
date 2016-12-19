@@ -126,6 +126,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
         if (requestCode == REQUEST_LOGIN) {
             showBuyDialog(mExpect);
+        } else if (requestCode == IntentItem.REQUEST_BUILD_POSITION) {
+            //TODO 建仓成功
         }
     }
 
@@ -265,68 +267,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }
-//    private Timer dataTimer = null;
-//    private TimerTask dataTimerTask = null;
-//
-//    private void startDataTimer() {
-//        Log.i("zyu", "startDataTimer");
-//        if (null != dataTimer || null != dataTimerTask) {
-//            stopDataTimer();
-//        }
-//        dataTimer = new Timer();
-//        dataTimerTask = new TimerTask() {
-//            @Override
-//            public void run() {
-//                getMarketPrice();
-//            }
-//        };
-//        dataTimer.schedule(dataTimerTask, 0, HttpConstant.REFRESH_TIME);
-//    }
-
-//    private void getMarketPrice() {
-//        ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
-//        Call<MarketEntity> response = dataApi.rates(getMarketParams());
-//        response.enqueue(new Callback<MarketEntity>() {
-//            @Override
-//            public void onResponse(Call<MarketEntity> call, Response<MarketEntity> response) {
-//                MarketEntity vo = response.body();
-//                vo.init();
-//                if (mCurDataLineFragment != null) {
-//                    String dataType = mCurDataLineFragment.getDataType();
-//                    if (dataType.equals("YDCL")) {
-//                        dataType = "YDOIL";
-//                    }
-//                    String data = vo.getData(dataType);
-//                    PriceEntity price = new PriceEntity(data);
-//                    mLatestPrice = price.getLatestPrice();
-//                    mCurDataLineFragment.setPriceTvs(getActivity(), price);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<MarketEntity> call, Throwable t) {
-//            }
-//        });
-//    }
-
-//    private Map<String, String> getMarketParams() {
-//        final Map<String, String> params = ParamsUtil.getCommonParams();
-//        params.put("method", "gdiex.market.rates");
-//        params.put("sign", ParamsUtil.sign(params));
-//        return params;
-//    }
-
-//    private void stopDataTimer() {
-//        if (null != dataTimer) {
-//            dataTimer.cancel();
-//            dataTimer = null;
-//        }
-//        if (null != dataTimerTask) {
-//            dataTimerTask.cancel();
-//            dataTimerTask = null;
-//        }
-//    }
-
 
     private void showBuildPositionDialog() {
         BuildPositionDialog dialog = new BuildPositionDialog(getActivity());
@@ -363,7 +303,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         intent.putExtra(IntentItem.CONTARCT_INFO, entity);
         intent.putExtra(IntentItem.EXCEPTION, up);
         intent.putExtra(IntentItem.DATA_TYPE, mCurDataLineFragment.getDataType());
-        startActivity(intent);
+        startActivityForResult(intent, IntentItem.REQUEST_BUILD_POSITION);
     }
 
     @Override

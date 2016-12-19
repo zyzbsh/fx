@@ -22,6 +22,7 @@ import java.util.Map;
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.FullyGridLayoutManager;
+import fxtrader.com.app.entity.BuildPositionResponseEntity;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
@@ -357,15 +358,15 @@ public class BuildDialog extends Dialog implements View.OnClickListener{
             return;
         }
         ContractApi api = RetrofitUtils.createApi(ContractApi.class);
-        Call<CommonResponse> respon = api.buildPosition(ParamsUtil.getToken(), getBuildPositionParams());
-        respon.enqueue(new Callback<CommonResponse>() {
+        Call<BuildPositionResponseEntity> respon = api.buildPosition(ParamsUtil.getToken(), getBuildPositionParams());
+        respon.enqueue(new Callback<BuildPositionResponseEntity>() {
             @Override
-            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+            public void onResponse(Call<BuildPositionResponseEntity> call, Response<BuildPositionResponseEntity> response) {
                 setProfitAndLoss();
             }
 
             @Override
-            public void onFailure(Call<CommonResponse> call, Throwable t) {
+            public void onFailure(Call<BuildPositionResponseEntity> call, Throwable t) {
 
             }
         });

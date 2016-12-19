@@ -15,6 +15,9 @@ import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.db.UserCouponsColumn;
+import fxtrader.com.app.db.helper.TicketsHelper;
+import fxtrader.com.app.db.helper.UserCouponsHelper;
 import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.LoginResponseEntity;
 import fxtrader.com.app.entity.TicketListEntity;
@@ -151,6 +154,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onResponse(Call<TicketListEntity> call, Response<TicketListEntity> response) {
                 TicketListEntity entity = response.body();
+                TicketsHelper.getInstance().save(entity);
                 getUserCoupon();
             }
 
@@ -176,6 +180,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onResponse(Call<CouponListEntity> call, Response<CouponListEntity> response) {
                 CouponListEntity entity = response.body();
+                UserCouponsHelper.getInstance().save(entity);
                 setResult(RESULT_OK);
                 finish();
             }

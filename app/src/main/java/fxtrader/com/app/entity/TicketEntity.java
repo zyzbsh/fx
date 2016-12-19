@@ -1,5 +1,9 @@
 package fxtrader.com.app.entity;
 
+import android.text.TextUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,6 +42,34 @@ public class TicketEntity {
 
     public void setCanUseList(List<String> canUseList) {
         this.canUseList = canUseList;
+    }
+
+    public void setDataTypes(String dataTypes) {
+        String[] a = dataTypes.split(",");
+       this.canUseList = Arrays.asList(a);
+    }
+
+    public String getDataTypes() {
+        if (this.canUseList == null || this.canUseList.isEmpty()) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        int size = this.canUseList.size();
+        for (int i = 0; i < size; i++) {
+            builder.append(this.canUseList.get(i));
+            if (i != size - 1) {
+                builder.append(",");
+            }
+        }
+
+        return builder.toString();
+    }
+
+    public boolean containDataType(String type) {
+        if (this.canUseList == null || this.canUseList.isEmpty()) {
+            return false;
+        }
+        return this.canUseList.contains(type);
     }
 
     @Override
