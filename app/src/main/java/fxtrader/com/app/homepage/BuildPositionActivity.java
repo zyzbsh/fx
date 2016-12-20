@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -97,6 +98,10 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
     private ProfitAndLossView mStopLossView;
 
+    private CheckBox mCouponCb;
+
+    private TextView mCouponNumTv;
+
     private int mTicketCount = 0;
 
     private TextView mMarginTv;
@@ -104,6 +109,10 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
     private TextView mFeeTv;
 
     private String mLatestPrice;
+
+    private List<CouponDetailEntity> mCoupons;
+
+    private List<TicketEntity> mTickets;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,21 +127,22 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         } else {
             return;
         }
-        List<CouponDetailEntity> coupons = UserCouponsHelper.getInstance().getData();
-        List<TicketEntity> tickets = TicketsHelper.getInstance().getData();
+        mCoupons = UserCouponsHelper.getInstance().getData();
+        mTickets = TicketsHelper.getInstance().getData();
         initParams();
         initTitle();
         initContractInfo();
         initInfoRec();
         initSeekBar();
         initProfitAndLoss();
+        initCouponLayout();
         initMarginLayout();
         initOkTv();
 
         setContractInfoLayout(mCurContractInfo);
         setPriceLayout(mLatestPrice);
         setMarginLayout();
-
+        setCouponLayout();
     }
 
     @Override
@@ -217,6 +227,11 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 //        }
             }
         });
+    }
+
+    private void initCouponLayout() {
+        mCouponCb = (CheckBox) findViewById(R.id.build_position_coupon_cb);
+        mCouponNumTv = (TextView) findViewById(R.id.build_position_coupon_num_tv);
     }
 
     private void initMarginLayout() {
@@ -390,6 +405,14 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         String fee = String.valueOf(f);
         mMarginTv.setText(getString(R.string.deposit_num, margin));
         mFeeTv.setText(getString(R.string.fee_num, fee));
+    }
+
+    private void setCouponLayout(){
+        mCouponCb.setChecked(false);
+        mCouponCb.setClickable(false);
+        if (mCoupons != null) {
+            mCouponNumTv.setText(getString(R.string.num_remain, mCoupons.size()));
+        }
     }
 
     @Override
