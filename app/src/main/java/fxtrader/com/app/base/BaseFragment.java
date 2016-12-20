@@ -19,7 +19,7 @@ public abstract class BaseFragment extends Fragment {
 
     protected void openActivityForResult(Class<?> clazz, int requestCode) {
         Intent intent = new Intent(getActivity(), clazz);
-        getActivity().startActivityForResult(intent, requestCode);
+        startActivityForResult(intent, requestCode);
     }
 
     protected void showLoadingProgress(){

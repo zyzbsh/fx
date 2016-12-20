@@ -10,8 +10,6 @@ import java.util.List;
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.db.DBHelper;
 import fxtrader.com.app.db.TicketsColumn;
-import fxtrader.com.app.db.UserCouponsColumn;
-import fxtrader.com.app.entity.CouponDetailEntity;
 import fxtrader.com.app.entity.TicketEntity;
 import fxtrader.com.app.entity.TicketListEntity;
 
@@ -53,7 +51,7 @@ public class TicketsHelper extends ColumnHelper<TicketEntity>{
 
     public List<TicketEntity> getData() {
         List<TicketEntity> data = new ArrayList<>();
-        Cursor c = DBHelper.getInstance(mContext).rawQuery(TicketsColumn.TABLE_NAME, null);
+        Cursor c = DBHelper.getInstance(mContext).rawQuery("select * from " + TicketsColumn.TABLE_NAME, null);
         if (exist(c)) {
             c.moveToFirst();
             do {

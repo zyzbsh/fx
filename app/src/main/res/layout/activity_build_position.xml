@@ -325,7 +325,7 @@
             android:paddingRight="7dp">
 
             <CheckBox
-                android:id="@+id/dialog_buy_use_coupon_cb"
+                android:id="@+id/build_position_coupon_cb"
                 style="@style/BuyDialogTv"
                 android:button="@null"
                 android:gravity="center_vertical"
@@ -335,8 +335,9 @@
                 android:text="@string/use_coupon" />
 
             <TextView
+                android:id="@+id/build_position_coupon_num_tv"
                 style="@style/BuyDialogTv"
-                android:layout_alignBottom="@id/dialog_buy_use_coupon_cb"
+                android:layout_alignBottom="@id/build_position_coupon_cb"
                 android:layout_alignParentRight="true"
                 android:text="@string/num_remain"
 
@@ -345,7 +346,7 @@
             <TextView
                 android:id="@+id/dialog_buy_deposit_tv"
                 style="@style/BuyDialogTv"
-                android:layout_below="@id/dialog_buy_use_coupon_cb"
+                android:layout_below="@id/build_position_coupon_cb"
                 android:layout_marginTop="5dp"
                 android:text="@string/deposit_num" />
 

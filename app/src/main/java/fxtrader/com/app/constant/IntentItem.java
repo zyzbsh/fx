@@ -4,7 +4,8 @@ package fxtrader.com.app.constant;
  * Created by pc on 2016/11/17.
  */
 public final class IntentItem {
-    public static final int REQUEST_BUILD_POSITION = 10;
+    public static final int REQUEST_LOGIN = 100;
+    public static final int REQUEST_BUILD_POSITION = 101;
     public static final String LOGIN = "login";
     public static final String ACTION_PRICE = "fxtrader.com.app.price";
     public static final String PRICE = "price";

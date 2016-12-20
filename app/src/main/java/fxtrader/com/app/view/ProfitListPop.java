@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fxtrader.com.app.R;
+import fxtrader.com.app.adapter.ListBaseAdapter;
+import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.homepage.OrderDetailActivity;
 import fxtrader.com.app.homepage.PositionListActivity;
 
@@ -68,33 +70,31 @@ public class ProfitListPop extends PopupWindow {
 
     private void setRecView(View view) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.pop_profit_list_rec);
-        final CustomAdapter adapter = new CustomAdapter(mContext, getData());
+        final CustomAdapter adapter = new CustomAdapter(mContext);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new CustomAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, TestInfo data, int position) {
+            public void onItemClick(View view, PositionInfoEntity data, int position) {
                 Intent intent = new Intent(mContext, OrderDetailActivity.class);
                 mContext.startActivity(intent);
             }
         });
     }
 
-    static class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
-        private Context context;
-        private List<TestInfo> data;
+    static class CustomAdapter extends ListBaseAdapter<PositionInfoEntity> {
         private OnRecyclerViewItemClickListener mOnItemClickListener;
         private MyViewHolder holder;
         private int layoutPosition;
+        private Context context;
 
         public interface OnRecyclerViewItemClickListener {
-            void onItemClick(View view, TestInfo data, int position);
+            void onItemClick(View view, PositionInfoEntity data, int position);
         }
 
-        public CustomAdapter(Context context, List<TestInfo> data) {
+        public CustomAdapter(Context context) {
             this.context = context;
-            this.data = data;
         }
 
         public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
@@ -108,15 +108,10 @@ public class ProfitListPop extends PopupWindow {
             return holder;
         }
 
-        @Override
-
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
-            TestInfo info = data.get(position);
+            PositionInfoEntity info = mDataList.get(position);
             holder.profitTv.setText(info.getProfit());
-            String price = this.context.getString(R.string.buying_price_num, info.getPrice());
-            holder.priceTv.setText(price);
-            holder.numTv.setText(info.getNum());
-            holder.timeTv.setText(info.getTime());
+            holder.timeTv.setText(info.getSaleTimestamp());
             holder.itemView.setTag(info);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -124,7 +119,7 @@ public class ProfitListPop extends PopupWindow {
                     //获取当前点击的位置
                     layoutPosition = holder.getLayoutPosition();
                     notifyDataSetChanged();
-                    mOnItemClickListener.onItemClick(holder.itemView, (TestInfo) holder.itemView.getTag(), layoutPosition);
+                    mOnItemClickListener.onItemClick(holder.itemView, (PositionInfoEntity) holder.itemView.getTag(), layoutPosition);
                 }
             });
             holder.closePositionTv.setOnClickListener(new View.OnClickListener() {
@@ -135,15 +130,6 @@ public class ProfitListPop extends PopupWindow {
             });
         }
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public int getItemCount() {
-            return data.size();
-        }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
             private TextView profitTv;
@@ -162,68 +148,5 @@ public class ProfitListPop extends PopupWindow {
             }
         }
     }
-
-    private List<TestInfo> getData() {
-        List<TestInfo> data = new ArrayList<>();
-        TestInfo info1 = new TestInfo("+100.00", "1928.0", "0.1吨", "10手买涨");
-        TestInfo info2 = new TestInfo("+100.00", "1928.0", "0.1吨", "10手买涨");
-        TestInfo info3 = new TestInfo("+100.00", "1928.0", "0.1吨", "10手买涨");
-        TestInfo info4 = new TestInfo("+100.00", "1928.0", "0.1吨", "10手买涨");
-
-        data.add(info1);
-        data.add(info2);
-        data.add(info3);
-        data.add(info4);
-
-        return data;
-    }
-
-
-    private class TestInfo {
-        private String profit = "";
-        private String price = "";
-        private String num = "";
-        private String time = "";
-
-        public TestInfo(String profit, String price, String num, String time) {
-            this.profit = profit;
-            this.price = price;
-            this.num = num;
-            this.time = time;
-        }
-
-        public String getProfit() {
-            return profit;
-        }
-
-        public void setProfit(String profit) {
-            this.profit = profit;
-        }
-
-        public String getPrice() {
-            return price;
-        }
-
-        public void setPrice(String price) {
-            this.price = price;
-        }
-
-        public String getNum() {
-            return num;
-        }
-
-        public void setNum(String num) {
-            this.num = num;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
-    }
-
 
 }

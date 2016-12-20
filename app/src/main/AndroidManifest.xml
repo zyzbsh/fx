@@ -22,13 +22,11 @@
 
         <activity
             android:name=".login.LoginActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.CustomDialog"></activity>
 
         <activity
             android:name=".homepage.BuildPositionActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BuildDialog"></activity>
 

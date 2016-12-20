@@ -7,6 +7,10 @@ public final class HttpConstant {
 
     public final static long REFRESH_TIME = 10000;
 
+    public final static int REFRESH_POSITION_LIST = 10000;
+
+    public final static int REFRESH_USER_INFO = 10000;
+
     public static class ContractUnit{
         public static final String KG = "kg";
         public static final String T = "t";

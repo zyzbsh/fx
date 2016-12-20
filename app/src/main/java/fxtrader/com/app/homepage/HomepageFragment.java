@@ -11,12 +11,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -33,11 +30,14 @@ import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.db.helper.UserInfoHelper;
 import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.ContractListEntity;
 import fxtrader.com.app.entity.MarketEntity;
+import fxtrader.com.app.entity.PositionListEntity;
 import fxtrader.com.app.entity.PriceEntity;
+import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
@@ -47,7 +47,6 @@ import fxtrader.com.app.service.PriceService;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.BuildPositionDialog;
-import fxtrader.com.app.view.BuildDialog;
 import fxtrader.com.app.view.ProfitListPop;
 import fxtrader.com.app.view.ctr.MainTitleProfitCtr;
 import retrofit2.Call;
@@ -60,11 +59,13 @@ import retrofit2.Response;
  */
 public class HomepageFragment extends BaseFragment implements View.OnClickListener {
 
-    public static final int REQUEST_LOGIN = 10;
-
     private MainTitleProfitCtr mTitleProfitCtr;
 
+    private ProfitListPop mProfitListPop;
+
     private TextView mSystemBulletinContentTv;
+
+    private RelativeLayout mAccountInfoLayout;
 
     private TextView mBalanceAmountTv;
 
@@ -116,18 +117,31 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
+        if (isLogin()){
+            setAccountInfoLayout();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mPriceReceiver != null) {
+            getActivity().unregisterReceiver(mPriceReceiver);
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        LogZ.i("requestCode = " + requestCode + ", resultCode = " + resultCode);
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        if (requestCode == REQUEST_LOGIN) {
-            showBuyDialog(mExpect);
+        if (requestCode == IntentItem.REQUEST_LOGIN) {
+            startUserTimer();
+            openBuildPositionActivity(mExpect);
         } else if (requestCode == IntentItem.REQUEST_BUILD_POSITION) {
-            //TODO 建仓成功
+            startPositionTimer();
         }
     }
 
@@ -142,15 +156,32 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initTitleProfitLayout(View view) {
-        View v = view.findViewById(R.id.homepage_title_profit_layout);
+        final View v = view.findViewById(R.id.homepage_title_profit_layout);
         mTitleProfitCtr = new MainTitleProfitCtr(v);
+        mTitleProfitCtr.setProfitListListener(new MainTitleProfitCtr.ProfitListListener() {
+            @Override
+            public void showList() {
+                if (mProfitListPop == null) {
+                    mProfitListPop = new ProfitListPop(getContext());
+                    mProfitListPop.show(v);
+                }
+            }
+        });
     }
 
     private void initAccountInfoLayout(View view) {
+        mAccountInfoLayout = (RelativeLayout) view.findViewById(R.id.homepage_account_info_layout);
         mBalanceAmountTv = (TextView) view.findViewById(R.id.homepage_balance_amount_tv);
         mCashCouponTv = (TextView) view.findViewById(R.id.homepage_cash_coupon_tv);
         view.findViewById(R.id.homepage_recharge_tv).setOnClickListener(this);
         view.findViewById(R.id.homepage_withdraw_tv).setOnClickListener(this);
+    }
+
+    private void setAccountInfoLayout() {
+        UserEntity entity = UserInfoHelper.getInstance().getEntity(LoginConfig.getInstance().getAccount());
+        mAccountInfoLayout.setVisibility(View.VISIBLE);
+        mBalanceAmountTv.setText(String.valueOf(entity.getObject().getFunds()));
+        mCashCouponTv.setText(String.valueOf(entity.getObject().getCouponAmount()));
     }
 
     private void initSystemBulletinLayout(View view) {
@@ -268,36 +299,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         return params;
     }
 
-    private void showBuildPositionDialog() {
-        BuildPositionDialog dialog = new BuildPositionDialog(getActivity());
-        dialog.show();
-        dialog.setOkListener(new BuildPositionDialog.OkListener() {
-            @Override
-            public void ok() {
-                mTitleProfitCtr.setProfitListListener(new MainTitleProfitCtr.ProfitListListener() {
-                    @Override
-                    public void showList() {
-                        //TODO
-                        ProfitListPop pop = new ProfitListPop(getActivity());
-                        pop.show(mTitleProfitCtr.getProfitView());
-                    }
-                });
-                mTitleProfitCtr.show();
-            }
-        });
-    }
-
-    private void showBuyDialog(boolean up) {
+    private void openBuildPositionActivity(boolean up) {
         String dataType = mCurDataLineFragment.getDataType();
         ContractEntity entity = mContractMap.get(dataType);
-//        BuildDialog dialog = new BuildDialog(getActivity(), mLatestPrice, entity, up);
-//        dialog.show();
-//        dialog.setBuildPositionListener(new BuildDialog.BuildPositionListener() {
-//            @Override
-//            public void buildPosition() {
-//                showBuildPositionDialog();
-//            }
-//        });
         Intent intent = new Intent(getActivity(), BuildPositionActivity.class);
         intent.putExtra(IntentItem.PRICE, mLatestPrice);
         intent.putExtra(IntentItem.CONTARCT_INFO, entity);
@@ -355,10 +359,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private void expect(boolean raise) {
         mExpect = raise;
         if (isLogin()) {
-
-            showBuyDialog(raise);
+            openBuildPositionActivity(raise);
         } else {
-            openActivityForResult(LoginActivity.class, REQUEST_LOGIN);
+            openActivityForResult(LoginActivity.class, IntentItem.REQUEST_LOGIN);
         }
     }
 
@@ -445,6 +448,95 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                     mCurDataLineFragment.setPriceTvs(getActivity(), price);
                 }
         }
+    }
+
+    private Timer positionTimer = null;
+    private TimerTask positionTimerTask = null;
+
+    private void startPositionTimer() {
+        Log.i("zyu", "startDataTimer");
+        if (null != positionTimer || null != positionTimerTask) {
+            stopPositionTimer();
+        }
+        positionTimer = new Timer();
+        positionTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                getPositionList();
+            }
+        };
+        positionTimer.schedule(positionTimerTask, 0, HttpConstant.REFRESH_POSITION_LIST);
+    }
+
+    private void stopPositionTimer() {
+        if (null != positionTimer) {
+            positionTimer.cancel();
+            positionTimer = null;
+        }
+        if (null != positionTimerTask) {
+            positionTimerTask.cancel();
+            positionTimerTask = null;
+        }
+    }
+
+    private void getPositionList(){
+        ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
+        String token = ParamsUtil.getToken();
+        Call<PositionListEntity> respon = dataApi.positionList(token, getPositionListParams());
+        respon.enqueue(new Callback<PositionListEntity>() {
+            @Override
+            public void onResponse(Call<PositionListEntity> call, Response<PositionListEntity> response) {
+                PositionListEntity entity = response.body();
+//                mTitleProfitCtr
+            }
+
+            @Override
+            public void onFailure(Call<PositionListEntity> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String, String> getPositionListParams(){
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.storage.list");
+        params.put("sale", "false");
+        params.put("page", "0");
+        params.put("size", String.valueOf(Integer.MAX_VALUE));
+        params.put("sort", "buyingDate,DESC");
+        return params;
+    }
+
+    private Timer userTimer = null;
+    private TimerTask userTimerTask = null;
+
+    private void startUserTimer() {
+        if (null != userTimer || null != userTimerTask) {
+            stopUserTimer();
+        }
+        userTimer = new Timer();
+        userTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                getUserInfo();
+            }
+        };
+        userTimer.schedule(userTimerTask, 0, HttpConstant.REFRESH_USER_INFO);
+    }
+
+    private void stopUserTimer() {
+        if (null != userTimer) {
+            userTimer.cancel();
+            userTimer = null;
+        }
+        if (null != userTimerTask) {
+            userTimerTask.cancel();
+            userTimerTask = null;
+        }
+    }
+
+    private void getUserInfo(){
+
     }
 
 }

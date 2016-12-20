@@ -9,11 +9,9 @@ import java.util.List;
 
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.db.DBHelper;
-import fxtrader.com.app.db.TicketsColumn;
 import fxtrader.com.app.db.UserCouponsColumn;
 import fxtrader.com.app.entity.CouponDetailEntity;
 import fxtrader.com.app.entity.CouponListEntity;
-import fxtrader.com.app.entity.TicketEntity;
 
 /**
  * Created by pc on 2016/12/20.
@@ -41,7 +39,7 @@ public class UserCouponsHelper extends ColumnHelper<CouponDetailEntity>{
 
     public List<CouponDetailEntity> getData() {
         List<CouponDetailEntity> data = new ArrayList<>();
-        Cursor c = DBHelper.getInstance(mContext).rawQuery(UserCouponsColumn.TABLE_NAME, null);
+        Cursor c = DBHelper.getInstance(mContext).rawQuery("select * from " + UserCouponsColumn.TABLE_NAME, null);
         if (exist(c)) {
             c.moveToFirst();
             do {
@@ -59,13 +57,16 @@ public class UserCouponsHelper extends ColumnHelper<CouponDetailEntity>{
             int size = list.size();
             for (int i = 0; i < size; i++ ){
                 CouponDetailEntity bean = list.get(i);
-                DBHelper.getInstance(mContext).insert(TicketsColumn.TABLE_NAME, getValues(bean));
+                DBHelper.getInstance(mContext).insert(UserCouponsColumn.TABLE_NAME, getValues(bean));
             }
         }
     }
 
     public void delete() {
         DBHelper.getInstance(mContext).delete(UserCouponsColumn.TABLE_NAME, null, null);
+    }
+
+    public void delete(CouponDetailEntity entity) {
     }
 
 
