@@ -35,12 +35,14 @@ import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.ContractListEntity;
 import fxtrader.com.app.entity.MarketEntity;
+import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PositionListEntity;
 import fxtrader.com.app.entity.PriceEntity;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.UserInfoManager;
 import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.login.LoginActivity;
 import fxtrader.com.app.service.PriceService;
@@ -163,8 +165,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             public void showList() {
                 if (mProfitListPop == null) {
                     mProfitListPop = new ProfitListPop(getContext());
-                    mProfitListPop.show(v);
                 }
+                mProfitListPop.show(v);
             }
         });
     }
@@ -479,6 +481,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    private List<PositionInfoEntity> mPositionInfoList;
+
     private void getPositionList(){
         ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
         String token = ParamsUtil.getToken();
@@ -487,7 +491,16 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onResponse(Call<PositionListEntity> call, Response<PositionListEntity> response) {
                 PositionListEntity entity = response.body();
-//                mTitleProfitCtr
+                mPositionInfoList = entity.getObject().getContent();
+                if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
+                    mTitleProfitCtr.show();
+                    if (mProfitListPop == null) {
+                        mProfitListPop = new ProfitListPop(getContext());
+                    }
+                    mProfitListPop.addData(mPositionInfoList);
+                } else {
+                    mTitleProfitCtr.hide();
+                }
             }
 
             @Override
@@ -536,7 +549,19 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void getUserInfo(){
+        UserInfoManager.getInstance().get(new UserInfoManager.UserInfoListener() {
+            @Override
+            public void onSuccess(UserEntity user) {
+                mAccountInfoLayout.setVisibility(View.VISIBLE);
+                mBalanceAmountTv.setText(String.valueOf(user.getObject().getFunds()));
+                mCashCouponTv.setText(String.valueOf(user.getObject().getCouponAmount()));
+            }
 
+            @Override
+            public void onHttpFailure() {
+
+            }
+        });
     }
 
 }

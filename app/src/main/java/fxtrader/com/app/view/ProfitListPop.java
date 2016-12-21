@@ -28,7 +28,11 @@ import fxtrader.com.app.homepage.PositionListActivity;
  */
 public class ProfitListPop extends PopupWindow {
 
+    private static final int MAX_SHOW_COUNT = 4;
+
     private Context mContext;
+
+    private CustomAdapter mAdapter;
 
     public ProfitListPop(Context context) {
         super(context);
@@ -70,11 +74,11 @@ public class ProfitListPop extends PopupWindow {
 
     private void setRecView(View view) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.pop_profit_list_rec);
-        final CustomAdapter adapter = new CustomAdapter(mContext);
+        mAdapter = new CustomAdapter(mContext);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new CustomAdapter.OnRecyclerViewItemClickListener() {
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new CustomAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, PositionInfoEntity data, int position) {
                 Intent intent = new Intent(mContext, OrderDetailActivity.class);
@@ -82,6 +86,24 @@ public class ProfitListPop extends PopupWindow {
             }
         });
     }
+
+    public void addData(List<PositionInfoEntity> data) {
+        List<PositionInfoEntity> list = null;
+        int size = data.size();
+        if (size <= MAX_SHOW_COUNT) {
+            list = data;
+        } else {
+            for (int i = 0; i < MAX_SHOW_COUNT; i ++) {
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
+                list.add(data.get(i));
+            }
+        }
+        mAdapter.addAll(list);
+
+    }
+
 
     static class CustomAdapter extends ListBaseAdapter<PositionInfoEntity> {
         private OnRecyclerViewItemClickListener mOnItemClickListener;
