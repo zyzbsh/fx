@@ -31,6 +31,10 @@ public class MainTitleProfitCtr {
         return mProfitView;
     }
 
+    public boolean isProfitViewShow() {
+        return mProfitView.getVisibility() == View.VISIBLE;
+    }
+
     public void show() {
         mProfitView.setVisibility(View.VISIBLE);
     }

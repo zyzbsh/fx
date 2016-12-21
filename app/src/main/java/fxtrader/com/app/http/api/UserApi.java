@@ -43,4 +43,5 @@ public interface UserApi {
 
     @GET("/api/tickets")
     Call<TicketListEntity> tickets(@QueryMap Map<String, String> params);
+
 }

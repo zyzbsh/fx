@@ -30,8 +30,8 @@ public class ContractInfoEntity implements Serializable{
     private int margin;
     private String name;
     private double plRate;
-    private int plUnit;
-    private int specification;
+    private double plUnit;
+    private String specification;
     private String unit;
     private String baseUnit = "";
     private String baseNum = "";
@@ -93,19 +93,19 @@ public class ContractInfoEntity implements Serializable{
         this.plRate = plRate;
     }
 
-    public int getPlUnit() {
+    public double getPlUnit() {
         return plUnit;
     }
 
-    public void setPlUnit(int plUnit) {
+    public void setPlUnit(double plUnit) {
         this.plUnit = plUnit;
     }
 
-    public int getSpecification() {
+    public String getSpecification() {
         return specification;
     }
 
-    public void setSpecification(int specification) {
+    public void setSpecification(String specification) {
         this.specification = specification;
     }
 

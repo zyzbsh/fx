@@ -14,23 +14,40 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
+import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.PositionInfoEntity;
+import fxtrader.com.app.entity.PositionListEntity;
 import fxtrader.com.app.homepage.OrderDetailActivity;
 import fxtrader.com.app.homepage.PositionListActivity;
+import fxtrader.com.app.http.ParamsUtil;
+import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.api.ContractApi;
+import fxtrader.com.app.lrececlerview.interfaces.OnItemClickListener;
+import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
+import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
+import fxtrader.com.app.tools.LogZ;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by pc on 2016/11/20.
  */
 public class ProfitListPop extends PopupWindow {
 
-    private static final int MAX_SHOW_COUNT = 4;
+    public static final int MAX_SHOW_COUNT = 4;
 
     private Context mContext;
+
+    private TextView mRecordTv;
+
+    LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter;
 
     private CustomAdapter mAdapter;
 
@@ -60,7 +77,7 @@ public class ProfitListPop extends PopupWindow {
     }
 
     private void setShowTv(View view){
-        TextView recordTv = (TextView) view.findViewById(R.id.pop_profit_list_record_tv);
+        mRecordTv = (TextView) view.findViewById(R.id.pop_profit_list_record_tv);
         TextView moreTv = (TextView)view.findViewById(R.id.pop_profit_list_more_tv);
         moreTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,102 +90,160 @@ public class ProfitListPop extends PopupWindow {
 
 
     private void setRecView(View view) {
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.pop_profit_list_rec);
+        LRecyclerView recyclerView = (LRecyclerView) view.findViewById(R.id.pop_profit_list_rec);
         mAdapter = new CustomAdapter(mContext);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new CustomAdapter.OnRecyclerViewItemClickListener() {
+        mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(mContext, mAdapter);
+        recyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
+        mHeaderAndFooterRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(View view, PositionInfoEntity data, int position) {
+            public void onItemClick(View view, int position) {
                 Intent intent = new Intent(mContext, OrderDetailActivity.class);
                 mContext.startActivity(intent);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
             }
         });
     }
 
-    public void addData(List<PositionInfoEntity> data) {
-        List<PositionInfoEntity> list = null;
-        int size = data.size();
-        if (size <= MAX_SHOW_COUNT) {
-            list = data;
-        } else {
-            for (int i = 0; i < MAX_SHOW_COUNT; i ++) {
-                if (list == null) {
-                    list = new ArrayList<>();
-                }
-                list.add(data.get(i));
-            }
-        }
-        mAdapter.addAll(list);
-
+    public void addData(List<PositionInfoEntity> data, int size) {
+        mRecordTv.setText(mContext.getString(R.string.profit_list_num, String.valueOf(size)));
+        mAdapter.setDataList(data);
+        mAdapter.notifyDataSetChanged();
     }
 
 
-    static class CustomAdapter extends ListBaseAdapter<PositionInfoEntity> {
-        private OnRecyclerViewItemClickListener mOnItemClickListener;
-        private MyViewHolder holder;
+    class CustomAdapter extends ListBaseAdapter<PositionInfoEntity> {
+        private ViewHolder holder;
         private int layoutPosition;
         private Context context;
-
-        public interface OnRecyclerViewItemClickListener {
-            void onItemClick(View view, PositionInfoEntity data, int position);
-        }
 
         public CustomAdapter(Context context) {
             this.context = context;
         }
 
-        public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
-            this.mOnItemClickListener = listener;
-        }
-
         @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(context).inflate(R.layout.item_pop_profit_list, parent, false);
-            holder = new MyViewHolder(itemView);
+            holder = new ViewHolder(itemView);
             return holder;
         }
 
-        public void onBindViewHolder(final MyViewHolder holder, final int position) {
-            PositionInfoEntity info = mDataList.get(position);
-            holder.profitTv.setText(info.getProfit());
-            holder.timeTv.setText(info.getSaleTimestamp());
-            holder.itemView.setTag(info);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //获取当前点击的位置
-                    layoutPosition = holder.getLayoutPosition();
-                    notifyDataSetChanged();
-                    mOnItemClickListener.onItemClick(holder.itemView, (PositionInfoEntity) holder.itemView.getTag(), layoutPosition);
-                }
-            });
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+            final PositionInfoEntity info = mDataList.get(position);
+            LogZ.i(info.toString());
+            ViewHolder holder = (ViewHolder) viewHolder;
+            ProfitInfo profitInfo = getPrifit(info);
+            if (profitInfo.isProfit){
+                holder.profitTv.setTextColor(Color.parseColor("#e83743"));
+            } else {
+                holder.profitTv.setTextColor(Color.parseColor("#09cd29"));
+            }
+            holder.profitTv.setText(profitInfo.floatProfit);
+            holder.stopProfitTv.setText(info.getProfit() * 10 + "%");
+            holder.buyPriceTv.setText("买入价:" + String.valueOf(info.getBuyingRate()));
+            holder.specificationTv.setText(info.getSpecification());
+            holder.dealCountTv.setText(String.valueOf(info.getDealCount()) + " 手");
+            String dealDirection = "";
+            if ("UP".equals(info.getDealDirection())) {
+                dealDirection = "买涨";
+            } else {
+                dealDirection = "买跌";
+            }
+            holder.dealDirectionTv.setText(dealDirection);
+
+            final String id = info.getId();
             holder.closePositionTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO平仓
+                    closePosition(id);
                 }
             });
         }
 
+        private ProfitInfo getPrifit(PositionInfoEntity entity) {
+            ProfitInfo info = new ProfitInfo();
+            double rate = entity.getPlRate();
+            double unit = entity.getPlUnit();
+            double buyPrice = entity.getBuyingRate();
+            double latestPrice = Double.valueOf(entity.getLatestPrice());
+            double diff = latestPrice - buyPrice;
+            if ("UP".equals(entity.getDealDirection())) { //买涨
+                info.isProfit = (diff > 0) ? true : false;
+            } else {
+                info.isProfit = (diff > 0) ? false : true;
+            }
+            double result = diff * rate * unit;
+            BigDecimal big = new BigDecimal(result);
+            double num = big.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+            if (info.isProfit && (num < 0)) {
+                double d = 0 - num;
+                info.floatProfit = String.valueOf(d);
+            } else if (!info.isProfit && (num > 0)) {
 
-        class MyViewHolder extends RecyclerView.ViewHolder {
+            }
+            info.floatProfit = String.valueOf(num);
+            return info;
+        }
+
+        private void closePosition(String id) {
+            ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
+            String token = ParamsUtil.getToken();
+            Call<CommonResponse> respon = dataApi.closePosition(token, getClosePositionParams(id));
+            respon.enqueue(new Callback<CommonResponse>() {
+                @Override
+                public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+                    CommonResponse common = response.body();
+                }
+
+                @Override
+                public void onFailure(Call<CommonResponse> call, Throwable t) {
+
+                }
+            });
+        }
+
+        private Map<String, String> getClosePositionParams(String id) {
+            final Map<String, String> params = ParamsUtil.getCommonParams();
+            params.put("method", "gdiex.storage.close");
+            params.put("storageId", id);
+            params.put("sign", ParamsUtil.sign(params));
+            return params;
+        }
+
+
+
+
+        class ViewHolder extends RecyclerView.ViewHolder {
             private TextView profitTv;
-            private TextView priceTv;
-            private TextView numTv;
-            private TextView timeTv;
+            private TextView stopProfitTv;
+            private TextView buyPriceTv;
+            private TextView specificationTv;
+            private TextView dealCountTv;
             private TextView closePositionTv;
+            private TextView dealDirectionTv;
 
-            public MyViewHolder(View itemView) {
+            public ViewHolder(View itemView) {
                 super(itemView);
                 profitTv = (TextView) itemView.findViewById(R.id.item_pop_profit_list_profit_tv);
-                priceTv = (TextView) itemView.findViewById(R.id.item_pop_profit_list_price_tv);
-                numTv = (TextView) itemView.findViewById(R.id.item_pop_profit_list_num_tv);
-                timeTv = (TextView) itemView.findViewById(R.id.item_pop_profit_list_time_tv);
+                stopProfitTv = (TextView) itemView.findViewById(R.id.item_pop_profit_list_stop_profit_tv);
+                buyPriceTv = (TextView) itemView.findViewById(R.id.item_pop_profit_list_buy_price_tv);
+                specificationTv = (TextView) itemView.findViewById(R.id.item_pop_profit_list_specification_tv);
+                dealCountTv = (TextView) itemView.findViewById(R.id.item_pop_profit_list_deal_count_tv);
+                dealDirectionTv = (TextView) itemView.findViewById(R.id.item_pop_profit_list_deal_direction_tv);
                 closePositionTv = (TextView) itemView.findViewById(R.id.item_pop_profit_list_close_position_tv);
             }
         }
+    }
+
+    class ProfitInfo {
+        boolean isProfit;
+        String floatProfit;
     }
 
 }

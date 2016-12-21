@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#959292"
+    android:background="@color/transparent"
     android:paddingTop="3dp"
     android:paddingLeft="2dp"
     android:paddingRight="2dp"
@@ -13,13 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/shape_profit_list_bg"
+        android:background="@color/transparent"
         android:padding="10.8dp">
 
-        <android.support.v7.widget.RecyclerView
+        <fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView
             android:id="@+id/pop_profit_list_rec"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"></fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView>
 
         <RelativeLayout
             android:layout_width="match_parent"

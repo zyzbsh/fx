@@ -31,9 +31,8 @@ public interface ContractApi {
     @POST("/api/storages")
     Call<BuildPositionResponseEntity> buildPosition(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
 
-    @FormUrlEncoded
-    @POST("/api/storages")
-    Call<CommonResponse> closePosition(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
+    @PUT("/api/storages")
+    Call<CommonResponse> closePosition(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 
     @PUT("/api/storages")
     Call<CommonResponse> setProfitAndLoss(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);

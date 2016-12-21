@@ -19,7 +19,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +122,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
         if (isLogin()){
-            setAccountInfoLayout();
+            startUserTimer();
         }
     }
 
@@ -236,6 +238,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private LinkedHashMap<String, ContractEntity> mContractMap;
 
+    private Map<String, ContractInfoEntity> mContractInfoMap = new HashMap<>();
+
     /**
      * 获取合约列表
      */
@@ -266,6 +270,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                         contract.add(info);
                         mContractMap.put(dataType, contract);
                     }
+                    mContractInfoMap.put(info.getCode(), info);
                 }
 
 
@@ -439,16 +444,23 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         public void onReceive(Context context, Intent intent) {
             MarketEntity vo = (MarketEntity) intent.getSerializableExtra(IntentItem.PRICE);
             vo.init();
-                if (mCurDataLineFragment != null) {
-                    String dataType = mCurDataLineFragment.getDataType();
-                    if (dataType.equals("YDCL")) {
-                        dataType = "YDOIL";
-                    }
-                    String data = vo.getData(dataType);
-                    PriceEntity price = new PriceEntity(data);
-                    mLatestPrice = price.getLatestPrice();
-                    mCurDataLineFragment.setPriceTvs(getActivity(), price);
+            if (mCurDataLineFragment != null) {
+                String dataType = mCurDataLineFragment.getDataType();
+                if (dataType.equals("YDCL")) {
+                    dataType = "YDOIL";
                 }
+                String data = vo.getData(dataType);
+                PriceEntity price = new PriceEntity(data);
+                mLatestPrice = price.getLatestPrice();
+                mCurDataLineFragment.setPriceTvs(getActivity(), price);
+
+            }
+            if (mTitleProfitCtr.isProfitViewShow()) {
+                List<PositionInfoEntity> list = getPopProfitList(vo, mPositionInfoList);
+                if (mProfitListPop != null) {
+                    mProfitListPop.addData(list, mPositionInfoList.size());
+                }
+            }
         }
     }
 
@@ -497,7 +509,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                     if (mProfitListPop == null) {
                         mProfitListPop = new ProfitListPop(getContext());
                     }
-                    mProfitListPop.addData(mPositionInfoList);
                 } else {
                     mTitleProfitCtr.hide();
                 }
@@ -510,6 +521,57 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         });
     }
 
+    private List<PositionInfoEntity> getPopProfitList(MarketEntity vo, List<PositionInfoEntity> data) {
+
+        double profit = 0;
+        int size = data.size();
+        for (int i = 0; i < size; i++) {
+            PositionInfoEntity positionInfoEntity = data.get(i);
+            String code = positionInfoEntity.getContractCode();
+            if (code.equals("YDCL")) {
+                code = "YDOIL";
+            }
+            String type = vo.getData(code);
+            PriceEntity price = new PriceEntity(type);
+            double latestPrice = Double.parseDouble(price.getLatestPrice());
+            positionInfoEntity.setLatestPrice(latestPrice);
+
+            ContractInfoEntity contractInfoEntity = mContractInfoMap.get(code);
+            positionInfoEntity.setPlRate(contractInfoEntity.getPlRate());
+            positionInfoEntity.setPlUnit(contractInfoEntity.getPlUnit());
+            String specification = "";
+            if (contractInfoEntity.getName().contains("kg")) {
+                specification = contractInfoEntity.getSpecification() + "kg";
+            } else {
+                specification = contractInfoEntity.getSpecification() + "t";
+            }
+            positionInfoEntity.setSpecification(specification);
+            profit = profit + getProfit(positionInfoEntity);
+        }
+        BigDecimal big = new BigDecimal(profit);
+        double sum = big.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+        mTitleProfitCtr.setProfit(String.valueOf(sum));
+
+        List<PositionInfoEntity> list = new ArrayList<>();
+        int count = size <= ProfitListPop.MAX_SHOW_COUNT ? size : ProfitListPop.MAX_SHOW_COUNT;
+        for (int i = 0; i < count; i++) {
+            PositionInfoEntity positionInfoEntity = data.get(i);
+            list.add(positionInfoEntity);
+        }
+        LogZ.i(list.toString());
+        return list;
+    }
+
+    private double getProfit(PositionInfoEntity entity) {
+        double rate = entity.getPlRate();
+        double unit = entity.getPlUnit();
+        double buyPrice = entity.getBuyingRate();
+        double latestPrice = Double.valueOf(entity.getLatestPrice());
+        double diff = latestPrice - buyPrice;
+        double result = diff * rate * unit;
+        return result;
+    }
+
     private Map<String, String> getPositionListParams(){
         final Map<String, String> params = ParamsUtil.getCommonParams();
         params.put("method", "gdiex.storage.list");
@@ -517,6 +579,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         params.put("page", "0");
         params.put("size", String.valueOf(Integer.MAX_VALUE));
         params.put("sort", "buyingDate,DESC");
+        params.put("sign", ParamsUtil.sign(params));
         return params;
     }
 

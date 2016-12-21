@@ -1,9 +1,11 @@
 package fxtrader.com.app.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by pc on 2016/12/21.
  */
-public class PositionInfoEntity {
+public class PositionInfoEntity implements Serializable{
     /**
      * autoSale : false
      * buyingDate : 1477561516000
@@ -37,7 +39,7 @@ public class PositionInfoEntity {
 
     private boolean autoSale;
     private long buyingDate;
-    private int buyingRate;
+    private double buyingRate;
     private int consumeAmount;
     private String contractCode;
     private int customerId;
@@ -64,6 +66,12 @@ public class PositionInfoEntity {
     private int usedTicketId;
     private int usedTicketValueAmount;
 
+    private double plRate;
+    private double plUnit;
+    private String specification;
+    private double latestPrice;
+
+
     public boolean isAutoSale() {
         return autoSale;
     }
@@ -80,7 +88,7 @@ public class PositionInfoEntity {
         this.buyingDate = buyingDate;
     }
 
-    public int getBuyingRate() {
+    public double getBuyingRate() {
         return buyingRate;
     }
 
@@ -286,5 +294,79 @@ public class PositionInfoEntity {
 
     public void setUsedTicketValueAmount(int usedTicketValueAmount) {
         this.usedTicketValueAmount = usedTicketValueAmount;
+    }
+
+    public double getPlRate() {
+        return plRate;
+    }
+
+    public void setPlRate(double plRate) {
+        this.plRate = plRate;
+    }
+
+    public double getPlUnit() {
+        return plUnit;
+    }
+
+    public void setPlUnit(double plUnit) {
+        this.plUnit = plUnit;
+    }
+
+    public void setBuyingRate(double buyingRate) {
+        this.buyingRate = buyingRate;
+    }
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
+
+    public double getLatestPrice() {
+        return latestPrice;
+    }
+
+    public void setLatestPrice(double latestPrice) {
+        this.latestPrice = latestPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "PositionInfoEntity{" +
+                "autoSale=" + autoSale +
+                ", buyingDate=" + buyingDate +
+                ", buyingRate=" + buyingRate +
+                ", consumeAmount=" + consumeAmount +
+                ", contractCode='" + contractCode + '\'' +
+                ", customerId=" + customerId +
+                ", dealCount=" + dealCount +
+                ", dealDirection='" + dealDirection + '\'' +
+                ", divideStatus='" + divideStatus + '\'' +
+                ", exception=" + exception +
+                ", handingChargeAmount=" + handingChargeAmount +
+                ", id='" + id + '\'' +
+                ", loss=" + loss +
+                ", memberCode='" + memberCode + '\'' +
+                ", payAmount=" + payAmount +
+                ", profit=" + profit +
+                ", profitAndLoss=" + profitAndLoss +
+                ", rollBackStatus='" + rollBackStatus + '\'' +
+                ", sale=" + sale +
+                ", saleTimestamp=" + saleTimestamp +
+                ", sellingDate=" + sellingDate +
+                ", sellingIncome=" + sellingIncome +
+                ", sellingRate=" + sellingRate +
+                ", sellingType='" + sellingType + '\'' +
+                ", usedTicket=" + usedTicket +
+                ", usedTicketCount=" + usedTicketCount +
+                ", usedTicketId=" + usedTicketId +
+                ", usedTicketValueAmount=" + usedTicketValueAmount +
+                ", plRate=" + plRate +
+                ", plUnit=" + plUnit +
+                ", specification='" + specification + '\'' +
+                ", latestPrice=" + latestPrice +
+                '}';
     }
 }
