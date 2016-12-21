@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class UserCouponsColumn extends DatabaseColumn{
 
-    public static final String TABLE_NAME = "tickets";
+    public static final String TABLE_NAME = "coupons";
     public static final String ID = "id";
     public static final String TICKET_ID = "ticket_id";
     public static final String LAST_TIME = "last_time";

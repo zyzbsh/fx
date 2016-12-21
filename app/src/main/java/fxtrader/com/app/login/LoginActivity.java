@@ -2,6 +2,8 @@ package fxtrader.com.app.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,11 +20,14 @@ import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.db.UserCouponsColumn;
 import fxtrader.com.app.db.helper.TicketsHelper;
 import fxtrader.com.app.db.helper.UserCouponsHelper;
+import fxtrader.com.app.db.helper.UserInfoHelper;
 import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.LoginResponseEntity;
 import fxtrader.com.app.entity.TicketListEntity;
+import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.UserInfoManager;
 import fxtrader.com.app.http.api.UserApi;
 import fxtrader.com.app.tools.Base64;
 import fxtrader.com.app.tools.EncryptionTool;
@@ -41,6 +46,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private EditText mPwdEdt;
 
     private TextView mRegisterTipTv;
+
+    private int mRequest = 0;
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            mRequest--;
+            if (mRequest == 0) {
+                setResult(RESULT_OK);
+                finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,12 +126,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         try {
             UserApi userApi = RetrofitUtils.createApi(UserApi.class);
             Call<LoginResponseEntity> repos = userApi.login(getParams(account, pwd));
+            mRequest++;
             repos.enqueue(new Callback<LoginResponseEntity>() {
                 @Override
                 public void onResponse(Call<LoginResponseEntity> call, Response<LoginResponseEntity> response) {
+                    mHandler.sendEmptyMessage(0);
                     LoginResponseEntity entity = response.body();
                     LoginConfig.getInstance().saveUser(account, entity.getAccess_token());
                     getTickets();
+//                    getUserInfo();
                 }
 
                 @Override
@@ -125,6 +146,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         }
 
+    }
+
+    private void getUserInfo(){
+        mRequest++;
+        UserInfoManager.getInstance().get(new UserInfoManager.UserInfoListener() {
+            @Override
+            public void onSuccess(UserEntity user) {
+                mHandler.sendEmptyMessage(0);
+            }
+
+            @Override
+            public void onHttpFailure() {
+                mHandler.sendEmptyMessage(0);
+            }
+        });
     }
 
     private void forgetPwd() {
@@ -150,9 +186,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void getTickets() {
         UserApi userApi = RetrofitUtils.createApi(UserApi.class);
         Call<TicketListEntity> repos = userApi.tickets(getTicketsParams());
+        mRequest++;
         repos.enqueue(new Callback<TicketListEntity>() {
             @Override
             public void onResponse(Call<TicketListEntity> call, Response<TicketListEntity> response) {
+                mHandler.sendEmptyMessage(0);
                 TicketListEntity entity = response.body();
                 TicketsHelper.getInstance().save(entity);
                 getUserCoupon();
@@ -161,6 +199,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onFailure(Call<TicketListEntity> call, Throwable t) {
                 Log.e("zyu", t.getMessage());
+                mHandler.sendEmptyMessage(0);
             }
         });
     }
@@ -176,18 +215,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         UserApi userApi = RetrofitUtils.createApi(UserApi.class);
         String token = ParamsUtil.getToken();
         Call<CouponListEntity> repos = userApi.coupons(token, getCouponParams());
+        mRequest++;
         repos.enqueue(new Callback<CouponListEntity>() {
             @Override
             public void onResponse(Call<CouponListEntity> call, Response<CouponListEntity> response) {
                 CouponListEntity entity = response.body();
                 UserCouponsHelper.getInstance().save(entity);
-                setResult(RESULT_OK);
-                finish();
+                mHandler.sendEmptyMessage(0);
             }
 
             @Override
             public void onFailure(Call<CouponListEntity> call, Throwable t) {
                 Log.e("zyu", t.getMessage());
+                mHandler.sendEmptyMessage(0);
             }
         });
     }

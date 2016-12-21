@@ -5,10 +5,11 @@ package fxtrader.com.app.entity;
  */
 public class UserEntity {
 
+
     /**
      * code : 200
      * message : ??
-     * object : {"account":"oMtyLv6T1SuCYFSrqxUNXrwPH5GQ","agent":false,"agentId":0,"headimgurl":"http:wwcwadsvQnVIh0RdsicD98qC8UChG0BMgEicnVbLSdD1s/0","id":121,"memberCode":"HT","memberId":19,"nickname":"左","organId":2,"referrerId":1,"registerDate":1477645795000,"sex":2,"shareId":0,"telNumber":"13668902xxx","wxOpenId":"oMtyLv6T1SuCYFSrqxUNXrwPH5GQ"}
+     * object : {"account":"oMtyLv6T1SuCYFSrqxUNXrwPH5GQ","agent":false,"agentId":0,"headimgurl":"http:wwcwadsvQnVIh0RdsicD98qC8UChG0BMgEicnVbLSdD1s/0","id":121,"memberCode":"HT","memberId":19,"nickname":"?","organId":2,"referrerId":1,"registerDate":1477645795000,"sex":2,"shareId":0,"telNumber":"13668902xxx","wxOpenId":"oMtyLv6T1SuCYFSrqxUNXrwPH5GQ","funds":100,"couponAmount":4}
      * success : true
      */
 
@@ -49,16 +50,6 @@ public class UserEntity {
         this.success = success;
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + "UserEntity{" +
-                "code=" + code +
-                ", message='" + message + '\'' +
-                ", object=" + object +
-                ", success=" + success +
-                '}';
-    }
-
     public static class ObjectBean {
         /**
          * account : oMtyLv6T1SuCYFSrqxUNXrwPH5GQ
@@ -68,7 +59,7 @@ public class UserEntity {
          * id : 121
          * memberCode : HT
          * memberId : 19
-         * nickname : 左
+         * nickname : ?
          * organId : 2
          * referrerId : 1
          * registerDate : 1477645795000
@@ -76,12 +67,13 @@ public class UserEntity {
          * shareId : 0
          * telNumber : 13668902xxx
          * wxOpenId : oMtyLv6T1SuCYFSrqxUNXrwPH5GQ
+         * funds : 100.0
+         * couponAmount : 4
          */
 
         private String account;
         private boolean agent;
         private int agentId;
-        private long founds;
         private String headimgurl;
         private int id;
         private String memberCode;
@@ -94,6 +86,8 @@ public class UserEntity {
         private int shareId;
         private String telNumber;
         private String wxOpenId;
+        private double funds;
+        private int couponAmount;
 
         public String getAccount() {
             return account;
@@ -117,14 +111,6 @@ public class UserEntity {
 
         public void setAgentId(int agentId) {
             this.agentId = agentId;
-        }
-
-        public long getFounds() {
-            return founds;
-        }
-
-        public void setFounds(long founds) {
-            this.founds = founds;
         }
 
         public String getHeadimgurl() {
@@ -223,26 +209,20 @@ public class UserEntity {
             this.wxOpenId = wxOpenId;
         }
 
-        @Override
-        public String toString() {
-            return "ObjectBean{" +
-                    "account='" + account + '\'' +
-                    ", agent=" + agent +
-                    ", agentId=" + agentId +
-                    ", founds=" + founds +
-                    ", headimgurl='" + headimgurl + '\'' +
-                    ", id=" + id +
-                    ", memberCode='" + memberCode + '\'' +
-                    ", memberId=" + memberId +
-                    ", nickname='" + nickname + '\'' +
-                    ", organId=" + organId +
-                    ", referrerId=" + referrerId +
-                    ", registerDate=" + registerDate +
-                    ", sex=" + sex +
-                    ", shareId=" + shareId +
-                    ", telNumber='" + telNumber + '\'' +
-                    ", wxOpenId='" + wxOpenId + '\'' +
-                    '}';
+        public double getFunds() {
+            return funds;
+        }
+
+        public void setFunds(double funds) {
+            this.funds = funds;
+        }
+
+        public int getCouponAmount() {
+            return couponAmount;
+        }
+
+        public void setCouponAmount(int couponAmount) {
+            this.couponAmount = couponAmount;
         }
     }
 }

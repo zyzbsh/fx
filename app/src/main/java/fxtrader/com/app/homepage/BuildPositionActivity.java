@@ -19,15 +19,14 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
-import fxtrader.com.app.adapter.FullyGridLayoutManager;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.db.helper.TicketsHelper;
@@ -37,7 +36,6 @@ import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.CouponDetailEntity;
-import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PositionEntity;
 import fxtrader.com.app.entity.PriceEntity;
@@ -46,6 +44,7 @@ import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.ContractApi;
+import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.ProfitAndLossView;
 import retrofit2.Call;
@@ -98,21 +97,23 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
     private ProfitAndLossView mStopLossView;
 
+    private int mTicketCount = 0;
+
     private CheckBox mCouponCb;
 
     private TextView mCouponNumTv;
 
-    private int mTicketCount = 0;
+    private List<CouponDetailEntity> mCoupons;
+
+    private List<TicketEntity> mTickets;
+
+    private List<CouponDetailEntity> mValidCoupons;
 
     private TextView mMarginTv;
 
     private TextView mFeeTv;
 
     private String mLatestPrice;
-
-    private List<CouponDetailEntity> mCoupons;
-
-    private List<TicketEntity> mTickets;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +122,10 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         mLatestPrice = getIntent().getStringExtra(IntentItem.PRICE);
         mIsUp = getIntent().getBooleanExtra(IntentItem.EXCEPTION, false);
         mDataType = getIntent().getStringExtra(IntentItem.DATA_TYPE);
+        if (mDataType.equals("YDCL")) {
+            mDataType = "YDOIL";
+        }
+        LogZ.i("latestPrice = " + mLatestPrice + ", mIsUp = " + mIsUp + ", mDataType = " + mDataType);
         mContract = (ContractEntity) getIntent().getSerializableExtra(IntentItem.CONTARCT_INFO);
         if (mContract.hasData()) {
             mCurContractInfo = mContract.getData().get(0);
@@ -129,6 +134,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         }
         mCoupons = UserCouponsHelper.getInstance().getData();
         mTickets = TicketsHelper.getInstance().getData();
+        setValidCoupons(mCurContractInfo);
         initParams();
         initTitle();
         initContractInfo();
@@ -142,7 +148,8 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         setContractInfoLayout(mCurContractInfo);
         setPriceLayout(mLatestPrice);
         setMarginLayout();
-        setCouponLayout();
+
+
     }
 
     @Override
@@ -167,6 +174,32 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         params.width = UIUtil.getScreenWidth(AppApplication.getInstance().getActivity()) - w;
         params.height = UIUtil.getScreenHeight(AppApplication.getInstance().getActivity()) - h;
         layout.setLayoutParams(params);
+    }
+
+    private void setValidCoupons(ContractInfoEntity contractInfoEntity){
+        if (mValidCoupons == null) {
+            mValidCoupons = new ArrayList<>();
+        } else {
+            mValidCoupons.clear();
+        }
+        String dataType = contractInfoEntity.getDataType();
+        int margin = contractInfoEntity.getMargin();
+        LogZ.i("tickets: " + mTickets.toString());
+        LogZ.i("coupons: " + mCoupons.toString());
+        for(TicketEntity ticket : mTickets) {
+            int value = ticket.getValue();
+            if (value == margin && ticket.containDataType(dataType)) {
+                int id = ticket.getId();
+                for (CouponDetailEntity coupon : mCoupons) {
+                    if (coupon.getTicketId() == id) {
+                        if (coupon.getLastUseTime() > System.currentTimeMillis()) {
+                            mValidCoupons.add(coupon);
+                            LogZ.i("valid :  " + coupon.toString());
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void initTitle() {
@@ -199,7 +232,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         mParams.height = UIUtil.dip2px(this, 70) * raw + space * 2;
         recyclerView.setLayoutParams(mParams);
         final CustomAdapter adapter = new CustomAdapter(this, getData());
-        FullyGridLayoutManager manager = new FullyGridLayoutManager(this, 2);
+        GridLayoutManager manager = new GridLayoutManager(this, 2);
         manager.setOrientation(GridLayoutManager.VERTICAL);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(manager);
@@ -213,6 +246,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 //                mSeekBar.setMax(data.getDealLimit() * 10);
 //                mSeekBar.setProgress(0);
                 setMarginLayout();
+                setCouponLayout(data);
             }
         });
 
@@ -229,9 +263,24 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         });
     }
 
-    private void initCouponLayout() {
+    private void initCouponLayout(){
         mCouponCb = (CheckBox) findViewById(R.id.build_position_coupon_cb);
         mCouponNumTv = (TextView) findViewById(R.id.build_position_coupon_num_tv);
+        if (mValidCoupons != null && !mValidCoupons.isEmpty()) {
+            mCouponCb.setClickable(true);
+        } else {
+            mCouponCb.setClickable(false);
+        }
+        mCouponNumTv.setText(String.valueOf(mCoupons.size()));
+
+    }
+
+    private void setCouponCb(boolean enabled){
+        mCouponCb.setClickable(enabled);
+    }
+
+    private void setCouponNumTv() {
+        mCouponNumTv.setText(String.valueOf(mCoupons.size()));
     }
 
     private void initMarginLayout() {
@@ -286,6 +335,15 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
             BigDecimal b = new BigDecimal(stopLossPrice);
             double f = b.setScale(1, BigDecimal.ROUND_CEILING).doubleValue();
             mStopLossPriceTv.setText(String.valueOf(f));
+        }
+    }
+
+    private void setCouponLayout(ContractInfoEntity contractInfoEntity) {
+        setValidCoupons(contractInfoEntity);
+        if (mValidCoupons != null && !mValidCoupons.isEmpty()) {
+            mCouponCb.setClickable(true);
+        } else {
+
         }
     }
 
@@ -407,14 +465,6 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         mFeeTv.setText(getString(R.string.fee_num, fee));
     }
 
-    private void setCouponLayout(){
-        mCouponCb.setChecked(false);
-        mCouponCb.setClickable(false);
-        if (mCoupons != null) {
-            mCouponNumTv.setText(getString(R.string.num_remain, mCoupons.size()));
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -439,6 +489,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
                 BuildPositionResponseEntity entity = response.body();
                 if (entity.isSuccess()) {
                     PositionEntity positionEntity = entity.getObject();
+                    UserCouponsHelper.getInstance().delete();
                     setProfitAndLoss(positionEntity.getId());
                 } else {
                     dismissProgressDialog();
@@ -448,6 +499,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void onFailure(Call<BuildPositionResponseEntity> call, Throwable t) {
+                LogZ.i(t.toString());
                 showToastLong("建仓失败，请重试。");
                 dismissProgressDialog();
             }
@@ -464,10 +516,25 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
             direction = HttpConstant.DealDirection.DROP;
         }
         params.put("dealDirection", direction);
-        params.put("dealCount", String.valueOf(mDealCount));
-        params.put("ticketCount", String.valueOf(mTicketCount));
+        int ticketId = 1;
+        if (mValidCoupons != null && !mValidCoupons.isEmpty()) {
+            for (CouponDetailEntity coupon : mValidCoupons) {
+                if (coupon.getLastUseTime() < System.currentTimeMillis()) {
+                    ticketId = coupon.getTicketId();
+                }
+            }
+        }
+
+        int dealCount = mDealCount;
+        int ticketCount = 0;
+        if (ticketId != 1) {
+            dealCount = 0;
+            ticketCount = 1;
+        }
+        params.put("dealCount", String.valueOf(dealCount));
+        params.put("ticketCount", String.valueOf(ticketCount));
         params.put("code", mDataType);
-        params.put("ticketId", String.valueOf(mTicketId));
+        params.put("ticketId", String.valueOf(ticketId));
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

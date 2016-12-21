@@ -1,5 +1,6 @@
 package fxtrader.com.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -34,6 +35,11 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         AppApplication.getInstance().setActivity(this);
         setContentView(R.layout.activity_main);
         initBottomLayout();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initBottomLayout() {

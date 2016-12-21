@@ -6,6 +6,7 @@ import fxtrader.com.app.entity.BuildPositionResponseEntity;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.ContractListEntity;
 import fxtrader.com.app.entity.MarketEntity;
+import fxtrader.com.app.entity.PositionListEntity;
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -36,5 +37,8 @@ public interface ContractApi {
 
     @PUT("/api/storages")
     Call<CommonResponse> setProfitAndLoss(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/storages")
+    Call<PositionListEntity> positionList(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 
 }
