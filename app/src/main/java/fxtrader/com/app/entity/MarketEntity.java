@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import fxtrader.com.app.http.HttpConstant;
+
 /**
  * 实时行情
  * Created by zhangyuzhu on 2016/12/6.
@@ -33,8 +35,8 @@ public class MarketEntity extends CommonResponse implements Serializable{
         if (data == null) {
             data = new HashMap<>();
         }
-        data.put("YDOIL", object.YDOIL);
-        data.put("YDHF", object.YDHF);
+        data.put(HttpConstant.PriceCode.YDCL, object.YDCL);
+        data.put(HttpConstant.PriceCode.YDHF, object.YDHF);
     }
 
     public String getData(String type) {
@@ -84,13 +86,13 @@ public class MarketEntity extends CommonResponse implements Serializable{
     }
 
     static class Data implements Serializable{
-        String YDOIL;
         String YDHF;
+        String YDCL;
 
         @Override
         public String toString() {
             return "Data{" +
-                    "YDOIL='" + YDOIL + '\'' +
+                    "YDCL='" + YDCL + '\'' +
                     ", YDHF='" + YDHF + '\'' +
                     '}';
         }

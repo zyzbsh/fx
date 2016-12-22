@@ -40,20 +40,20 @@ public class PositionInfoEntity implements Serializable{
     private boolean autoSale;
     private long buyingDate;
     private double buyingRate;
-    private int consumeAmount;
+    private double consumeAmount;
     private String contractCode;
     private int customerId;
     private int dealCount;
     private String dealDirection;
     private String divideStatus;
     private boolean exception;
-    private int handingChargeAmount;
+    private double handingChargeAmount;
     private String id;
-    private int loss;
+    private double loss;
     private String memberCode;
     private int payAmount;
-    private int profit;
-    private int profitAndLoss;
+    private double profit;
+    private double profitAndLoss;
     private String rollBackStatus;
     private boolean sale;
     private int saleTimestamp;
@@ -70,6 +70,7 @@ public class PositionInfoEntity implements Serializable{
     private double plUnit;
     private String specification;
     private double latestPrice;
+    private String contractName = "";
 
 
     public boolean isAutoSale() {
@@ -96,11 +97,11 @@ public class PositionInfoEntity implements Serializable{
         this.buyingRate = buyingRate;
     }
 
-    public int getConsumeAmount() {
+    public double getConsumeAmount() {
         return consumeAmount;
     }
 
-    public void setConsumeAmount(int consumeAmount) {
+    public void setConsumeAmount(double consumeAmount) {
         this.consumeAmount = consumeAmount;
     }
 
@@ -152,11 +153,11 @@ public class PositionInfoEntity implements Serializable{
         this.exception = exception;
     }
 
-    public int getHandingChargeAmount() {
+    public double getHandingChargeAmount() {
         return handingChargeAmount;
     }
 
-    public void setHandingChargeAmount(int handingChargeAmount) {
+    public void setHandingChargeAmount(double handingChargeAmount) {
         this.handingChargeAmount = handingChargeAmount;
     }
 
@@ -168,11 +169,11 @@ public class PositionInfoEntity implements Serializable{
         this.id = id;
     }
 
-    public int getLoss() {
+    public double getLoss() {
         return loss;
     }
 
-    public void setLoss(int loss) {
+    public void setLoss(double loss) {
         this.loss = loss;
     }
 
@@ -192,19 +193,19 @@ public class PositionInfoEntity implements Serializable{
         this.payAmount = payAmount;
     }
 
-    public int getProfit() {
+    public double getProfit() {
         return profit;
     }
 
-    public void setProfit(int profit) {
+    public void setProfit(double profit) {
         this.profit = profit;
     }
 
-    public int getProfitAndLoss() {
+    public double getProfitAndLoss() {
         return profitAndLoss;
     }
 
-    public void setProfitAndLoss(int profitAndLoss) {
+    public void setProfitAndLoss(double profitAndLoss) {
         this.profitAndLoss = profitAndLoss;
     }
 
@@ -332,6 +333,14 @@ public class PositionInfoEntity implements Serializable{
         this.latestPrice = latestPrice;
     }
 
+    public String getContractName() {
+        return contractName;
+    }
+
+    public void setContractName(String contractName) {
+        this.contractName = contractName;
+    }
+
     @Override
     public String toString() {
         return "PositionInfoEntity{" +
@@ -367,6 +376,7 @@ public class PositionInfoEntity implements Serializable{
                 ", plUnit=" + plUnit +
                 ", specification='" + specification + '\'' +
                 ", latestPrice=" + latestPrice +
+                ", contractName='" + contractName + '\'' +
                 '}';
     }
 }

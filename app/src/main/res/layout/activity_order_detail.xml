@@ -60,7 +60,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/order_detail_fund_tv"
+                    android:id="@+id/order_detail_profit_tv"
                     style="@style/OrderDetailTv"
                     android:layout_marginTop="15dp"
                     android:text="@string/order_detail_fund_num" />
@@ -90,21 +90,30 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/order_detail_buy_price_tv"
                             style="@style/OrderDetailTv"
-                            android:text="@string/order_detail_buy_price_num"
-                            android:id="@+id/order_detail_buy_price_tv" />
+                            android:text="@string/order_detail_buy_price_num" />
 
                         <TextView
+                            android:id="@+id/order_detail_buy_account_tv"
                             style="@style/OrderDetailTv"
                             android:layout_marginTop="20dp"
-                            android:text="@string/order_detail_price_num"
-                            android:id="@+id/order_detail_price_tv" />
+                            android:text="@string/order_detail_buy_account_num" />
 
-                        <TextView
-                            style="@style/OrderDetailTv"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:text="@string/order_detail_decide_type"
-                            android:id="@+id/order_detail_decide_tv" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/OrderDetailTv"
+                                android:text="@string/order_detail_price_num" />
+                            <TextView
+                                android:id="@+id/order_detail_price_tv"
+                                style="@style/OrderDetailTv"
+                                android:text="@string/order_detail_price_num" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -113,22 +122,24 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <TextView
-                            style="@style/OrderDetailTv"
-                            android:text="@string/order_detail_buy_account_num"
-                            android:id="@+id/order_detail_buy_account_tv" />
 
                         <TextView
+                            android:id="@+id/order_detail_balance_tv"
                             style="@style/OrderDetailTv"
-                            android:layout_marginTop="20dp"
-                            android:text="@string/order_detail_balance_num"
-                            android:id="@+id/order_detail_balance_tv" />
+                            android:text="@string/order_detail_balance_num" />
 
                         <TextView
+                            android:id="@+id/order_detail_deal_direction_tv"
                             style="@style/OrderDetailTv"
                             android:layout_marginTop="20dp"
-                            android:text="@string/order_detail_buy_num"
-                            android:id="@+id/order_detail_buy_num_tv" />
+                            android:text="@string/order_detail_decide_type" />
+
+
+                        <TextView
+                            android:id="@+id/order_detail_buy_num_tv"
+                            style="@style/OrderDetailTv"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/order_detail_buy_num" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -139,6 +150,7 @@
                     android:background="@color/black_28" />
 
                 <TextView
+                    android:id="@+id/order_detail_build_time_tv"
                     style="@style/OrderDetailTv"
                     android:layout_marginBottom="19.8dp"
                     android:layout_marginTop="19.8dp"
@@ -169,6 +181,7 @@
                         android:text="@string/stop_loss_num" />
 
                     <TextView
+                        android:id="@+id/order_detail_change_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -180,8 +193,7 @@
                         android:paddingTop="5dp"
                         android:text="@string/change"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:id="@+id/order_detail_change_tv" />
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 
@@ -191,14 +203,14 @@
                     android:background="@color/black_28" />
 
                 <TextView
+                    android:id="@+id/order_detail_remind_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
                     android:gravity="center_horizontal"
                     android:text="@string/order_detail_remind_time"
                     android:textColor="@color/gray_6"
-                    android:textSize="12sp"
-                    android:id="@+id/order_detail_remind_tv" />
+                    android:textSize="12sp" />
 
             </LinearLayout>
         </ScrollView>

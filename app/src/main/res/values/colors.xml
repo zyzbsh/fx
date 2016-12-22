@@ -26,4 +26,5 @@
     <color name="color_ff">#F0F0F0</color>
     <color name="color_00">#8A000000</color>
     <color name="transparent">#00000000</color>
+    <color name="bg_build_position">#50000000</color>
 </resources>

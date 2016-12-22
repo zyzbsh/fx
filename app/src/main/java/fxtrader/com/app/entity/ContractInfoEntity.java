@@ -19,6 +19,8 @@ public class ContractInfoEntity implements Serializable{
      * name : 0.1kg白银
      * plRate : 0.1
      * plUnit : 1
+     * profitAndLoss": 0.3,
+     " queryParam": "YDHF",
      * specification : 8
      * unit : 8?/?
      */
@@ -27,6 +29,7 @@ public class ContractInfoEntity implements Serializable{
     private String dataType;
     private int dealLimit;
     private double handingCharge;
+    private double originalHandingCharge;
     private int margin;
     private String name;
     private double plRate;
@@ -35,6 +38,7 @@ public class ContractInfoEntity implements Serializable{
     private String unit;
     private String baseUnit = "";
     private String baseNum = "";
+    private double profitAndLoss;
     private String queryParam = "";
 
     public String getCode() {
@@ -141,6 +145,22 @@ public class ContractInfoEntity implements Serializable{
         this.queryParam = queryParam;
     }
 
+    public double getProfitAndLoss() {
+        return profitAndLoss;
+    }
+
+    public void setProfitAndLoss(double profitAndLoss) {
+        this.profitAndLoss = profitAndLoss;
+    }
+
+    public double getOriginalHandingCharge() {
+        return originalHandingCharge;
+    }
+
+    public void setOriginalHandingCharge(double originalHandingCharge) {
+        this.originalHandingCharge = originalHandingCharge;
+    }
+
     @Override
     public String toString() {
         return "ContractInfoEntity{" +
@@ -148,15 +168,17 @@ public class ContractInfoEntity implements Serializable{
                 ", dataType='" + dataType + '\'' +
                 ", dealLimit=" + dealLimit +
                 ", handingCharge=" + handingCharge +
+                ", originalHandingCharge=" + originalHandingCharge +
                 ", margin=" + margin +
                 ", name='" + name + '\'' +
                 ", plRate=" + plRate +
                 ", plUnit=" + plUnit +
-                ", specification=" + specification +
+                ", specification='" + specification + '\'' +
                 ", unit='" + unit + '\'' +
                 ", baseUnit='" + baseUnit + '\'' +
                 ", baseNum='" + baseNum + '\'' +
-                ", queryParam=" + queryParam +
+                ", profitAndLoss=" + profitAndLoss +
+                ", queryParam='" + queryParam + '\'' +
                 '}';
     }
 }

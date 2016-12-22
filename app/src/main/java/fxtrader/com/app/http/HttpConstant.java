@@ -11,6 +11,11 @@ public final class HttpConstant {
 
     public final static int REFRESH_USER_INFO = 10000;
 
+    public static class PriceCode{
+        public static final String YDHF = "YDHF";
+        public static final String YDCL = "YDCL";
+    }
+
     public static class ContractUnit{
         public static final String KG = "kg";
         public static final String T = "t";

@@ -20,6 +20,7 @@ import java.util.Map;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
+import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PositionListEntity;
@@ -100,6 +101,7 @@ public class ProfitListPop extends PopupWindow {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(mContext, OrderDetailActivity.class);
+                intent.putExtra(IntentItem.ORDER_DETAIL, mAdapter.getDataList().get(position));
                 mContext.startActivity(intent);
             }
 
@@ -149,7 +151,7 @@ public class ProfitListPop extends PopupWindow {
             holder.buyPriceTv.setText("买入价:" + String.valueOf(info.getBuyingRate()));
             holder.specificationTv.setText(info.getSpecification());
             holder.dealCountTv.setText(String.valueOf(info.getDealCount()) + " 手");
-            String dealDirection = "";
+            String dealDirection;
             if ("UP".equals(info.getDealDirection())) {
                 dealDirection = "买涨";
             } else {

@@ -1,11 +1,10 @@
-package fxtrader.com.app.view;
+package fxtrader.com.app.homepage;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,74 +13,122 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import fxtrader.com.app.R;
+import fxtrader.com.app.base.BaseActivity;
+import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.entity.CommonResponse;
+import fxtrader.com.app.entity.PositionInfoEntity;
+import fxtrader.com.app.http.ParamsUtil;
+import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.tools.LogZ;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
- * 建仓
- * Created by pc on 2016/11/19.
+ * Created by pc on 2016/12/22.
  */
-public class BuildPositionDialog extends Dialog {
-
+public class ProfitAndLossActivity extends BaseActivity {
     private RecyclerView mStopProfitRec;
 
     private RecyclerView mStopLossRec;
+
+    private PositionInfoEntity mPositionInfoEntity;
 
     private double mStopProfit;
 
     private double mStopLoss;
 
-    private boolean mChecked = false;
-
     private State mStopProfitState;
 
     private State mStopLossState;
 
-    public interface OkListener {
-        public void ok(int stopProfit, int stopLoss);
-    }
+    private int mProfitPosition;
 
-
-    public BuildPositionDialog(Context context, double stopProfit, double stopLoss) {
-        super(context, R.style.BuyDialogTheme);
-        this.setCanceledOnTouchOutside(false);
-        mStopProfit = stopProfit;
-        mStopLoss = stopLoss;
-    }
+    private int mLossPosition;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_build_position);
+        setContentView(R.layout.activity_profit_and_loss);
+        mPositionInfoEntity = (PositionInfoEntity) getIntent().getSerializableExtra(IntentItem.POSITION_INFO);
+        mStopProfit = mPositionInfoEntity.getProfit();
+        mStopLoss = mPositionInfoEntity.getLoss();
+        mProfitPosition = (int) Math.abs(mStopProfit * 10);
+        mLossPosition = (int) Math.abs(mStopLoss * 10);
         setCancelTv();
         setStopProfitView();
         setStopLossView();
-    }
-
-    public void setOkListener(final OkListener listener) {
-        findViewById(R.id.dialog_build_sure_tv).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                listener.ok(mStopProfitState.stopPercent, mStopLossState.stopPercent);
-            }
-        });
     }
 
     private void setCancelTv() {
         findViewById(R.id.dialog_build_cancel_tv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
+                finish();
+            }
+        });
+        findViewById(R.id.dialog_build_sure_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int profitPercent = (int) Math.abs(mPositionInfoEntity.getProfit() * 10);
+                int lossPercent = (int) Math.abs(mPositionInfoEntity.getLoss() * 10);
+                if (mStopProfitState.stopPercent == profitPercent && mStopLossState.stopPercent == lossPercent) {
+                    return;
+                }
+                setProfitAndLoss();
             }
         });
     }
 
+    private void setProfitAndLoss() {
+        showProgressDialog();
+        ContractApi api = RetrofitUtils.createApi(ContractApi.class);
+        final Call<CommonResponse> respon = api.setProfitAndLoss(ParamsUtil.getToken(), getSetProfitAndLossParams());
+        respon.enqueue(new Callback<CommonResponse>() {
+            @Override
+            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+                CommonResponse common = response.body();
+                if (common.isSuccess()) {
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                showToastLong(common.getMessage());
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onFailure(Call<CommonResponse> call, Throwable t) {
+                showToastLong("设置止盈止损失败");
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    private Map<String, String> getSetProfitAndLossParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.storage.updatePL");
+        params.put("storageId", mPositionInfoEntity.getId());
+        params.put("profit", "0." + mStopProfitState.stopPercent);
+        int stopLossPercent = mStopLossState.stopPercent;
+        String stop = "";
+        if (stopLossPercent == 0) {
+            stop = "0";
+        } else {
+            stop = "-0." + stopLossPercent;
+        }
+        params.put("loss", stop);
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
     private void setStopProfitView() {
         mStopProfitRec = (RecyclerView) findViewById(R.id.dialog_build_stop_profit_rec);
-        final CustomAdapter adapter = new CustomAdapter(getContext(), getData(mStopProfit));
-        GridLayoutManager manager = new GridLayoutManager(getContext(), 5);
+        final CustomAdapter adapter = new CustomAdapter(this, getData(), mProfitPosition);
+        GridLayoutManager manager = new GridLayoutManager(this, 5);
         mStopProfitRec.setLayoutManager(manager);
         mStopProfitRec.setAdapter(adapter);
         adapter.setOnItemClickListener(new CustomAdapter.OnRecyclerViewItemClickListener() {
@@ -95,8 +142,8 @@ public class BuildPositionDialog extends Dialog {
 
     private void setStopLossView() {
         mStopLossRec = (RecyclerView) findViewById(R.id.dialog_build_stop_loss_rec);
-        final CustomAdapter adapter = new CustomAdapter(getContext(), getData(mStopLoss));
-        GridLayoutManager manager = new GridLayoutManager(getContext(), 5);
+        final CustomAdapter adapter = new CustomAdapter(this, getData(), mLossPosition);
+        GridLayoutManager manager = new GridLayoutManager(this, 5);
         mStopLossRec.setLayoutManager(manager);
         mStopLossRec.setAdapter(adapter);
         adapter.setOnItemClickListener(new CustomAdapter.OnRecyclerViewItemClickListener() {
@@ -108,25 +155,15 @@ public class BuildPositionDialog extends Dialog {
     }
 
 
-    private int getColor(int colorRes) {
-        return ContextCompat.getColor(getContext(), colorRes);
-    }
-
-    private List<State> getData(double stopPercent) {
-        int percent = (int) Math.abs(stopPercent * 10);
+    private List<State> getData() {
         List<State> data = new ArrayList<>();
         State first = new State();
         first.show = "不设";
-        if (percent == 0) {
-            first.checked = true;
-        }
+        data.add(first);
         for (int i = 1; i < 10; i++) {
             State state = new State();
             state.show = i * 10 + "%";
             state.stopPercent = i;
-            if (percent == i) {
-                state.checked = true;
-            }
             data.add(state);
         }
         LogZ.i("size = " + data.size());
@@ -145,9 +182,10 @@ public class BuildPositionDialog extends Dialog {
             void onItemClick(View view, State data, int position);
         }
 
-        public CustomAdapter(Context context, List<State> data) {
+        public CustomAdapter(Context context, List<State> data, int position) {
             this.context = context;
             this.data = data;
+            this.layoutPosition = position;
         }
 
         public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
@@ -167,10 +205,15 @@ public class BuildPositionDialog extends Dialog {
             State state = data.get(position);
             holder.textView.setText(state.show);
             holder.itemView.setTag(state);
-            if (state.checked) {
-                layoutPosition = position;
-                state.checked =false;
+            //更改状态
+            if (position == layoutPosition) {
+                holder.textView.setBackgroundResource(R.drawable.shape_item_build_percent);
+                holder.textView.setTextColor(Color.parseColor("#ffffff"));
+            } else {
+                holder.textView.setBackgroundColor(Color.parseColor("#ffffff"));
+                holder.textView.setTextColor(Color.parseColor("#666666"));
             }
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -180,15 +223,6 @@ public class BuildPositionDialog extends Dialog {
                     mOnItemClickListener.onItemClick(holder.itemView, (State) holder.itemView.getTag(), layoutPosition);
                 }
             });
-
-            //更改状态
-            if (position == layoutPosition) {
-                holder.textView.setBackgroundResource(R.drawable.shape_item_build_percent);
-                holder.textView.setTextColor(Color.parseColor("#ffffff"));
-            } else {
-                holder.textView.setBackgroundColor(Color.parseColor("#ffffff"));
-                holder.textView.setTextColor(Color.parseColor("#666666"));
-            }
         }
 
         @Override
@@ -214,6 +248,5 @@ public class BuildPositionDialog extends Dialog {
     class State {
         int stopPercent;
         String show;
-        boolean checked = false;
     }
 }

@@ -18,11 +18,18 @@ public class DateTools {
 	}
 
 	public static String getCurrentData2() {
-		return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 	}
 
 	public static String changeToDate(long time){
 		DateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(time);
+		return formatter.format(calendar.getTime());
+	}
+
+	public static String changeToDate2(long time) {
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(time);
 		return formatter.format(calendar.getTime());
@@ -72,7 +79,7 @@ public class DateTools {
 	}
 
 	public static Date StrToData(String str) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			Date date = null;
 			date = sdf.parse(str);

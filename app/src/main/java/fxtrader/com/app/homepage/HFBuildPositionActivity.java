@@ -44,6 +44,7 @@ import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.ContractApi;
+import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.ProfitAndLossView;
@@ -55,7 +56,7 @@ import retrofit2.Response;
  * 建仓
  * Created by pc on 2016/12/18.
  */
-public class BuildPositionActivity extends BaseActivity implements View.OnClickListener{
+public class HFBuildPositionActivity extends BaseActivity implements View.OnClickListener{
 
     private static final int DEFAULT_DEAL_COUNT = 1;
 
@@ -93,10 +94,6 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
     private int mDealCount = DEFAULT_DEAL_COUNT;
 
-    private ProfitAndLossView mStopProfitView;
-
-    private ProfitAndLossView mStopLossView;
-
     private int mTicketCount = 0;
 
     private CheckBox mCouponCb;
@@ -118,7 +115,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentLayout(R.layout.activity_build_position);
+        setContentLayout(R.layout.activity_hf_build_position);
         mLatestPrice = getIntent().getStringExtra(IntentItem.PRICE);
         mIsUp = getIntent().getBooleanExtra(IntentItem.EXCEPTION, false);
         mDataType = getIntent().getStringExtra(IntentItem.DATA_TYPE);
@@ -137,7 +134,6 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         initContractInfo();
         initInfoRec();
         initSeekBar();
-        initProfitAndLoss();
         initCouponLayout();
         initMarginLayout();
         initOkTv();
@@ -288,7 +284,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
     private void setContractInfoLayout(ContractInfoEntity info) {
         mCurContractInfo = info;
         mSpecificationTv.setText(info.getBaseNum() + info.getBaseUnit());
-        mHandChargeTv.setText(this.getString(R.string.margin_num, info.getMargin()));
+        mHandChargeTv.setText(getString(R.string.margin_num, info.getMargin()));
         mProfitAndLossTv.setText(String.valueOf(info.getPlRate()));
     }
 
@@ -304,10 +300,11 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         double latestPrice = Double.parseDouble(price);
         double profitAndLoss = mCurContractInfo.getPlRate() * mCurContractInfo.getPlUnit();
 
-        if (mStopProfitView.getPercent() == 0) {
+        double stopPercent = mCurContractInfo.getProfitAndLoss();
+        if (stopPercent < 10E-6) {
             mTargetPriceTv.setText("");
         } else {
-            double profit = mCurContractInfo.getMargin() * mStopProfitView.getPercent() / 10.0;
+            double profit = mCurContractInfo.getMargin() * stopPercent;
             double targetPrice;
             if (mIsUp) {
                 targetPrice = latestPrice  + profit / profitAndLoss;
@@ -319,15 +316,15 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
             mTargetPriceTv.setText(String.valueOf(f));
         }
 
-        if (mStopLossView.getPercent() == 0) {
+        if (stopPercent < 10E-6 || stopPercent >=1) {
             mStopLossPriceTv.setText("");
-        } else {
-            double loss = mCurContractInfo.getMargin() * mStopLossView.getPercent() / 10.0;
+        }else {
+            double loss = mCurContractInfo.getMargin() * stopPercent;
             double stopLossPrice;
             if (mIsUp) {
-                stopLossPrice = latestPrice - loss / profitAndLoss;
+                stopLossPrice = latestPrice  - loss / profitAndLoss;
             } else {
-                stopLossPrice = latestPrice + loss / profitAndLoss;
+                stopLossPrice = latestPrice  + loss / profitAndLoss;
             }
             BigDecimal b = new BigDecimal(stopLossPrice);
             double f = b.setScale(1, BigDecimal.ROUND_CEILING).doubleValue();
@@ -421,13 +418,6 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-    private void initProfitAndLoss() {
-        mStopProfitView = (ProfitAndLossView) findViewById(R.id.dialog_build_stop_profit_layout);
-        mStopLossView = (ProfitAndLossView) findViewById(R.id.dialog_build_stop_loss_layout);
-        mStopProfitView.setTitle(R.string.stop_profit);
-        mStopLossView.setTitle(R.string.stop_loss);
-    }
-
     private void initOkTv() {
         mOkTv = (TextView) findViewById(R.id.dialog_buy_build_position_tv);
         mOkTv.setOnClickListener(this);
@@ -488,13 +478,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
             public void onResponse(Call<BuildPositionResponseEntity> call, Response<BuildPositionResponseEntity> response) {
                 BuildPositionResponseEntity entity = response.body();
                 if (entity.isSuccess()) {
-                    if (mStopProfitView.getPercent() == 0 && mStopLossView.getPercent() == 0) {
-                        setResult(RESULT_OK);
-                        finish();
-                    } else {
-                        PositionEntity positionEntity = entity.getObject();
-                        setProfitAndLoss(positionEntity.getId());
-                    }
+                    PositionEntity positionEntity = entity.getObject();
                 } else {
                     dismissProgressDialog();
                     showToastLong(entity.getMessage());
@@ -543,46 +527,6 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         return params;
     }
 
-    private void setProfitAndLoss(String storageId){
-        ContractApi api = RetrofitUtils.createApi(ContractApi.class);
-        final Call<CommonResponse> respon = api.setProfitAndLoss(ParamsUtil.getToken(), getSetProfitAndLossParams(storageId));
-        respon.enqueue(new Callback<CommonResponse>() {
-            @Override
-            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
-                CommonResponse common = response.body();
-                if (common.isSuccess()) {
-                    setResult(RESULT_OK);
-                    finish();
-                }
-                showToastLong(common.getMessage());
-                dismissProgressDialog();
-            }
-
-            @Override
-            public void onFailure(Call<CommonResponse> call, Throwable t) {
-                showToastLong("设置止盈止损失败");
-                dismissProgressDialog();
-            }
-        });
-    }
-
-    private Map<String, String> getSetProfitAndLossParams(String storageId) {
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.storage.updatePL");
-        params.put("storageId", storageId);
-        params.put("profit", "0." + mStopProfitView.getPercent());
-        int stopLossPercent = mStopLossView.getPercent();
-        String stop = "";
-        if (stopLossPercent == 0) {
-            stop = "-0.0";
-        } else {
-            stop = "-0." + stopLossPercent;
-        }
-        params.put("loss", stop);
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
-    }
-
     static class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
         private Context context;
         private List<ContractInfoEntity> data;
@@ -605,7 +549,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(context).inflate(R.layout.item_dialog_build, parent, false);
+            View itemView = LayoutInflater.from(context).inflate(R.layout.item_build_position_hf, parent, false);
             holder = new MyViewHolder(itemView);
             return holder;
         }
@@ -614,11 +558,11 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
             ContractInfoEntity info = data.get(position);
+            String percent = String.valueOf(ContractUtil.getDouble(info.getProfitAndLoss() * 100, 0)) + "%";
+            holder.profitPercentTv.setText(percent);
             String fee = String.valueOf(info.getHandingCharge());
             String feeText = context.getString(R.string.fee_num, fee);
             holder.feeTv.setText(feeText);
-            holder.specTv.setText(info.getBaseNum() + info.getBaseUnit());
-            holder.marginTv.setText(String.valueOf(info.getMargin()));
             holder.itemView.setTag(info);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -630,20 +574,31 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
                 }
             });
 
+
             //更改状态
             if (position == layoutPosition) {
-                holder.specTv.setTextColor(Color.WHITE);
-                holder.marginTv.setTextColor(Color.WHITE);
-                holder.buildUnit.setTextColor(Color.WHITE);
+                holder.desTv.setTextColor(Color.WHITE);
+                holder.profitPercentTv.setTextColor(Color.WHITE);
                 holder.itemView.setBackgroundResource(R.mipmap.bg_build_position_item_clicked);
                 holder.itemLayout.setBackgroundColor(Color.parseColor("#00000000"));
             } else {
-                holder.specTv.setTextColor(Color.parseColor("#f6812e"));
-                int color = Color.parseColor("#e83743");
-                holder.marginTv.setTextColor(color);
-                holder.buildUnit.setTextColor(color);
+                holder.desTv.setTextColor(Color.parseColor("#f6812e"));
+                holder.profitPercentTv.setTextColor(Color.parseColor("#e83743"));
                 holder.itemView.setBackgroundColor(Color.parseColor("#00000000"));
                 holder.itemLayout.setBackgroundResource(R.mipmap.bg_build_position_item_default);
+            }
+
+            if (position == 0) {
+                holder.discountTv.setVisibility(View.VISIBLE);
+                holder.discountTv.setText("4折");
+            } else if (position ==1) {
+                holder.discountTv.setVisibility(View.VISIBLE);
+                holder.discountTv.setText("6折");
+            } else if (position == 2) {
+                holder.discountTv.setVisibility(View.VISIBLE);
+                holder.discountTv.setText("8折");
+            } else {
+                holder.discountTv.setVisibility(View.GONE);
             }
         }
 
@@ -659,19 +614,19 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
         class MyViewHolder extends RecyclerView.ViewHolder {
             private TextView feeTv;
-            private TextView specTv;
-            private TextView marginTv;
-            private TextView buildUnit;
+            private TextView desTv;
+            private TextView profitPercentTv;
             private RelativeLayout itemLayout;
+            private TextView discountTv;
 
 
             public MyViewHolder(View itemView) {
                 super(itemView);
                 feeTv = (TextView) itemView.findViewById(R.id.item_dialog_build_fee_tv);
-                specTv = (TextView) itemView.findViewById(R.id.item_dialog_build_spec_tv);
-                marginTv = (TextView) itemView.findViewById(R.id.item_dialog_build_margin_tv);
-                buildUnit = (TextView) itemView.findViewById(R.id.item_dialog_build_unit_tv);
+                desTv = (TextView) itemView.findViewById(R.id.build_position_hf_profit_percent_des_tv);
+                profitPercentTv = (TextView) itemView.findViewById(R.id.build_position_hf_profit_percent_tv);
                 itemLayout = (RelativeLayout) itemView.findViewById(R.id.item_dialog_build_layout);
+                discountTv = (TextView) itemView.findViewById(R.id.item_build_position_hf_discount_tv);
             }
         }
     }

@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.config.LoginConfig;
@@ -48,9 +49,9 @@ import fxtrader.com.app.http.UserInfoManager;
 import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.login.LoginActivity;
 import fxtrader.com.app.service.PriceService;
+import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
-import fxtrader.com.app.view.BuildPositionDialog;
 import fxtrader.com.app.view.ProfitListPop;
 import fxtrader.com.app.view.ctr.MainTitleProfitCtr;
 import retrofit2.Call;
@@ -122,6 +123,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
         if (isLogin()){
+            startPositionTimer();
             startUserTimer();
         }
     }
@@ -236,9 +238,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-    private LinkedHashMap<String, ContractEntity> mContractMap;
-
-    private Map<String, ContractInfoEntity> mContractInfoMap = new HashMap<>();
+//    private LinkedHashMap<String, ContractEntity> mContractMap = new LinkedHashMap<>();
+//    private Map<String, ContractInfoEntity> mContractInfoMap = new HashMap<>();
 
     /**
      * 获取合约列表
@@ -255,28 +256,26 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                     LogZ.i("合约列表没有数据。");
                     return;
                 }
-
-                if (mContractMap == null) {
-                    mContractMap = new LinkedHashMap<String, ContractEntity>();
-                }
+                ContractUtil.clear();
 
                 for (ContractInfoEntity info : mContractList) {
-                    String dataType = info.getQueryParam();
-                    if (mContractMap.containsKey(dataType)) {
-                        ContractEntity contract = mContractMap.get(dataType);
-                        contract.add(info);
-                    } else {
-                        ContractEntity contract = new ContractEntity(dataType);
-                        contract.add(info);
-                        mContractMap.put(dataType, contract);
-                    }
-                    mContractInfoMap.put(info.getCode(), info);
+                    ContractUtil.addContract(info);
+//                    String dataType = info.getQueryParam();
+//                    if (mContractMap.containsKey(dataType)) {
+//                        ContractEntity contract = mContractMap.get(dataType);
+//                        contract.add(info);
+//                    } else {
+//                        ContractEntity contract = new ContractEntity(dataType);
+//                        contract.add(info);
+//                        mContractMap.put(dataType, contract);
+//                    }
+//                    mContractInfoMap.put(info.getCode(), info);
                 }
 
 
                 List<Fragment> fragments = new ArrayList<>();
-                for (String type : mContractMap.keySet()) {
-                    ContractEntity contract = mContractMap.get(type);
+                for (String type : ContractUtil.getContractMap().keySet()) {
+                    ContractEntity contract = ContractUtil.getContractMap().get(type);
                     DataLineFragment fragment = new DataLineFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString(IntentItem.CONTRACT_NAME, contract.getName());
@@ -308,14 +307,20 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private void openBuildPositionActivity(boolean up) {
         String dataType = mCurDataLineFragment.getDataType();
-        ContractEntity entity = mContractMap.get(dataType);
-        Intent intent = new Intent(getActivity(), BuildPositionActivity.class);
+        Intent intent;
+        if (dataType.equals(HttpConstant.PriceCode.YDHF)) {
+            intent = new Intent(getActivity(), HFBuildPositionActivity.class);
+        } else {
+            intent = new Intent(getActivity(), BuildPositionActivity.class);
+        }
+        ContractEntity entity = ContractUtil.getContractMap().get(dataType);
         intent.putExtra(IntentItem.PRICE, mLatestPrice);
         intent.putExtra(IntentItem.CONTARCT_INFO, entity);
         intent.putExtra(IntentItem.EXCEPTION, up);
         intent.putExtra(IntentItem.DATA_TYPE, mCurDataLineFragment.getDataType());
         startActivityForResult(intent, IntentItem.REQUEST_BUILD_POSITION);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -444,11 +449,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         public void onReceive(Context context, Intent intent) {
             MarketEntity vo = (MarketEntity) intent.getSerializableExtra(IntentItem.PRICE);
             vo.init();
+            AppApplication.getInstance().setMarketEntity(vo);
             if (mCurDataLineFragment != null) {
                 String dataType = mCurDataLineFragment.getDataType();
-                if (dataType.equals("YDCL")) {
-                    dataType = "YDOIL";
-                }
                 String data = vo.getData(dataType);
                 PriceEntity price = new PriceEntity(data);
                 mLatestPrice = price.getLatestPrice();
@@ -468,7 +471,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private TimerTask positionTimerTask = null;
 
     private void startPositionTimer() {
-        Log.i("zyu", "startDataTimer");
         if (null != positionTimer || null != positionTimerTask) {
             stopPositionTimer();
         }
@@ -502,56 +504,35 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         respon.enqueue(new Callback<PositionListEntity>() {
             @Override
             public void onResponse(Call<PositionListEntity> call, Response<PositionListEntity> response) {
+                LogZ.i("profitView");
                 PositionListEntity entity = response.body();
-                mPositionInfoList = entity.getObject().getContent();
-                if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
-                    mTitleProfitCtr.show();
-                    if (mProfitListPop == null) {
-                        mProfitListPop = new ProfitListPop(getContext());
+                if (entity != null && entity.getObject() != null) {
+                    mPositionInfoList = entity.getObject().getContent();
+                    if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
+                        LogZ.i("显示profitView");
+                        mTitleProfitCtr.show();
+                        if (mProfitListPop == null) {
+                            mProfitListPop = new ProfitListPop(getContext());
+                        }
+                    } else {
+                        LogZ.i("隐藏profitView");
+                        mTitleProfitCtr.hide();
                     }
-                } else {
-                    mTitleProfitCtr.hide();
                 }
             }
 
             @Override
             public void onFailure(Call<PositionListEntity> call, Throwable t) {
-
+                LogZ.i(t.toString());
             }
         });
     }
 
     private List<PositionInfoEntity> getPopProfitList(MarketEntity vo, List<PositionInfoEntity> data) {
-
-        double profit = 0;
-        int size = data.size();
-        for (int i = 0; i < size; i++) {
-            PositionInfoEntity positionInfoEntity = data.get(i);
-            String code = positionInfoEntity.getContractCode();
-            if (code.equals("YDCL")) {
-                code = "YDOIL";
-            }
-            String type = vo.getData(code);
-            PriceEntity price = new PriceEntity(type);
-            double latestPrice = Double.parseDouble(price.getLatestPrice());
-            positionInfoEntity.setLatestPrice(latestPrice);
-
-            ContractInfoEntity contractInfoEntity = mContractInfoMap.get(code);
-            positionInfoEntity.setPlRate(contractInfoEntity.getPlRate());
-            positionInfoEntity.setPlUnit(contractInfoEntity.getPlUnit());
-            String specification = "";
-            if (contractInfoEntity.getName().contains("kg")) {
-                specification = contractInfoEntity.getSpecification() + "kg";
-            } else {
-                specification = contractInfoEntity.getSpecification() + "t";
-            }
-            positionInfoEntity.setSpecification(specification);
-            profit = profit + getProfit(positionInfoEntity);
-        }
-        BigDecimal big = new BigDecimal(profit);
-        double sum = big.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
+        double sum = ContractUtil.initProfitInfoList(vo, data);
         mTitleProfitCtr.setProfit(String.valueOf(sum));
 
+        int size = data.size();
         List<PositionInfoEntity> list = new ArrayList<>();
         int count = size <= ProfitListPop.MAX_SHOW_COUNT ? size : ProfitListPop.MAX_SHOW_COUNT;
         for (int i = 0; i < count; i++) {
@@ -562,15 +543,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         return list;
     }
 
-    private double getProfit(PositionInfoEntity entity) {
-        double rate = entity.getPlRate();
-        double unit = entity.getPlUnit();
-        double buyPrice = entity.getBuyingRate();
-        double latestPrice = Double.valueOf(entity.getLatestPrice());
-        double diff = latestPrice - buyPrice;
-        double result = diff * rate * unit;
-        return result;
-    }
+
 
     private Map<String, String> getPositionListParams(){
         final Map<String, String> params = ParamsUtil.getCommonParams();

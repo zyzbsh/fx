@@ -29,6 +29,16 @@
             android:name=".homepage.BuildPositionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BuildDialog"></activity>
+        <activity
+            android:name=".homepage.HFBuildPositionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.BuildDialog"></activity>
+        <activity
+            android:name=".homepage.ProfitAndLossActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.BuildDialog"></activity>
+
+
 
         <activity
             android:name=".homepage.OrderDetailActivity"

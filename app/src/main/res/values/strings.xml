@@ -58,6 +58,7 @@
     <string name="num_remain">剩余数量%1$s张</string>
     <string name="deposit_num">保证金：%1$s</string>
     <string name="fee_num">手续费&#160;&#160;&#160;%1$s元/手</string>
+    <string name="margin_num">%1$s元/手</string>
     <string name="market_price_num">市场价：%1$s</string>
     <string name="build_position">建仓</string>
     <string name="cancel">取消</string>
@@ -77,12 +78,12 @@
     <string name="buying_price_num">买入价:%1$s</string>
     <string name="sure_to_close_position">确定平仓</string>
     <string name="order_detail">订单详情</string>
-    <string name="order_detail_product_des">%1$s%2$s(%3$s元)</string>
-    <string name="order_detail_fund_num">盈亏资金：%1$s</string>
+    <string name="order_detail_product_des">%1$s(%2$s元)</string>
+    <string name="order_detail_fund_num">盈亏资金：%1$s元(%2$s)</string>
     <string name="order_detail_order_num">订单号：%1$s</string>
     <string name="order_detail_buy_price_num">入仓价：%1$s</string>
     <string name="order_detail_buy_account_num">入仓金额：%1$s</string>
-    <string name="order_detail_price_num">行情：%1$s</string>
+    <string name="order_detail_price_num">行情：</string>
     <string name="order_detail_balance_num">本单余额：%1$s</string>
     <string name="order_detail_decide_type">方向：%1$s</string>
     <string name="order_detail_buy_num">数量：%1$s</string>
@@ -97,7 +98,7 @@
     <string name="total_break_even">总盈亏</string>
     <string name="profit_num">+%1$s</string>
     <string name="loss_num">-%1$s</string>
-    <string name="position_list_num">共%1$s持仓单</string>
+    <string name="position_list_num">共%1$d持仓单</string>
     <string name="personal_center">个人中心</string>
     <string name="fund_list">资金流水</string>
     <string name="trade_history">交易历史</string>

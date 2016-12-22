@@ -2,6 +2,7 @@ package fxtrader.com.app.config;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 import android.text.TextUtils;
 
 import fxtrader.com.app.AppApplication;
@@ -13,6 +14,7 @@ public final class LoginConfig {
 
     public static final String ACCOUNT = "account";
     public static final String TOKEN = "token";
+    public static final String TIME = "time";
 
     private static LoginConfig sConfig;
     private SharedPreferences mSp;
@@ -32,6 +34,7 @@ public final class LoginConfig {
         SharedPreferences.Editor editor = mSp.edit();
         editor.putString(ACCOUNT, account);
         editor.putString(TOKEN, token);
+        editor.putString(TIME, String.valueOf(System.currentTimeMillis()));
         editor.commit();
     }
 
@@ -44,8 +47,19 @@ public final class LoginConfig {
     }
 
     public boolean isLogin() {
-        String token = getToken();
-        return !TextUtils.isEmpty(token);
+        long curTime = System.currentTimeMillis();
+        String recordTime = mSp.getString(TIME, "");
+        if (TextUtils.isEmpty(recordTime)) {
+            return false;
+        }
+        long time = Long.parseLong(recordTime);
+        if (curTime - time < 50 * 60 * 1000) {
+            String token = getToken();
+            return !TextUtils.isEmpty(token);
+        } else {
+            return false;
+        }
+
     }
 
 

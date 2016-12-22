@@ -43,7 +43,7 @@ public class PositionEntity {
     private String dealDirection;
     private String divideStatus;
     private boolean exception;
-    private int handingChargeAmount;
+    private double handingChargeAmount;
     private String id;
     private int loss;
     private String memberCode;
@@ -140,11 +140,11 @@ public class PositionEntity {
         this.exception = exception;
     }
 
-    public int getHandingChargeAmount() {
+    public double getHandingChargeAmount() {
         return handingChargeAmount;
     }
 
-    public void setHandingChargeAmount(int handingChargeAmount) {
+    public void setHandingChargeAmount(double handingChargeAmount) {
         this.handingChargeAmount = handingChargeAmount;
     }
 

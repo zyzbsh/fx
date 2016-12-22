@@ -7,7 +7,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -22,7 +22,7 @@
             android:textSize="19sp" />
 
         <TextView
-            android:id="@+id/item_position_list_price_tv"
+            android:id="@+id/item_position_list_buy_price_tv"
             android:layout_width="wrap_content"
             android:layout_below="@id/item_position_list_break_even_tv"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:textColor="@color/gray_6"
             android:textSize="14sp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/item_position_list_production_tv"
+            android:id="@+id/item_position_list_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/gray_6"
