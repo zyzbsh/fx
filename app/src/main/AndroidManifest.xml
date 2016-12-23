@@ -106,6 +106,12 @@
             android:name=".mine.RedEnvelopeActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".mine.RechargeActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".mine.RechargeWebActivity"
+            android:screenOrientation="portrait"/>
+
         <service android:name=".service.PriceService"/>
 
     </application>

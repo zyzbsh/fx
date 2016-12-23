@@ -1,9 +1,11 @@
 package fxtrader.com.app.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by zhangyuzhu on 2016/12/7.
  */
-public class UserEntity {
+public class UserEntity implements Serializable{
 
 
     /**
@@ -50,7 +52,7 @@ public class UserEntity {
         this.success = success;
     }
 
-    public static class ObjectBean {
+    public static class ObjectBean implements Serializable{
         /**
          * account : oMtyLv6T1SuCYFSrqxUNXrwPH5GQ
          * agent : false

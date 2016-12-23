@@ -5,6 +5,10 @@ package fxtrader.com.app.http;
  */
 public final class HttpConstant {
 
+    public static String BASE_URL = "http://121.9.227.58:13516/";
+
+    public static String TEST_URL = " http://125.88.152.51:15516/";
+
     public final static long REFRESH_TIME = 10000;
 
     public final static int REFRESH_POSITION_LIST = 10000;

@@ -50,27 +50,35 @@
                     android:id="@+id/recharge_cash_coupon_icon_im"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:src="@mipmap/icon_cash_coupon" />
 
-                <TextView
-                    android:id="@+id/recharge_cash_coupon_tv"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@id/recharge_cash_coupon_icon_im"
-                    android:text="@string/cash_coupon"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/person_cash_coupon_tv" />
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/recharge_cash_coupon_count_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/recharge_cash_coupon_icon_im"
-                    android:layout_alignLeft="@id/recharge_cash_coupon_count_tv"
-                    android:layout_toRightOf="@id/recharge_cash_coupon_icon_im"
-                    android:textColor="@color/tv_cash_coupon_count"
-                    android:textSize="@dimen/person_cash_coupon_tv" />
+                    <TextView
+                        android:id="@+id/recharge_cash_coupon_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/cash_coupon"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/person_cash_coupon_tv" />
+
+                    <TextView
+                        android:id="@+id/recharge_cash_coupon_count_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/tv_cash_coupon_count"
+                        android:textSize="@dimen/person_cash_coupon_tv" />
+
+                </LinearLayout>
             </RelativeLayout>
 
 
@@ -87,6 +95,8 @@
                     android:id="@+id/recharge_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/person_name_tv" />
 
@@ -154,6 +164,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_edt_recharge"
                 android:gravity="center"
+                android:inputType="number"
                 android:text="@string/hint_recharge"
                 android:textColor="@color/gray_6"
                 android:textSize="14sp" />
@@ -227,16 +238,16 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_marginTop="20dp"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
 
                 <LinearLayout
                     android:id="@+id/recharge_wx_layout"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:gravity="center"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/shape_red_corner_5"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <TextView
@@ -244,42 +255,44 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@mipmap/icon_wx"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
                         android:drawablePadding="5dp"
-                        android:text="中信银行支付" />
+                        android:text="中信银行支付"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="（微信支付）"
                         android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:text="（微信支付）"/>
+                        android:textSize="12sp" />
                 </LinearLayout>
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:src="@mipmap/icon_recharge_recommend"/>
+                    android:src="@mipmap/icon_recharge_recommend" />
             </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/recharge_yh_layout"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center"
                 android:layout_height="40dp"
-                android:background="@drawable/shape_recharge_yl">
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_recharge_yl"
+                android:gravity="center"
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/recharge_yh_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/icon_yl"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
                     android:drawablePadding="5dp"
-                    android:text="@string/recharge_yh" />
+                    android:text="@string/recharge_yh"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </LinearLayout>

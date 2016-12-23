@@ -8,7 +8,9 @@ import fxtrader.com.app.entity.CurrencyListEntity;
 import fxtrader.com.app.entity.LoginResponseEntity;
 import fxtrader.com.app.entity.TicketListEntity;
 import fxtrader.com.app.entity.UserEntity;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -43,5 +45,9 @@ public interface UserApi {
 
     @GET("/api/tickets")
     Call<TicketListEntity> tickets(@QueryMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/api/currency/unionpay")
+    Call<ResponseBody> bankRecharge(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
 
 }

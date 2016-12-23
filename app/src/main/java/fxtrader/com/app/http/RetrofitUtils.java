@@ -13,15 +13,16 @@ public class RetrofitUtils {
 
     private static Retrofit singleton;
 
-    private static String BASE_URL = "http://121.9.227.58:13516/";
+    private static Retrofit testSingleton;
+
+
 
     public static <T> T createApi(Class<T> clazz){
         if(singleton == null){
             synchronized (RetrofitUtils.class){
                 if(singleton == null){
                     singleton = new Retrofit.Builder()
-//                            .baseUrl("http://125.88.152.51:15516/")
-                            .baseUrl(BASE_URL)
+                            .baseUrl(HttpConstant.BASE_URL)
                             .addConverterFactory(GsonConverterFactory.create())
                             .client(OkHttpUtils.getSingleton(AppApplication.getInstance().getBaseContext()))
                             .build();
@@ -31,6 +32,24 @@ public class RetrofitUtils {
 
 
         return singleton.create(clazz);
+    }
+
+    public static <T> T createTestApi(Class<T> clazz){
+        if(testSingleton == null){
+            synchronized (RetrofitUtils.class){
+                if(testSingleton == null){
+                    testSingleton = new Retrofit.Builder()
+//                            .baseUrl("http://125.88.152.51:15516/")
+                            .baseUrl(HttpConstant.TEST_URL)
+//                            .addConverterFactory(GsonConverterFactory.create())
+                            .client(OkHttpUtils.getSingleton(AppApplication.getInstance().getBaseContext()))
+                            .build();
+                }
+            }
+        }
+
+
+        return testSingleton.create(clazz);
     }
 
 }

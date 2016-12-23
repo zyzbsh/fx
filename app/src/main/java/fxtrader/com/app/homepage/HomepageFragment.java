@@ -48,6 +48,8 @@ import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.UserInfoManager;
 import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.login.LoginActivity;
+import fxtrader.com.app.mine.RechargeActivity;
+import fxtrader.com.app.mine.WithdrawActivity;
 import fxtrader.com.app.service.PriceService;
 import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.LogZ;
@@ -145,9 +147,18 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
         if (requestCode == IntentItem.REQUEST_LOGIN) {
             startUserTimer();
+            startPositionTimer();
             openBuildPositionActivity(mExpect);
         } else if (requestCode == IntentItem.REQUEST_BUILD_POSITION) {
             startPositionTimer();
+        } else if (requestCode == IntentItem.REQUEST_RECHARGE) {
+            startUserTimer();
+            startPositionTimer();
+            openRechargeActivity();
+        } else if (requestCode == IntentItem.REQUEST_WITHDRAW) {
+            startUserTimer();
+            startPositionTimer();
+            openWithdrawActivity();
         }
     }
 
@@ -306,6 +317,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void openBuildPositionActivity(boolean up) {
+        if (mCurDataLineFragment == null) {
+            return;
+        }
         String dataType = mCurDataLineFragment.getDataType();
         Intent intent;
         if (dataType.equals(HttpConstant.PriceCode.YDHF)) {
@@ -354,18 +368,30 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private void recharge() {
         if (isLogin()) {
-
+            openRechargeActivity();
         } else {
-
+            openActivityForResult(LoginActivity.class, IntentItem.REQUEST_RECHARGE);
         }
+    }
+
+    private void openRechargeActivity(){
+        Intent intent = new Intent(getActivity(), RechargeActivity.class);
+        intent.putExtra(IntentItem.USER_INFO, mUserEntity);
+        startActivity(intent);
     }
 
     private void withdraw() {
         if (isLogin()) {
-
+            openWithdrawActivity();
         } else {
-
+            openActivityForResult(LoginActivity.class, IntentItem.REQUEST_WITHDRAW);
         }
+    }
+
+    private void openWithdrawActivity(){
+        Intent intent = new Intent(getActivity(), WithdrawActivity.class);
+        intent.putExtra(IntentItem.USER_INFO, mUserEntity);
+        startActivity(intent);
     }
 
     private void expect(boolean raise) {
@@ -584,10 +610,13 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    private UserEntity mUserEntity;
+
     private void getUserInfo(){
         UserInfoManager.getInstance().get(new UserInfoManager.UserInfoListener() {
             @Override
             public void onSuccess(UserEntity user) {
+                mUserEntity = user;
                 mAccountInfoLayout.setVisibility(View.VISIBLE);
                 mBalanceAmountTv.setText(String.valueOf(user.getObject().getFunds()));
                 mCashCouponTv.setText(String.valueOf(user.getObject().getCouponAmount()));

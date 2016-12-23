@@ -7,6 +7,8 @@ public final class IntentItem {
     public static final int REQUEST_LOGIN = 100;
     public static final int REQUEST_BUILD_POSITION = 101;
     public static final int REQUEST_SET_PROFIT_AND_LOSS = 102;
+    public static final int REQUEST_RECHARGE = 103;
+    public static final int REQUEST_WITHDRAW = 104;
     public static final String LOGIN = "login";
     public static final String ACTION_PRICE = "fxtrader.com.app.price";
     public static final String PRICE = "price";
@@ -17,4 +19,5 @@ public final class IntentItem {
     public static final String CONTRACT_TYPE = "contract_type";
     public static final String ORDER_DETAIL = "order_detail";
     public static final String POSITION_INFO = "position_info";
+    public static final String USER_INFO = "user_info";
 }
