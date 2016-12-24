@@ -103,7 +103,7 @@ public class DataLineFragment extends BaseFragment{
         mChartView.setContractType(mContractType);
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mChartView.getLayoutParams();
         int screenWidth = UIUtil.getScreenWidth(AppApplication.getInstance().getActivity());
-        int pad = UIUtil.dip2px(getContext(), 35);
+        int pad = UIUtil.dip2px(getActivity(), 35);
         int width = screenWidth - 2 * pad;
         lp.width = width;
         lp.height = width * 4 / 5;

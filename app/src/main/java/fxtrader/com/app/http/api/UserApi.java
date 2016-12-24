@@ -50,4 +50,8 @@ public interface UserApi {
     @POST("/api/currency/unionpay")
     Call<ResponseBody> bankRecharge(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
 
+    @FormUrlEncoded
+    @POST("/api/currency/withdrawal")
+    Call<ResponseBody> withdraw(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
+
 }

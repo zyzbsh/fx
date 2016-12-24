@@ -1,5 +1,6 @@
 package fxtrader.com.app.mine;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,17 +11,18 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.IOException;
 import java.util.Map;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.constant.IntentItem;
-import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.UserInfoManager;
 import fxtrader.com.app.http.api.UserApi;
+import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.LogZ;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -51,6 +53,8 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
     private TextView[] mMoneyTvs = new TextView[mMoneyTvIds.length];
 
     private UserEntity mUserEntity;
+
+    private double mRechargeAcount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +109,34 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == IntentItem.REQUEST_RECHARGE) {
+            showProgressDialog();
+            UserInfoManager.getInstance().get(new UserInfoManager.UserInfoListener() {
+                @Override
+                public void onSuccess(UserEntity user) {
+                    double found = user.getObject().getFunds();
+                    double diff = found - mUserEntity.getObject().getFunds() - mRechargeAcount;
+                    if (diff > -10E-6 && diff < 10E-6) {
+                        double d = ContractUtil.getDouble(mRechargeAcount, 2);
+                        mReceiveTv.setText(String.valueOf(d));
+                    }
+                    dismissProgressDialog();
+                }
+
+                @Override
+                public void onHttpFailure() {
+                    dismissProgressDialog();
+                }
+            });
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -126,21 +158,25 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         if (mUserEntity != null) {
             setUserView();
         } else {
-            showProgressDialog();
-            UserInfoManager.getInstance().get(new UserInfoManager.UserInfoListener() {
-                @Override
-                public void onSuccess(UserEntity user) {
-                    mUserEntity = user;
-                    setUserView();
-                    dismissProgressDialog();
-                }
-
-                @Override
-                public void onHttpFailure() {
-                    dismissProgressDialog();
-                }
-            });
+            requestUserInfo();
         }
+    }
+
+    private void requestUserInfo(){
+        showProgressDialog();
+        UserInfoManager.getInstance().get(new UserInfoManager.UserInfoListener() {
+            @Override
+            public void onSuccess(UserEntity user) {
+                mUserEntity = user;
+                setUserView();
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onHttpFailure() {
+                dismissProgressDialog();
+            }
+        });
     }
 
     private void setUserView(){
@@ -151,16 +187,17 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void bankRecharge(){
-        final String amount = mRechargeEdt.getText().toString().trim();
-        if (TextUtils.isEmpty(amount)) {
+        String acount = mRechargeEdt.getText().toString().trim();
+        if (TextUtils.isEmpty(acount)) {
             return;
         }
         try {
-            double d = Double.parseDouble(amount);
+            double d = Double.parseDouble(acount);
             if (d < 20 || d > 5000) {
                 showToastShort("请输入20元以上，5000元以下的金额");
                 return;
             }
+            mRechargeAcount = d;
         } catch (Exception e) {
             showToastShort("请输入具体金额");
             return;
@@ -169,11 +206,19 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         showProgressDialog();
         UserApi userApi = RetrofitUtils.createTestApi(UserApi.class);
         String token = ParamsUtil.getToken();
-        final Call<ResponseBody> respo = userApi.bankRecharge(token, getRechargerParams(amount));
+        final Call<ResponseBody> respo = userApi.bankRecharge(token, getRechargerParams(acount));
         respo.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 dismissProgressDialog();
+                try {
+                    String str = new String(response.body().bytes());
+                    Intent intent = new Intent(RechargeActivity.this, WebHtmlActivity.class);
+                    intent.putExtra(IntentItem.RECHARGE_HTML, str);
+                    startActivityForResult(intent, IntentItem.REQUEST_RECHARGE);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 LogZ.d(response.body().source().toString());
             }
 

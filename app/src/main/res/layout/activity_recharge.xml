@@ -133,9 +133,7 @@
                 android:id="@+id/recharge_receive_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/receive_money"
                 android:textColor="@color/red_text"
-
                 android:textSize="15sp" />
         </LinearLayout>
 

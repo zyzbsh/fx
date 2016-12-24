@@ -179,7 +179,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void showList() {
                 if (mProfitListPop == null) {
-                    mProfitListPop = new ProfitListPop(getContext());
+                    mProfitListPop = new ProfitListPop(getActivity());
                 }
                 mProfitListPop.show(v);
             }
@@ -224,7 +224,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private void initViewPager(View view) {
         mViewPager = (ViewPager) view.findViewById(R.id.homepage_view_pager);
         ViewGroup.LayoutParams params = mViewPager.getLayoutParams();
-        int width = UIUtil.getScreenWidth(getActivity()) - UIUtil.dip2px(getContext(), 26) * 2;
+        int width = UIUtil.getScreenWidth(getActivity()) - UIUtil.dip2px(getActivity(), 26) * 2;
         int height = width * 4 / 5 + UIUtil.dip2px(getActivity(), 55);
         params.width = width;
         params.height = height;
@@ -538,7 +538,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                         LogZ.i("显示profitView");
                         mTitleProfitCtr.show();
                         if (mProfitListPop == null) {
-                            mProfitListPop = new ProfitListPop(getContext());
+                            mProfitListPop = new ProfitListPop(getActivity());
                         }
                     } else {
                         LogZ.i("隐藏profitView");

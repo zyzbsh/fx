@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="23dp"
+        android:paddingTop="20dp"
         android:paddingBottom="23dp"
         android:background="#fc6d5a">
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="15sp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="35dp"
             android:text="@string/withdraw_can_num"/>
 
         <TextView
@@ -44,15 +44,293 @@
             android:text="@string/remind_withdraw_account"/>
 
         <EditText
+            android:id="@+id/withdraw_input_edt"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:gravity="center"
             android:hint="@string/input_withdraw_account"
             android:textSize="14sp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:background="@drawable/shape_white_corner_3"
             android:layout_marginRight="20dp"/>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:layout_weight="1"
+        android:paddingRight="20dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/withdraw_bank_layout"
+            android:layout_width="match_parent"
+            android:layout_margin="3dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_bank"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:gravity="right"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/gray_6"
+                    android:text="@string/withdraw_info_bank"/>
+
+                <TextView
+                    android:id="@+id/withdraw_bank_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/red_text"
+                    android:textSize="13sp"
+                    android:text="@string/withdraw_remind_bank"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/black_33"/>
+
+        <RelativeLayout
+            android:id="@+id/withdraw_province_layout"
+            android:layout_width="match_parent"
+            android:layout_margin="3dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_province"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:gravity="right"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/gray_6"
+                    android:text="@string/province"/>
+
+                <TextView
+                    android:id="@+id/withdraw_province_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/red_text"
+                    android:textSize="13sp"
+                    android:text="@string/withdraw_remind_province"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/black_33"/>
+        <RelativeLayout
+            android:id="@+id/withdraw_city_layout"
+            android:layout_width="match_parent"
+            android:layout_margin="3dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_city"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:gravity="right"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/gray_6"
+                    android:text="@string/city"/>
+
+                <TextView
+                    android:id="@+id/withdraw_city_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/red_text"
+                    android:textSize="13sp"
+                    android:text="@string/withdraw_remind_city"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/black_33"/>
+        <RelativeLayout
+            android:id="@+id/withdraw_branch_layout"
+            android:layout_width="match_parent"
+            android:layout_margin="3dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_branch"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:gravity="right"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/gray_6"
+                    android:text="@string/bank_branch"/>
+
+                <TextView
+                    android:id="@+id/withdraw_branch_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/red_text"
+                    android:textSize="13sp"
+                    android:text="@string/withdraw_remind_bank_branch"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/black_33"/>
+
+        <RelativeLayout
+            android:id="@+id/withdraw_card_layout"
+            android:layout_width="match_parent"
+            android:layout_margin="3dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_bank"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:gravity="right"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/gray_6"
+                    android:text="@string/bank_card"/>
+
+                <TextView
+                    android:id="@+id/withdraw_card_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/red_text"
+                    android:textSize="13sp"
+                    android:text="@string/withdraw_remind_card"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/black_33"/>
+        <RelativeLayout
+            android:id="@+id/withdraw_name_layout"
+            android:layout_width="match_parent"
+            android:layout_margin="3dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_bank"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:gravity="right"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/gray_6"
+                    android:text="@string/name"/>
+
+                <TextView
+                    android:id="@+id/withdraw_name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/red_text"
+                    android:textSize="13sp"
+                    android:text="@string/withdraw_remind"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/withdraw_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/red_e63643"
+        android:text="提现"/>
 
 </LinearLayout>

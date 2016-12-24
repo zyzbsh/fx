@@ -99,7 +99,7 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     protected int getCompactColor(int resId) {
-        return ContextCompat.getColor(this, resId);
+        return getResources().getColor(resId);
     }
 
 

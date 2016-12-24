@@ -209,4 +209,16 @@
     <string name="price_stop_loss">止损价</string>
     <string name="remind_profit_and_loss">范围0-90%</string>
     <string name="remind_build_position_send_red_envelope">我若盈利，将送出盈利的5%，分享给高手</string>
+    <string name="withdraw_info_bank">银行信息</string>
+    <string name="withdraw_remind_bank">请选择银行</string>
+    <string name="province">省份</string>
+    <string name="withdraw_remind_province">请选择省份</string>
+    <string name="city">城市</string>
+    <string name="withdraw_remind_city">请选择城市</string>
+    <string name="bank_branch">银行支行</string>
+    <string name="withdraw_remind_bank_branch">输入银行支行名称</string>
+    <string name="bank_card">银行卡号</string>
+    <string name="withdraw_remind_card">输入借记卡卡号</string>
+    <string name="name">姓名</string>
+    <string name="withdraw_remind">请输入持卡人姓名</string>
 </resources>
