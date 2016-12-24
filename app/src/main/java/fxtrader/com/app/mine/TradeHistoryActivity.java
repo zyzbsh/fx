@@ -12,12 +12,22 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseActivity;
+import fxtrader.com.app.entity.PositionListEntity;
+import fxtrader.com.app.http.ParamsUtil;
+import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
+import fxtrader.com.app.tools.LogZ;
+import fxtrader.com.app.view.ProfitListPop;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 交易历史
@@ -37,6 +47,7 @@ public class TradeHistoryActivity extends BaseActivity{
         setContentLayout(R.layout.activity_trade_history);
         initViews();
         setTitleContent(R.string.trade_history);
+        getPositionList();
     }
 
     private void initViews(){
@@ -109,6 +120,36 @@ public class TradeHistoryActivity extends BaseActivity{
         public String buyType = "2015-12-13 15:30:45";
         public String price = "3手买跌";
 
+    }
+
+    private void getPositionList(){
+        ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
+        String token = ParamsUtil.getToken();
+        Call<PositionListEntity> respon = dataApi.positionList(token, getPositionListParams());
+        respon.enqueue(new Callback<PositionListEntity>() {
+            @Override
+            public void onResponse(Call<PositionListEntity> call, Response<PositionListEntity> response) {
+                LogZ.i("profitView");
+                PositionListEntity entity = response.body();
+
+            }
+
+            @Override
+            public void onFailure(Call<PositionListEntity> call, Throwable t) {
+                LogZ.i(t.toString());
+            }
+        });
+    }
+
+    private Map<String, String> getPositionListParams(){
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.storage.list");
+        params.put("sale", "true");
+        params.put("page", "0");
+        params.put("size", String.valueOf(Integer.MAX_VALUE));
+        params.put("sort", "buyingDate,DESC");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
     }
 
 }

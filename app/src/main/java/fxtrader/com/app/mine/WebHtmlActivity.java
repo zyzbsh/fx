@@ -3,6 +3,7 @@ package fxtrader.com.app.mine;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -30,7 +31,13 @@ public class WebHtmlActivity extends BaseActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recharge_web);
+        setContentLayout(R.layout.activity_recharge_web);
+        setBackListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setResult(RESULT_OK);
+            }
+        });
         mWebView = (WebView) findViewById(R.id.recharge_web_view);
         WebSettings webSettings =   mWebView.getSettings();
         webSettings.setUseWideViewPort(true);//设置此属性，可任意比例缩放
@@ -76,5 +83,11 @@ public class WebHtmlActivity extends BaseActivity{
         params.put("amount", amount);
         params.put("sign", ParamsUtil.sign(params));
         return params;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_OK);
     }
 }

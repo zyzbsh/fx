@@ -55,6 +55,13 @@ public abstract class BaseActivity extends FragmentActivity {
         mTitleContentTv = (TextView) findViewById(R.id.title_content_tv);
     }
 
+    protected void setBackListener(View.OnClickListener listener) {
+        View view = findViewById(R.id.title_back);
+        if (view != null) {
+            view.setOnClickListener(listener);
+        }
+    }
+
     protected void setTitleContent(String content) {
         if (mTitleContentTv != null) {
             mTitleContentTv.setText(content);
