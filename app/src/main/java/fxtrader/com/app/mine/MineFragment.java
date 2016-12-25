@@ -6,22 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import java.util.Map;
-
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseFragment;
-import fxtrader.com.app.entity.CouponListEntity;
+import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.db.helper.UserInfoHelper;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.homepage.RedEnvelopListActivity;
-import fxtrader.com.app.http.ParamsUtil;
-import fxtrader.com.app.http.RetrofitUtils;
-import fxtrader.com.app.http.api.UserApi;
-import fxtrader.com.app.tools.LogZ;
+import fxtrader.com.app.http.UserInfoManager;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.PersonalInfoView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by zhangyuzhu on 2016/12/1.
@@ -29,6 +22,8 @@ import retrofit2.Response;
 public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     private PersonalInfoView mPersonalInfoView;
+
+    private UserEntity mUserEntity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,8 +40,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        getUser();
-        getCouponNum();
+        getUserInfo();
     }
 
     private void initViews(View view) {
@@ -55,10 +49,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         view.findViewById(R.id.mine_fund_list_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_trade_history_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_agent_platform_layout).setOnClickListener(this);
-        view.findViewById(R.id.mine_my_buy_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_use_rules_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_announcement_layout).setOnClickListener(this);
-        view.findViewById(R.id.mine_share_layout).setOnClickListener(this);
+        view.findViewById(R.id.mine_follow_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_my_gift_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_info_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_red_envelope_layout).setOnClickListener(this);
@@ -113,15 +106,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
             case R.id.mine_agent_platform_layout://经纪人平台
                 break;
-            case R.id.mine_my_buy_tv://我的合买
-                break;
             case R.id.mine_use_rules_layout://冠东使用规则
                 openActivity(TradeRulesActivity.class);
                 break;
             case R.id.mine_announcement_layout://公告
                 openActivity(AnnouncementActivity.class);
                 break;
-            case R.id.mine_share_tv://分享好友
+            case R.id.mine_follow_tv://我的关注
                 break;
             case R.id.mine_my_gift_layout://我的礼券
                 openActivity(ExperienceVoucherActivity.class);
@@ -130,58 +121,39 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 openActivity(PersonalInfoActivity.class);
                 break;
             case R.id.mine_red_envelope_layout://我的红包
-                openActivity(RedEnvelopListActivity.class);
+                openActivity(RedEnvelopeActivity.class);
                 break;
             default:
                 break;
         }
     }
 
-    private void getUser() {
-        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
-        String token = ParamsUtil.getToken();
-        Call<UserEntity> respo = userApi.info(token, getUserParams());
-        respo.enqueue(new Callback<UserEntity>() {
+    private void getUserInfo() {
+        String account = LoginConfig.getInstance().getAccount();
+        mUserEntity = UserInfoHelper.getInstance().getEntity(account);
+        if (mUserEntity == null) {
+            requestUserInfo();
+        }
+    }
+
+    private void requestUserInfo(){
+        showProgressDialog();
+        UserInfoManager.getInstance().get(new UserInfoManager.UserInfoListener() {
             @Override
-            public void onResponse(Call<UserEntity> call, Response<UserEntity> response) {
-                UserEntity entity = response.body();
-                LogZ.i(entity.toString());
+            public void onSuccess(UserEntity user) {
+                mUserEntity = user;
+                setUserView();
+                dismissProgressDialog();
             }
 
             @Override
-            public void onFailure(Call<UserEntity> call, Throwable t) {
-
+            public void onHttpFailure() {
+                dismissProgressDialog();
             }
         });
     }
 
-    private Map<String, String> getUserParams(){
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.users.get");
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
-    }
-
-    private void getCouponNum(){
-        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
-        String token = ParamsUtil.getToken();
-        Call<CouponListEntity> respo = userApi.coupons(token, getCouponsParams());
-        respo.enqueue(new Callback<CouponListEntity>() {
-            @Override
-            public void onResponse(Call<CouponListEntity> call, Response<CouponListEntity> response) {
-            }
-
-            @Override
-            public void onFailure(Call<CouponListEntity> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private Map<String, String> getCouponsParams() {
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.coupon.get");
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
+    private void setUserView(){
+        mPersonalInfoView.set(mUserEntity);
     }
 }

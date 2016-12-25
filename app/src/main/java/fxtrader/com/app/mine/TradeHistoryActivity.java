@@ -10,21 +10,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseActivity;
+import fxtrader.com.app.entity.ContractInfoEntity;
+import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PositionListEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
+import fxtrader.com.app.tools.ContractUtil;
+import fxtrader.com.app.tools.DateTools;
 import fxtrader.com.app.tools.LogZ;
-import fxtrader.com.app.view.ProfitListPop;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,7 +35,7 @@ import retrofit2.Response;
  * 交易历史
  * Created by zhangyuzhu on 2016/11/22.
  */
-public class TradeHistoryActivity extends BaseActivity{
+public class TradeHistoryActivity extends BaseActivity {
 
     private LRecyclerView mRecyclerView;
 
@@ -41,17 +43,21 @@ public class TradeHistoryActivity extends BaseActivity{
 
     private TextView mPositionListSizeTv;
 
+    private TextView mTotalTv;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentLayout(R.layout.activity_trade_history);
         initViews();
         setTitleContent(R.string.trade_history);
+        getPositionHistoryList();
         getPositionList();
     }
 
-    private void initViews(){
+    private void initViews() {
 
+        mTotalTv = (TextView) findViewById(R.id.trade_history_sum_tv);
         mTotalBreakEvenTv = (TextView) findViewById(R.id.trade_history_break_even_num_tv);
         mPositionListSizeTv = (TextView) findViewById(R.id.trade_history_size_tv);
 
@@ -60,16 +66,11 @@ public class TradeHistoryActivity extends BaseActivity{
         mRecyclerView.setPullRefreshEnabled(false);
 
         DataAdapter adapter = new DataAdapter(this);
-        List<ItemModel> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            list.add(new ItemModel());
-        }
-        adapter.addAll(list);
         LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(this, adapter);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
     }
 
-    class DataAdapter extends ListBaseAdapter<ItemModel> {
+    class DataAdapter extends ListBaseAdapter<PositionInfoEntity> {
 
         private LayoutInflater mLayoutInflater;
 
@@ -87,13 +88,23 @@ public class TradeHistoryActivity extends BaseActivity{
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ItemModel item = mDataList.get(position);
+            PositionInfoEntity info = mDataList.get(position);
 
             ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.breakEvenTv.setText(item.breakEven);
-            viewHolder.timeTv.setText(item.buyType);
-            viewHolder.priceTv.setText(item.price);
-            viewHolder.nameTv.setText(item.production);
+            viewHolder.breakEvenTv.setText(String.valueOf(info.getProfitAndLoss()));
+            String type = String.valueOf(info.getDealCount()) + " 手";
+            String dealDirection;
+            if ("UP".equals(info.getDealDirection())) {
+                dealDirection = "买涨";
+            } else {
+                dealDirection = "买跌";
+            }
+            viewHolder.priceTv.setText(type + dealDirection);
+            ContractInfoEntity contractInfoEntity = ContractUtil.getContractInfoMap().get(info.getContractCode());
+            if (contractInfoEntity != null) {
+                viewHolder.nameTv.setText(contractInfoEntity.getName());
+            }
+            viewHolder.timeTv.setText(DateTools.changeToDate2(info.getSellingDate()));
         }
 
 
@@ -114,24 +125,68 @@ public class TradeHistoryActivity extends BaseActivity{
         }
     }
 
-    class ItemModel{
-        public String breakEven = "-14";
-        public String production = "3000g粤油";
-        public String buyType = "2015-12-13 15:30:45";
-        public String price = "3手买跌";
-
-    }
-
-    private void getPositionList(){
+    private List<PositionInfoEntity> mPositionInfoList;
+    private void getPositionHistoryList() {
+        showProgressDialog();
         ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
         String token = ParamsUtil.getToken();
-        Call<PositionListEntity> respon = dataApi.positionList(token, getPositionListParams());
+        Call<PositionListEntity> respon = dataApi.positionList(token, getPositionListParams("true"));
         respon.enqueue(new Callback<PositionListEntity>() {
             @Override
             public void onResponse(Call<PositionListEntity> call, Response<PositionListEntity> response) {
-                LogZ.i("profitView");
+                dismissProgressDialog();
                 PositionListEntity entity = response.body();
+                if (entity != null && entity.getObject() != null) {
+                    mPositionInfoList = entity.getObject().getContent();
 
+                    if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
+                        double sum = 0;
+                        for (PositionInfoEntity position : mPositionInfoList) {
+                            sum = sum + position.getProfitAndLoss();
+                        }
+                        mTotalBreakEvenTv.setText(String.valueOf(sum));
+                        mTotalTv.setText(getString(R.string.position_list_num,mPositionInfoList.size()));
+                    } else {
+                        mTotalTv.setText(getString(R.string.position_list_num, 0));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PositionListEntity> call, Throwable t) {
+                LogZ.i(t.toString());
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    private Map<String, String> getPositionListParams(String history) {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.storage.list");
+        params.put("sale", history);
+        params.put("page", "0");
+        params.put("size", String.valueOf(Integer.MAX_VALUE));
+        params.put("sort", "buyingDate,DESC");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    private void getPositionList() {
+        ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
+        String token = ParamsUtil.getToken();
+        Call<PositionListEntity> respon = dataApi.positionList(token, getPositionListParams("true"));
+        respon.enqueue(new Callback<PositionListEntity>() {
+            @Override
+            public void onResponse(Call<PositionListEntity> call, Response<PositionListEntity> response) {
+                PositionListEntity entity = response.body();
+                if (entity != null && entity.getObject() != null) {
+                    List<PositionInfoEntity> list = entity.getObject().getContent();
+                    if (list == null) {
+                        mPositionListSizeTv.setText(getString(R.string.position_list_num,0));
+                    } else {
+                        mPositionListSizeTv.setText(getString(R.string.position_list_num, list.size()));
+                    }
+                }
             }
 
             @Override
@@ -139,17 +194,6 @@ public class TradeHistoryActivity extends BaseActivity{
                 LogZ.i(t.toString());
             }
         });
-    }
-
-    private Map<String, String> getPositionListParams(){
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.storage.list");
-        params.put("sale", "true");
-        params.put("page", "0");
-        params.put("size", String.valueOf(Integer.MAX_VALUE));
-        params.put("sort", "buyingDate,DESC");
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
     }
 
 }

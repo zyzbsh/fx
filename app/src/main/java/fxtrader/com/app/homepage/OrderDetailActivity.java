@@ -162,8 +162,16 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         mBuyAccountTv.setText(getString(R.string.order_detail_buy_account_num, String.valueOf(mBuyAccount)));
         String date = DateTools.changeToDate2(mPositionInfo.getBuyingDate());
         mDateTv.setText(getString(R.string.order_detail_build_time, date));
-        String lastDate = DateTools.changeToDate2(mPositionInfo.getSellingDate());
-        mRemindTv.setText(getString(R.string.order_detail_remind_time, lastDate));
+
+        String lastTime = "";
+        long dateLong = Long.parseLong(date);
+        long time = dateLong % DateTools.DAY;
+        if (time < 4 * DateTools.HOUR){
+            lastTime = DateTools.changeToDay(dateLong) + " 04:00:00";
+        } else { //time > 8 * DateTools.HOUR
+            lastTime = DateTools.changeToDay(dateLong + DateTools.DAY) + " 04:00:00";
+        }
+        mRemindTv.setText(getString(R.string.order_detail_remind_time, lastTime));
         setStopProfitTv(mPositionInfo.getProfit());
         setStopLossTv(mPositionInfo.getLoss());
     }

@@ -3,11 +3,13 @@ package fxtrader.com.app.db.helper;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.db.DBHelper;
 import fxtrader.com.app.db.UserInfoColumn;
 import fxtrader.com.app.entity.UserEntity;
+import fxtrader.com.app.tools.LogZ;
 
 /**
  * Created by pc on 2016/12/20.
@@ -34,11 +36,32 @@ public class UserInfoHelper extends ColumnHelper<UserEntity> {
     }
 
     public void save(UserEntity user) {
-        DBHelper.getInstance(mContext).delete(UserInfoColumn.TABLE_NAME, null, null);
+
+        String[] args = new String[] {user.getObject().getAccount()};
+        Cursor c = DBHelper.getInstance(mContext).rawQuery(
+                "SELECT * FROM " + UserInfoColumn.TABLE_NAME + " WHERE " + UserInfoColumn.ACCOUNT
+                        + " = ?", args);
+        if (exist(c)) {
+            c.moveToFirst();
+            delete(user.getObject().getAccount());
+        }
         DBHelper.getInstance(mContext).insert(UserInfoColumn.TABLE_NAME, getValues(user));
+        c.close();
+    }
+
+    private void delete(String account) {
+        String[] args = new String[] {account};
+        DBHelper.getInstance(mContext).delete(UserInfoColumn.TABLE_NAME,
+                UserInfoColumn.ACCOUNT + " = ?", args);
+    }
+
+    public boolean hasTelNumber(String account) {
+        UserEntity entity = getEntity(account);
+        return !TextUtils.isEmpty(entity.getObject().getTelNumber());
     }
 
     public UserEntity getEntity(String account) {
+        LogZ.i("account = " + account);
         UserEntity entity = null;
         Cursor c = DBHelper.getInstance(mContext).rawQuery("SELECT * FROM " + UserInfoColumn.TABLE_NAME + " WHERE " + UserInfoColumn.ACCOUNT + " = ? ", new String[]{account});
         if (exist(c)) {

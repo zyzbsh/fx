@@ -1,6 +1,7 @@
 package fxtrader.com.app.mine;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import fxtrader.com.app.lrececlerview.interfaces.OnItemClickListener;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
 import fxtrader.com.app.tools.DateTools;
+import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.view.PaymentDetailDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -114,6 +116,7 @@ public class ProfitAndLossDetailActivity extends BaseActivity {
 
 
     private void getData() {
+        showProgressDialog();
         UserApi userApi = RetrofitUtils.createApi(UserApi.class);
         String token = ParamsUtil.getToken();
         Call<CurrencyListEntity> respo = userApi.currencyDetail(token, getParams());
@@ -121,20 +124,26 @@ public class ProfitAndLossDetailActivity extends BaseActivity {
             @Override
             public void onResponse(Call<CurrencyListEntity> call, Response<CurrencyListEntity> response) {
                 CurrencyListEntity entity = response.body();
+                LogZ.i(entity.toString());
                 List<CurrencyDetailEntity> list = entity.getObject().getContent();
                 if (mTotal == 0 && entity.getObject() != null) {
                     mTotal = entity.getObject().getTotalElements();
+                    LogZ.i("total = " + mTotal);
                 }
                 if (list != null) {
+                    LogZ.i("list = " + list.toString());
                     mCount = mCount + list.size();
                     mAdapter.addAll(list);
+                    mAdapter.notifyDataSetChanged();
                     mPage++;
                 }
+                dismissProgressDialog();
             }
 
             @Override
             public void onFailure(Call<CurrencyListEntity> call, Throwable t) {
-
+                LogZ.i(t.toString());
+                dismissProgressDialog();
             }
         });
     }
@@ -169,15 +178,23 @@ public class ProfitAndLossDetailActivity extends BaseActivity {
             String type = item.getTransactionType();
             if (HttpConstant.TransactionType.BUILD_METALORDER.equals(type)) {
                 viewHolder.operateTv.setText(R.string.build_position);
-                viewHolder.iconIm.setImageResource(R.mipmap.icon_plus_circle);
             } else {
                 viewHolder.operateTv.setText(R.string.close_position);
-                viewHolder.iconIm.setImageResource(R.mipmap.icon_minus_circle);
             }
-
-            viewHolder.numTv.setText(getString(R.string.income_num, item.getTransactionMoney()));
+            double money = item.getTransactionMoney();
+            String moneyShow;
+            if (money >= 0) {
+                viewHolder.iconIm.setImageResource(R.mipmap.icon_plus_circle);
+                viewHolder.numTv.setTextColor(Color.parseColor("#f43e3b"));
+                moneyShow = "+" + String.valueOf(money);
+            } else {
+                viewHolder.iconIm.setImageResource(R.mipmap.icon_minus_circle);
+                viewHolder.numTv.setTextColor(Color.parseColor("#42d55a"));
+                moneyShow = "-" + String.valueOf(money);
+            }
+            viewHolder.numTv.setText(moneyShow);
             viewHolder.dateTv.setText(DateTools.changeToDate(item.getDate()));
-            viewHolder.accountTv.setText(getString(R.string.account_num, item.getRemainingMoney()));
+            viewHolder.accountTv.setText(getString(R.string.account_num, String.valueOf(item.getRemainingMoney())));
         }
 
 

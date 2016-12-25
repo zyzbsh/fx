@@ -13,6 +13,10 @@ import android.annotation.SuppressLint;
 @SuppressLint("SimpleDateFormat")
 public class DateTools {
 
+	public static long HOUR = 1000 * 60 * 60;
+
+	public static long DAY = 24 * HOUR;
+
 	public static String getCurrentData() {
 		return new SimpleDateFormat("yyyyMMdd").format(new Date());
 	}
@@ -34,6 +38,14 @@ public class DateTools {
 		calendar.setTimeInMillis(time);
 		return formatter.format(calendar.getTime());
 	}
+
+	public static String changeToDay(long time) {
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(time);
+		return formatter.format(calendar.getTime());
+	}
+
 
 	public static String getBeforeDate(int before) {
 		Date date = new Date();

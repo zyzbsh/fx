@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.Map;
 
+import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.config.LoginConfig;
@@ -134,7 +135,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     LoginResponseEntity entity = response.body();
                     LoginConfig.getInstance().saveUser(account, entity.getAccess_token());
                     getTickets();
-//                    getUserInfo();
+                    getUserInfo();
                 }
 
                 @Override
@@ -153,6 +154,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         UserInfoManager.getInstance().get(new UserInfoManager.UserInfoListener() {
             @Override
             public void onSuccess(UserEntity user) {
+                UserInfoHelper.getInstance().save(user);
+                LoginConfig.getInstance().saveInfo("" + user.getObject().getId(), user.getObject().getTelNumber());
                 mHandler.sendEmptyMessage(0);
             }
 

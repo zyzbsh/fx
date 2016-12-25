@@ -1,525 +1,561 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="false">
+    android:background="@mipmap/bg_homepage"
+    android:orientation="vertical"
+    android:paddingBottom="5dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@mipmap/bg_homepage"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/homepage_ad_im"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@mipmap/icon_ad" />
+
+        <ImageButton
+            android:id="@+id/homepage_close_ad_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:padding="10dp"
+            android:src="@mipmap/icon_close" />
 
         <RelativeLayout
+            android:id="@+id/homepage_title_profit_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="45dp"
+            android:background="@color/red_e63643"
+            android:visibility="gone">
 
-            <ImageView
-                android:id="@+id/homepage_ad_im"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@mipmap/icon_ad" />
-
-            <ImageButton
-                android:id="@+id/homepage_close_ad_btn"
+            <TextView
+                android:id="@+id/homepage_title_profit_list_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:background="@null"
-                android:padding="10dp"
-                android:src="@mipmap/icon_close" />
-
-            <RelativeLayout
-                android:id="@+id/homepage_title_profit_layout"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:background="@color/red_e63643"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/homepage_title_profit_list_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:text="列表"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/homepage_title_profit_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="11111"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/homepage_title_profit_tv"
-                    android:text="@string/account_unit"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:layout_toLeftOf="@id/homepage_title_profit_tv"
-                    android:text="@string/floating_proceed"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/homepage_account_info_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/black_33"
-            android:paddingBottom="10dp"
-            android:paddingLeft="25dp"
-            android:paddingRight="25dp"
-            android:visibility="gone"
-            android:paddingTop="10dp">
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:text="列表"
+                android:textColor="@color/white" />
 
             <TextView
-                android:id="@+id/homepage_balance_tv"
+                android:id="@+id/homepage_title_profit_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:drawableLeft="@mipmap/icon_money"
-                android:drawablePadding="5dp"
-                android:text="@string/account_balance"
+                android:layout_centerInParent="true"
+                android:text="11111"
                 android:textColor="@color/white"
-                android:textSize="13sp" />
+                android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/homepage_balance_amount_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/homepage_balance_tv"
-                android:textColor="@color/red_text"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/homepage_recharge_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/homepage_balance_amount_tv"
-                android:background="@mipmap/bg_withdraw"
-                android:gravity="center_horizontal"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp"
-                android:paddingTop="2dp"
-                android:text="@string/recharge"
-                android:textColor="@color/black_33"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/homepage_withdraw_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@id/homepage_recharge_tv"
-                android:background="@mipmap/bg_withdraw"
-                android:gravity="center_horizontal"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp"
-                android:paddingTop="2dp"
-                android:text="@string/withdraw"
-                android:textColor="@color/black_33"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/homepage_cash_coupon_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:drawableLeft="@mipmap/icon_crash"
-                android:drawablePadding="3dp"
-                android:text="@string/cash_coupon_num"
+                android:layout_toRightOf="@id/homepage_title_profit_tv"
+                android:text="@string/account_unit"
                 android:textColor="@color/white"
-                android:textSize="13sp" />
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@id/homepage_title_profit_tv"
+                android:text="@string/floating_proceed"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/homepage_account_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black_33"
+        android:paddingBottom="10dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:paddingTop="10dp"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/homepage_login_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/login"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/homepage_balance_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/homepage_balance_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/icon_money"
+                    android:drawablePadding="5dp"
+                    android:text="@string/account_balance"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/homepage_balance_amount_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/homepage_balance_tv"
+                    android:textColor="@color/red_text"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:orientation="vertical">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/homepage_view_pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/shape_white_with_yellow_stroke" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="-1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:background="@drawable/shape_red_with_yellow_stroke">
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:id="@+id/bg_btn_timeline"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@mipmap/bg_data_line"
-                        android:visibility="invisible" />
-
-                    <View
-                        android:id="@+id/bg_btn_kline5"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@mipmap/bg_data_line"
-                        android:visibility="invisible" />
-
-                    <View
-                        android:id="@+id/bg_btn_kline15"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@mipmap/bg_data_line"
-                        android:visibility="invisible" />
-
-                    <View
-                        android:id="@+id/bg_btn_kline30"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@mipmap/bg_data_line"
-                        android:visibility="invisible" />
-
-                    <View
-                        android:id="@+id/bg_btn_kline60"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@mipmap/bg_data_line"
-                        android:visibility="invisible" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginBottom="1dp"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btn_timeline"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:text="@string/time_line"
-                        android:textColor="@drawable/sel_btn_data_line"
-                        android:textSize="13sp" />
-
-                    <Button
-                        android:id="@+id/btn_kline5"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:text="@string/five_min"
-                        android:textColor="@drawable/sel_btn_data_line"
-                        android:textSize="13sp" />
-
-                    <Button
-                        android:id="@+id/btn_kline15"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:text="@string/ten_min"
-                        android:textColor="@drawable/sel_btn_data_line"
-                        android:textSize="13sp" />
-
-                    <Button
-                        android:id="@+id/btn_kline30"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:text="@string/half_hour"
-                        android:textColor="@drawable/sel_btn_data_line"
-                        android:textSize="13sp" />
-
-                    <Button
-                        android:id="@+id/btn_kline60"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:text="@string/one_hour"
-                        android:textColor="@drawable/sel_btn_data_line"
-                        android:textSize="13sp" />
-                </LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
-
-        <!--TextView
-            android:id="@+id/homepage_sys_announcement"
+        <TextView
+            android:id="@+id/homepage_cash_coupon_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/white"
-            android:drawableLeft="@mipmap/icon_sys_announce"
-            android:drawablePadding="5dp"
-            android:gravity="center_vertical"
-            android:padding="5dp"
-            android:textColor="#3e3a39"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@mipmap/icon_crash"
+            android:drawablePadding="3dp"
+            android:text="@string/cash_coupon_num"
+            android:textColor="@color/white"
             android:textSize="13sp" />
-        <!-->
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <TextView
+            android:id="@+id/homepage_recharge_tv"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="25dp"
-            android:layout_marginTop="5dp"
-            android:paddingRight="25dp">
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/homepage_cash_coupon_tv"
+            android:background="@mipmap/bg_withdraw"
+            android:gravity="center_horizontal"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="2dp"
+            android:text="@string/recharge"
+            android:textColor="@color/black_33"
+            android:textSize="10sp" />
 
-            <LinearLayout
-                android:id="@+id/homepage_expect_raise_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/shape_red_corner_5"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="5dp">
+        <TextView
+            android:id="@+id/homepage_withdraw_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/homepage_recharge_tv"
+            android:background="@mipmap/bg_withdraw"
+            android:gravity="center_horizontal"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="2dp"
+            android:text="@string/withdraw"
+            android:textColor="@color/black_33"
+            android:textSize="10sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_expect_raise"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingBottom="20dp"
-                    android:paddingTop="20dp">
+    </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/icon_raise" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:src="@mipmap/icon_raise_text" />
-
-                </LinearLayout>
-
-
-                <TextView
-                    android:id="@+id/homepage_expect_raise_des_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@mipmap/bg_homepage_buy_raise"
-                    android:gravity="center"
-                    android:text="@string/expect_raise_num"
-                    android:textColor="@color/yellow_text"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/homepage_expect_fall_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_green_corner_5"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="5dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_expect_fall"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingBottom="20dp"
-                    android:paddingTop="20dp">
-
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/icon_fall" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:src="@mipmap/icon_fall_text" />
-
-
-                </LinearLayout>
-
-
-                <TextView
-                    android:id="@+id/homepage_expect_fall_des_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@mipmap/bg_homepage_buy_fall"
-                    android:gravity="center"
-                    android:text="@string/expect_fall_num"
-                    android:textColor="@color/yellow_text"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="false">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:drawableLeft="@mipmap/icon_hot"
-                    android:drawablePadding="5dp"
-                    android:text="@string/master_hot"
-                    android:textColor="@color/black_33"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/homepage_master_more_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@mipmap/icon_more"
-                    android:gravity="center"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/more"
-                    android:textColor="@color/white"
-                    android:textSize="10sp" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="#f6812e"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:orientation="vertical">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/homepage_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/shape_white_with_yellow_stroke" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="-1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/shape_red_with_yellow_stroke">
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:id="@+id/bg_btn_timeline"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@mipmap/bg_data_line"
+                            android:visibility="invisible" />
+
+                        <View
+                            android:id="@+id/bg_btn_kline5"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@mipmap/bg_data_line"
+                            android:visibility="invisible" />
+
+                        <View
+                            android:id="@+id/bg_btn_kline15"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@mipmap/bg_data_line"
+                            android:visibility="invisible" />
+
+                        <View
+                            android:id="@+id/bg_btn_kline30"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@mipmap/bg_data_line"
+                            android:visibility="invisible" />
+
+                        <View
+                            android:id="@+id/bg_btn_kline60"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@mipmap/bg_data_line"
+                            android:visibility="invisible" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btn_timeline"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:text="@string/time_line"
+                            android:textColor="@drawable/sel_btn_data_line"
+                            android:textSize="13sp" />
+
+                        <Button
+                            android:id="@+id/btn_kline5"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:text="@string/five_min"
+                            android:textColor="@drawable/sel_btn_data_line"
+                            android:textSize="13sp" />
+
+                        <Button
+                            android:id="@+id/btn_kline15"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:text="@string/ten_min"
+                            android:textColor="@drawable/sel_btn_data_line"
+                            android:textSize="13sp" />
+
+                        <Button
+                            android:id="@+id/btn_kline30"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:text="@string/half_hour"
+                            android:textColor="@drawable/sel_btn_data_line"
+                            android:textSize="13sp" />
+
+                        <Button
+                            android:id="@+id/btn_kline60"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:text="@string/one_hour"
+                            android:textColor="@drawable/sel_btn_data_line"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+
+            <!--TextView
+                android:id="@+id/homepage_sys_announcement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/white"
+                android:drawableLeft="@mipmap/icon_sys_announce"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:padding="5dp"
+                android:textColor="#3e3a39"
+                android:textSize="13sp" />
+            <!-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@mipmap/bg_homepage_master">
+                android:orientation="horizontal"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp">
 
-                <ImageView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/homepage_expect_raise_layout"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitXY"
-                    android:src="@mipmap/icon_homepage_master"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_red_corner_5"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
-                <RelativeLayout
-                    android:id="@+id/homepage_master_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="-2dp"
-                    android:layout_marginRight="-2dp"
-                    android:layout_marginBottom="-2dp"
-                    android:background="@mipmap/bg_homepage_mastar_info">
-
-                    <RelativeLayout
-
-                        android:id="@+id/homepage_master_avatar_layout"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:background="@mipmap/bg_homepage_master_avatar">
+                        android:background="@drawable/shape_expect_raise"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingBottom="20dp"
+                        android:paddingTop="20dp">
+
                         <ImageView
-                            android:id="@+id/homepage_master_avatar_im"
-                            android:layout_width="30dp"
-                            android:layout_margin="10dp"
-                            android:layout_height="30dp"
-                            android:src="@mipmap/avatar_master" />
-                    </RelativeLayout>
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/icon_raise" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:src="@mipmap/icon_raise_text" />
+
+                    </LinearLayout>
+
 
                     <TextView
-                        android:id="@+id/homepage_master_name_tv"
+                        android:id="@+id/homepage_expect_raise_des_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:background="@mipmap/bg_homepage_buy_raise"
+                        android:gravity="center"
+                        android:text="@string/expect_raise_num"
+                        android:textColor="@color/yellow_text"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/homepage_expect_fall_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_green_corner_5"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_expect_fall"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingBottom="20dp"
+                        android:paddingTop="20dp">
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/icon_fall" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:src="@mipmap/icon_fall_text" />
+
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/homepage_expect_fall_des_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:background="@mipmap/bg_homepage_buy_fall"
+                        android:gravity="center"
+                        android:text="@string/expect_fall_num"
+                        android:textColor="@color/yellow_text"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="15dp"
-                        android:layout_toRightOf="@id/homepage_master_avatar_layout"
-                        android:text="NISHOLAS"
+                        android:drawableLeft="@mipmap/icon_hot"
+                        android:drawablePadding="5dp"
+                        android:text="@string/master_hot"
                         android:textColor="@color/black_33"
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/homepage_master_profit_tv"
+                        android:id="@+id/homepage_master_more_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:background="@mipmap/icon_more"
                         android:gravity="center"
-                        android:text="@string/profit_num"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/more"
                         android:textColor="@color/white"
-                        android:background="@mipmap/bg_homepage_master_money"
-                        android:textSize="14sp" />
+                        android:textSize="10sp" />
                 </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#f6812e" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@mipmap/bg_homepage_master"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/icon_homepage_master" />
+
+                    <RelativeLayout
+                        android:id="@+id/homepage_master_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="-2dp"
+                        android:layout_marginLeft="-2dp"
+                        android:layout_marginRight="-2dp"
+                        android:background="@mipmap/bg_homepage_mastar_info">
+
+                        <RelativeLayout
+
+                            android:id="@+id/homepage_master_avatar_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:background="@mipmap/bg_homepage_master_avatar">
+
+                            <ImageView
+                                android:id="@+id/homepage_master_avatar_im"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_margin="10dp"
+                                android:src="@mipmap/avatar_master" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/homepage_master_name_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toRightOf="@id/homepage_master_avatar_layout"
+                            android:text="NISHOLAS"
+                            android:textColor="@color/black_33"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/homepage_master_profit_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@mipmap/bg_homepage_master_money"
+                            android:gravity="center"
+                            android:text="@string/profit_num"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
-
-
         </LinearLayout>
 
-    </LinearLayout>
-
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

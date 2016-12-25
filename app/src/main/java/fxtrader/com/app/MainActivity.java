@@ -7,10 +7,13 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import java.util.ArrayList;
+
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.find.FindFragment;
 import fxtrader.com.app.homepage.HomepageFragment;
+import fxtrader.com.app.login.LoginActivity;
 import fxtrader.com.app.mine.MineFragment;
 import fxtrader.com.app.protection.ProtectionFragment;
 
@@ -21,6 +24,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     private View[] mBottomTabBgViews = new View[4];
 
+    private RadioGroup mRadioGroup;
+
     private BaseFragment mHomepageFragment;
 
     private BaseFragment mProtectionFragment;
@@ -28,6 +33,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
     private BaseFragment mFindFragment;
 
     private BaseFragment mMineFragment;
+
+    private ArrayList<Integer> mCheckedIdRecords = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +56,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         mBottomTabBgViews[2] = findViewById(R.id.main_tab_bg_find);
         mBottomTabBgViews[3] = findViewById(R.id.main_tab_bg_mine);
 
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.main_radio_group);
-        radioGroup.setOnCheckedChangeListener(this);
+        mRadioGroup = (RadioGroup) findViewById(R.id.main_radio_group);
+        mRadioGroup.setOnCheckedChangeListener(this);
 
         RadioButton btn = (RadioButton) findViewById(R.id.main_tab_homepage_btn);
         btn.setChecked(true);
@@ -59,44 +66,55 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        hideAllFragment(transaction);
-
-        if (R.id.main_tab_homepage_btn == checkedId) {
-            checkTabBg(0);
-            if (mHomepageFragment == null) {
-                mHomepageFragment = new HomepageFragment();
-                transaction.add(R.id.main_content_layout, mHomepageFragment);
+        if (R.id.main_tab_min_btn == checkedId) {
+            if (isLogin()) {
+                hideAllFragment(transaction);
+                checkTabBg(3);
+                if (mMineFragment == null) {
+                    mMineFragment = new MineFragment();
+                    transaction.add(R.id.main_content_layout, mMineFragment);
+                } else {
+                    transaction.show(mMineFragment);
+                }
+                transaction.commit();
             } else {
-                transaction.show(mHomepageFragment);
+                openActivity(LoginActivity.class);
+                int size = mCheckedIdRecords.size();
+                mRadioGroup.check(mCheckedIdRecords.get(size - 1));
             }
-        } else if (R.id.main_tab_protection_btn == checkedId) {
-            checkTabBg(1);
-            if (mProtectionFragment == null) {
-                mProtectionFragment = new ProtectionFragment();
-                transaction.add(R.id.main_content_layout, mProtectionFragment);
-            } else {
-                transaction.show(mProtectionFragment);
+        } else {
+            mCheckedIdRecords.clear();
+            hideAllFragment(transaction);
+            if (R.id.main_tab_homepage_btn == checkedId) {
+                checkTabBg(0);
+                if (mHomepageFragment == null) {
+                    mHomepageFragment = new HomepageFragment();
+                    transaction.add(R.id.main_content_layout, mHomepageFragment);
+                } else {
+                    transaction.show(mHomepageFragment);
+                }
+            } else if (R.id.main_tab_protection_btn == checkedId) {
+                checkTabBg(1);
+                if (mProtectionFragment == null) {
+                    mProtectionFragment = new ProtectionFragment();
+                    transaction.add(R.id.main_content_layout, mProtectionFragment);
+                } else {
+                    transaction.show(mProtectionFragment);
+                }
+            } else if (R.id.main_tab_find_btn == checkedId) {
+                checkTabBg(2);
+                if (mFindFragment == null) {
+                    mFindFragment = new FindFragment();
+                    transaction.add(R.id.main_content_layout, mFindFragment);
+                } else {
+                    transaction.show(mFindFragment);
+                }
             }
-        } else if (R.id.main_tab_find_btn == checkedId) {
-            checkTabBg(2);
-            if (mFindFragment == null) {
-                mFindFragment = new FindFragment();
-                transaction.add(R.id.main_content_layout, mFindFragment);
-            } else {
-                transaction.show(mFindFragment);
-            }
-        } else if (R.id.main_tab_min_btn == checkedId) {
-            checkTabBg(3);
-            if (mMineFragment == null) {
-                mMineFragment = new MineFragment();
-                transaction.add(R.id.main_content_layout, mMineFragment);
-            } else {
-                transaction.show(mMineFragment);
-            }
+            transaction.commit();
+            mCheckedIdRecords.add(checkedId);
         }
-        transaction.commit();
+
     }
 
     private void checkTabBg(int index) {

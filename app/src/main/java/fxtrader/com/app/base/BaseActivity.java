@@ -12,7 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import fxtrader.com.app.R;
+import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.tools.UIUtil;
+import fxtrader.com.app.view.DefaultProgressDialog;
 
 /**
  * activity基类
@@ -22,7 +24,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
     private TextView mTitleContentTv;
 
-    private ProgressDialog mProgressDialog;
+    private DefaultProgressDialog mLoadingProgress;
 
 
     @Override
@@ -91,17 +93,15 @@ public abstract class BaseActivity extends FragmentActivity {
     }
 
     protected void showProgressDialog(){
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            mProgressDialog.setCanceledOnTouchOutside(false);
+        if (mLoadingProgress == null) {
+            mLoadingProgress = new DefaultProgressDialog(this);
         }
-        mProgressDialog.show();
+        mLoadingProgress.show();
     }
 
     protected void dismissProgressDialog(){
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
+        if (mLoadingProgress != null && mLoadingProgress.isShowing()){
+            mLoadingProgress.dismiss();
         }
     }
 
@@ -109,7 +109,9 @@ public abstract class BaseActivity extends FragmentActivity {
         return getResources().getColor(resId);
     }
 
-
+    protected boolean isLogin(){
+        return LoginConfig.getInstance().isLogin();
+    }
 
 }
 

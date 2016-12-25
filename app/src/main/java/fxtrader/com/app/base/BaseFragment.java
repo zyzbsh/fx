@@ -22,14 +22,14 @@ public abstract class BaseFragment extends Fragment {
         startActivityForResult(intent, requestCode);
     }
 
-    protected void showLoadingProgress(){
+    protected void showProgressDialog(){
         if (mLoadingProgress == null) {
             mLoadingProgress = new DefaultProgressDialog(getContext());
         }
         mLoadingProgress.show();
     }
 
-    protected void dismissLoadingProgress(){
+    protected void dismissProgressDialog(){
         if (mLoadingProgress != null && mLoadingProgress.isShowing()){
             mLoadingProgress.dismiss();
         }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -69,6 +70,10 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private MainTitleProfitCtr mTitleProfitCtr;
 
     private ProfitListPop mProfitListPop;
+
+    private TextView mLoginTv;
+
+    private LinearLayout mBalanceLayout;
 
     private TextView mSystemBulletinContentTv;
 
@@ -124,9 +129,15 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        if (isLogin()){
+        if (isLogin()) {
+            mLoginTv.setVisibility(View.GONE);
+            mBalanceLayout.setVisibility(View.VISIBLE);
             startPositionTimer();
             startUserTimer();
+        } else {
+            mLoginTv.setVisibility(View.VISIBLE);
+            mBalanceLayout.setVisibility(View.GONE);
+            mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, " -"));
         }
     }
 
@@ -136,6 +147,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         if (mPriceReceiver != null) {
             getActivity().unregisterReceiver(mPriceReceiver);
         }
+        getActivity().stopService(new Intent(getActivity(), PriceService.class));
     }
 
     @Override
@@ -159,6 +171,14 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             startUserTimer();
             startPositionTimer();
             openWithdrawActivity();
+        }
+        if (isLogin()) {
+            mLoginTv.setVisibility(View.GONE);
+            mBalanceLayout.setVisibility(View.VISIBLE);
+        } else {
+            mLoginTv.setVisibility(View.VISIBLE);
+            mBalanceLayout.setVisibility(View.GONE);
+            mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, " -"));
         }
     }
 
@@ -187,18 +207,14 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initAccountInfoLayout(View view) {
+        mLoginTv = (TextView) view.findViewById(R.id.homepage_login_tv);
+        mLoginTv.setOnClickListener(this);
+        mBalanceLayout = (LinearLayout) view.findViewById(R.id.homepage_balance_layout);
         mAccountInfoLayout = (RelativeLayout) view.findViewById(R.id.homepage_account_info_layout);
         mBalanceAmountTv = (TextView) view.findViewById(R.id.homepage_balance_amount_tv);
         mCashCouponTv = (TextView) view.findViewById(R.id.homepage_cash_coupon_tv);
         view.findViewById(R.id.homepage_recharge_tv).setOnClickListener(this);
         view.findViewById(R.id.homepage_withdraw_tv).setOnClickListener(this);
-    }
-
-    private void setAccountInfoLayout() {
-        UserEntity entity = UserInfoHelper.getInstance().getEntity(LoginConfig.getInstance().getAccount());
-        mAccountInfoLayout.setVisibility(View.VISIBLE);
-        mBalanceAmountTv.setText(String.valueOf(entity.getObject().getFunds()));
-        mCashCouponTv.setText(String.valueOf(entity.getObject().getCouponAmount()));
     }
 
     private void initSystemBulletinLayout(View view) {
@@ -339,6 +355,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.homepage_login_tv:
+                openActivityForResult(LoginActivity.class, IntentItem.REQUEST_LOGIN);
+                break;
             case R.id.homepage_recharge_tv://充值
                 recharge();
                 break;
@@ -368,13 +387,19 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private void recharge() {
         if (isLogin()) {
-            openRechargeActivity();
+            String account = LoginConfig.getInstance().getAccount();
+            if (UserInfoHelper.getInstance().hasTelNumber(account)) {
+                openRechargeActivity();
+            } else {
+
+            }
+
         } else {
             openActivityForResult(LoginActivity.class, IntentItem.REQUEST_RECHARGE);
         }
     }
 
-    private void openRechargeActivity(){
+    private void openRechargeActivity() {
         Intent intent = new Intent(getActivity(), RechargeActivity.class);
         intent.putExtra(IntentItem.USER_INFO, mUserEntity);
         startActivity(intent);
@@ -382,13 +407,19 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private void withdraw() {
         if (isLogin()) {
-            openWithdrawActivity();
+            String account = LoginConfig.getInstance().getAccount();
+            if (UserInfoHelper.getInstance().hasTelNumber(account)) {
+                openWithdrawActivity();
+            } else {
+
+            }
+
         } else {
             openActivityForResult(LoginActivity.class, IntentItem.REQUEST_WITHDRAW);
         }
     }
 
-    private void openWithdrawActivity(){
+    private void openWithdrawActivity() {
         Intent intent = new Intent(getActivity(), WithdrawActivity.class);
         intent.putExtra(IntentItem.USER_INFO, mUserEntity);
         startActivity(intent);
@@ -523,7 +554,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private List<PositionInfoEntity> mPositionInfoList;
 
-    private void getPositionList(){
+    private void getPositionList() {
         ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
         String token = ParamsUtil.getToken();
         Call<PositionListEntity> respon = dataApi.positionList(token, getPositionListParams());
@@ -570,8 +601,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
 
-
-    private Map<String, String> getPositionListParams(){
+    private Map<String, String> getPositionListParams() {
         final Map<String, String> params = ParamsUtil.getCommonParams();
         params.put("method", "gdiex.storage.list");
         params.put("sale", "false");
@@ -612,14 +642,15 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private UserEntity mUserEntity;
 
-    private void getUserInfo(){
+    private void getUserInfo() {
         UserInfoManager.getInstance().get(new UserInfoManager.UserInfoListener() {
             @Override
             public void onSuccess(UserEntity user) {
                 mUserEntity = user;
                 mAccountInfoLayout.setVisibility(View.VISIBLE);
                 mBalanceAmountTv.setText(String.valueOf(user.getObject().getFunds()));
-                mCashCouponTv.setText(String.valueOf(user.getObject().getCouponAmount()));
+                String couponNum = String.valueOf(user.getObject().getCouponAmount());
+                mCashCouponTv.setText("现金券：" + couponNum);
             }
 
             @Override

@@ -20,8 +20,8 @@ public class CurrencyDetailEntity {
     private long date;
     private String id;
     private String memberCode;
-    private int remainingMoney;
-    private int transactionMoney;
+    private double remainingMoney;
+    private double transactionMoney;
     private String transactionType;
 
     public String getContext() {
@@ -64,19 +64,19 @@ public class CurrencyDetailEntity {
         this.memberCode = memberCode;
     }
 
-    public int getRemainingMoney() {
+    public double getRemainingMoney() {
         return remainingMoney;
     }
 
-    public void setRemainingMoney(int remainingMoney) {
+    public void setRemainingMoney(double remainingMoney) {
         this.remainingMoney = remainingMoney;
     }
 
-    public int getTransactionMoney() {
+    public double getTransactionMoney() {
         return transactionMoney;
     }
 
-    public void setTransactionMoney(int transactionMoney) {
+    public void setTransactionMoney(double transactionMoney) {
         this.transactionMoney = transactionMoney;
     }
 

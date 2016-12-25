@@ -1,7 +1,6 @@
 package fxtrader.com.app.adapter;
 
 import android.content.Context;
-import android.content.Entity;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -20,7 +19,7 @@ public class ListBaseAdapter<T> extends RecyclerView.Adapter {
         mScreenWidth = width;
     }
 
-    protected ArrayList<T> mDataList = new ArrayList<>();
+    protected List<T> mDataList = new ArrayList<>();
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

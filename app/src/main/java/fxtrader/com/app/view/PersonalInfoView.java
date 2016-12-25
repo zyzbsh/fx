@@ -7,7 +7,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import fxtrader.com.app.R;
+import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.mine.BindPhoneActivity;
 
 /**
@@ -15,9 +18,13 @@ import fxtrader.com.app.mine.BindPhoneActivity;
  */
 public class PersonalInfoView extends RelativeLayout implements View.OnClickListener {
 
+    private CircleImageView mAvatarIm;
+
     private TextView mNameTv;
 
-    private TextView mAccountBalanceTv;
+    private TextView mBalanceTv;
+
+    private TextView mCouponTv;
 
     private OnPersonalInfoListener mListener;
 
@@ -52,14 +59,15 @@ public class PersonalInfoView extends RelativeLayout implements View.OnClickList
         findViewById(R.id.cash_coupon_icon_im).setOnClickListener(this);
         findViewById(R.id.cash_coupon_tv).setOnClickListener(this);
         mNameTv = (TextView) findViewById(R.id.person_name_tv);
-        mAccountBalanceTv = (TextView) findViewById(R.id.person_account_balance_tv);
-
+        mBalanceTv = (TextView) findViewById(R.id.person_account_balance_tv);
+        mAvatarIm = (CircleImageView) findViewById(R.id.person_avatar_im);
+        mCouponTv = (TextView) findViewById(R.id.cash_coupon_count_tv);
         testData();
     }
 
     private void testData() {
         mNameTv.setText("Atmosphere");
-        mAccountBalanceTv.setText("帐号余额：5680");
+        mBalanceTv.setText("帐号余额：5680");
     }
 
 
@@ -93,10 +101,6 @@ public class PersonalInfoView extends RelativeLayout implements View.OnClickList
         }
     }
 
-    private void openPersonalCenterActivity(){
-
-    }
-
     private void showDialog(){
         if (mDialog == null) {
             mDialog = new InfoRemindDialog(getContext());
@@ -120,5 +124,13 @@ public class PersonalInfoView extends RelativeLayout implements View.OnClickList
         }
         mDialog.show();
     }
+
+    public void set(UserEntity user) {
+        Glide.with(getContext()).load(user.getObject().getHeadimgurl()).into(mAvatarIm);
+        mNameTv.setText(user.getObject().getNickname());
+        mBalanceTv.setText("帐号余额：" + String.valueOf(user.getObject().getFunds()));
+        mCouponTv.setText(String.valueOf(user.getObject().getCouponAmount()));
+    }
+
 
 }

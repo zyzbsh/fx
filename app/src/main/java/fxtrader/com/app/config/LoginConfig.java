@@ -15,6 +15,8 @@ public final class LoginConfig {
     public static final String ACCOUNT = "account";
     public static final String TOKEN = "token";
     public static final String TIME = "time";
+    public static final String ID = "id";
+    public static final String TEL_NUMBER = "tel_number";
 
     private static LoginConfig sConfig;
     private SharedPreferences mSp;
@@ -36,6 +38,21 @@ public final class LoginConfig {
         editor.putString(TOKEN, token);
         editor.putString(TIME, String.valueOf(System.currentTimeMillis()));
         editor.commit();
+    }
+
+    public void saveInfo(String id, String telNumber) {
+        SharedPreferences.Editor editor = mSp.edit();
+        editor.putString(id, id);
+        editor.putString(telNumber, telNumber);
+        editor.commit();
+    }
+
+    public String getId() {
+        return mSp.getString(ID, "");
+    }
+
+    public String getTelNumber() {
+        return mSp.getString(TEL_NUMBER, "");
     }
 
     public String getAccount(){

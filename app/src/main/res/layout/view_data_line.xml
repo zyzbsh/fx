@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,16 +13,38 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-        <TextView
-            android:id="@+id/homepage_contract_tv"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:layout_centerVertical="true"
-            android:drawableRight="@mipmap/icon_arrow_up"
-            android:text="@string/contract_price_num"
-            android:textColor="@color/red_text"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/homepage_contract_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/homepage_contract_latest_price_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red_text"
+                android:layout_marginLeft="10dp"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/homepage_contract_arrow_im"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:src="@mipmap/icon_arrow_up" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/homepage_contract_percent_tv"
@@ -32,7 +54,7 @@
             android:layout_centerVertical="true"
             android:text="100%"
             android:textColor="@color/black_33"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/homepage_contract_profit_tv"
@@ -43,7 +65,7 @@
             android:layout_toLeftOf="@id/homepage_contract_percent_tv"
             android:text="@string/homepage_profit_num"
             android:textColor="@color/red_text"
-            android:textSize="14sp" />
+            android:textSize="13sp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -58,41 +80,97 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/highest_num"
-            android:textSize="10sp"
-            android:textColor="@color/black_33" />
+            android:textColor="@color/black_33"
+            android:textSize="10sp" />
 
         <TextView
             android:id="@+id/homepage_lowest_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="10sp"
             android:text="@string/lowest_num"
-            android:textColor="@color/black_33" />
+            android:textColor="@color/black_33"
+            android:textSize="10sp" />
 
         <TextView
             android:id="@+id/homepage_yesterday_open_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="10sp"
             android:text="@string/yesterday_close_num"
-            android:textColor="@color/black_33" />
+            android:textColor="@color/black_33"
+            android:textSize="10sp" />
 
         <TextView
             android:id="@+id/homepage_today_open_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="10sp"
             android:text="@string/today_open_num"
-            android:textColor="@color/black_33" />
+            android:textColor="@color/black_33"
+            android:textSize="10sp" />
     </LinearLayout>
 
-    <fxtrader.com.app.view.NewMAChartView
-        android:id="@+id/view_new_machart"
+    <RelativeLayout
+        android:id="@+id/show_layout"
         android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <fxtrader.com.app.view.NewMAChartView
+            android:id="@+id/view_new_machart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
+            android:id="@+id/hide_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_remind_market"/>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="当前不是交易时间"
+                android:textColor="@color/red_text"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/red_text"
+                android:paddingBottom="2dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="2dp"
+                android:text="交易时间 周一早8：00-周六凌晨4:00"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5:00-9:00为休市结算时段"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black_33"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
 </LinearLayout>
 

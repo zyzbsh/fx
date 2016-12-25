@@ -6,6 +6,8 @@ import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.CurrencyListEntity;
 import fxtrader.com.app.entity.LoginResponseEntity;
+import fxtrader.com.app.entity.OpenPacket;
+import fxtrader.com.app.entity.PacketListEntity;
 import fxtrader.com.app.entity.TicketListEntity;
 import fxtrader.com.app.entity.UserEntity;
 import okhttp3.ResponseBody;
@@ -53,5 +55,14 @@ public interface UserApi {
     @FormUrlEncoded
     @POST("/api/currency/withdrawal")
     Call<ResponseBody> withdraw(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
+
+    @GET("/api/checkRedPacketIn")
+    Call<PacketListEntity> receivePackets(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/checkRedPacketOut")
+    Call<PacketListEntity> sendedPackets(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/openRedPack")
+    Call<OpenPacket> openPacket(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 
 }

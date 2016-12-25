@@ -100,14 +100,14 @@
     <string name="loss_num">-%1$s</string>
     <string name="position_list_num">共%1$d持仓单</string>
     <string name="personal_center">个人中心</string>
-    <string name="fund_list">资金流水</string>
+    <string name="fund_list">收支明细</string>
     <string name="trade_history">交易历史</string>
     <string name="agent_platform">经纪人平台</string>
     <string name="my_buy">我的合买</string>
     <string name="guandong_use_rules">冠东微盘\n使用规则</string>
     <string name="announcement">公告</string>
     <string name="share_to_friends">分享好友</string>
-    <string name="my_gift_certificate">我的礼券</string>
+    <string name="my_gift_certificate">我的现金券</string>
     <string name="personal_data">个人资料</string>
     <string name="personal_info">个人信息</string>
     <string name="balance_num">帐号余额：%1$s</string>
@@ -132,7 +132,7 @@
     <string name="profit_and_loss">浮动盈亏:</string>
     <string name="income_num">收入%1$s</string>
     <string name="pay_num">支出%1$s</string>
-    <string name="account_num">金额：%1$d</string>
+    <string name="account_num">金额：%1$s元</string>
     <string name="see">查看</string>
     <string name="readed">已读</string>
     <string name="unread">未读</string>
@@ -176,7 +176,7 @@
     <string name="production_max_profit_percent">粤东油 单笔最高盈利率</string>
     <string name="win">胜</string>
     <string name="contract_price_num">%1$s %2$s</string>
-    <string name="homepage_profit_num">%1$s点收益</string>
+    <string name="homepage_profit_num">17点收益</string>
     <string name="highest_num">最高 %1$s</string>
     <string name="lowest_num">最低 %1$s</string>
     <string name="yesterday_close_num">昨收 %1$s</string>
@@ -221,4 +221,5 @@
     <string name="withdraw_remind_card">输入借记卡卡号</string>
     <string name="name">姓名</string>
     <string name="withdraw_remind">请输入持卡人姓名</string>
+    <string name="red_envelope">红包</string>
 </resources>

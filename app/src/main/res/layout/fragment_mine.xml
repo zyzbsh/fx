@@ -43,8 +43,8 @@
 
                 <LinearLayout
                     android:id="@+id/mine_trade_history_layout"
-                    android:layout_marginLeft="1dp"
-                    style="@style/MineItemLayout">
+                    style="@style/MineItemLayout"
+                    android:layout_marginLeft="1dp">
 
 
                     <TextView
@@ -55,16 +55,18 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/mine_agent_platform_layout"
-                    android:layout_marginLeft="1dp"
-                    style="@style/MineItemLayout">
+                    android:id="@+id/mine_my_gift_layout"
+                    style="@style/MineItemLayout"
+                    android:layout_marginLeft="1dp">
 
                     <TextView
-                        android:id="@+id/mine_agent_platform_tv"
+                        android:id="@+id/mine_my_gift_tv"
                         style="@style/MineItemTv"
-                        android:drawableTop="@mipmap/icon_agent_platform"
-                        android:text="@string/agent_platform" />
+                        android:layout_marginLeft="1dp"
+                        android:drawableTop="@mipmap/icon_my_gift"
+                        android:text="@string/my_gift_certificate" />
                 </LinearLayout>
+
 
             </LinearLayout>
 
@@ -75,20 +77,9 @@
                 android:layout_marginBottom="1dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:id="@+id/mine_my_buy_layout"
-                    style="@style/MineItemLayout">
-
-                    <TextView
-                        android:id="@+id/mine_my_buy_tv"
-                        style="@style/MineItemTv"
-                        android:drawableTop="@mipmap/icon_my_buy"
-                        android:text="@string/my_buy" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/mine_use_rules_layout"
-                    android:layout_marginLeft="1dp"
                     style="@style/MineItemLayout">
 
                     <TextView
@@ -100,17 +91,29 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/mine_announcement_layout"
-                    android:layout_marginLeft="1dp"
-                    style="@style/MineItemLayout">
+                    android:id="@+id/mine_agent_platform_layout"
+                    style="@style/MineItemLayout"
+                    android:layout_marginLeft="1dp">
 
                     <TextView
-                        android:id="@+id/mine_announcement_tv"
+                        android:id="@+id/mine_agent_platform_tv"
                         style="@style/MineItemTv"
-                        android:layout_marginLeft="1dp"
-                        android:drawableTop="@mipmap/icon_announcement"
-                        android:text="@string/announcement" />
+                        android:drawableTop="@mipmap/icon_agent_platform"
+                        android:text="@string/agent_platform" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/mine_follow_layout"
+                    style="@style/MineItemLayout"
+                    android:layout_marginLeft="1dp">
+
+                    <TextView
+                        android:id="@+id/mine_follow_tv"
+                        style="@style/MineItemTv"
+                        android:drawableTop="@mipmap/icon_share_to_friends"
+                        android:text="@string/share_to_friends" />
+                </LinearLayout>
+
 
             </LinearLayout>
 
@@ -122,33 +125,22 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/mine_share_layout"
+                    android:id="@+id/mine_announcement_layout"
                     style="@style/MineItemLayout">
 
                     <TextView
-                        android:id="@+id/mine_share_tv"
-                        style="@style/MineItemTv"
-                        android:drawableTop="@mipmap/icon_share_to_friends"
-                        android:text="@string/share_to_friends" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/mine_my_gift_layout"
-                    android:layout_marginLeft="1dp"
-                    style="@style/MineItemLayout">
-
-                    <TextView
-                        android:id="@+id/mine_my_gift_tv"
+                        android:id="@+id/mine_announcement_tv"
                         style="@style/MineItemTv"
                         android:layout_marginLeft="1dp"
-                        android:drawableTop="@mipmap/icon_my_gift"
-                        android:text="@string/my_gift_certificate" />
+                        android:drawableTop="@mipmap/icon_announcement"
+                        android:text="@string/announcement" />
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:id="@+id/mine_info_layout"
-                    android:layout_marginLeft="1dp"
-                    style="@style/MineItemLayout">
+                    style="@style/MineItemLayout"
+                    android:layout_marginLeft="1dp">
 
                     <TextView
                         android:id="@+id/mine_info_tv"
@@ -158,42 +150,20 @@
                         android:text="@string/personal_data" />
                 </LinearLayout>
 
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/mine_layout_4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
                 <LinearLayout
                     android:id="@+id/mine_red_envelope_layout"
                     style="@style/MineItemLayout"
-                    android:layout_marginBottom="1dp">
+                    android:layout_marginLeft="1dp">
 
                     <TextView
                         android:id="@+id/mine_red_envelope_tv"
                         style="@style/MineItemTv"
                         android:drawableTop="@mipmap/icon_center_red_envelope"
-                        android:text="@string/my_red_envelope" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_marginLeft="1dp"
-                    style="@style/MineItemLayout">
-
-                    <TextView
-                        style="@style/MineItemTv"
-                        android:layout_marginLeft="1dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/MineItemLayout">
-
-                    <TextView
-                        style="@style/MineItemTv" />
+                        android:text="@string/red_envelope" />
                 </LinearLayout>
 
             </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>

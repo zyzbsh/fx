@@ -29,7 +29,7 @@ public class RedEnvelopeActivity extends BaseActivity implements RadioGroup.OnCh
         setContentLayout(R.layout.activity_red_envelope);
 
         mViewPager = (ViewPager) findViewById(R.id.red_envelope_view_pager);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 

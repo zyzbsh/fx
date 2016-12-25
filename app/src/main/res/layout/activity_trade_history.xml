@@ -30,7 +30,7 @@
             android:layout_height="55dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="17dp"
-            android:background="@color/white"
+            android:background="@color/gray_e7"
             android:padding="10dp">
 
             <TextView
@@ -71,7 +71,7 @@
             android:textColor="@color/red_text"
             android:textSize="15sp"
             android:padding="5dp"
-            android:background="@color/gray_e7"
+            android:background="@color/white"
             android:layout_above="@id/trade_history_bottom_layout"/>
 
         <fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView

@@ -35,7 +35,6 @@ public class UserInfoManager {
             @Override
             public void onResponse(Call<UserEntity> call, Response<UserEntity> response) {
                 UserEntity entity = response.body();
-                UserInfoHelper.getInstance().save(entity);
                 listener.onSuccess(entity);
             }
 

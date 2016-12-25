@@ -35,12 +35,16 @@ public final class HttpConstant {
         public static final String SELL_METALORDER = "SELL_METALORDER";
         /**充值**/
         public static final String RECHARGE = "RECHARGE";
+        /**补偿**/
+        public static final String COMPENSATION = "COMPENSATION";
         /**提现申请**/
         public static final String WITHDRAWALS_APPLY = "WITHDRAWALS_APPLY";
         /**提现成功**/
         public static final String WITHDRAWALS_SUCCESS = "WITHDRAWALS_SUCCESS";
         /**提现失败**/
         public static final String WITHDRAWALS_FAIL = "WITHDRAWALS_FAIL";
+        /**红包**/
+        public static final String REDPACKET = "REDPACKET";
     }
 
     public static class DealDirection{

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PriceEntity;
+import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.entity.UserInfoVo;
 import fxtrader.com.app.http.NetConfig;
 import fxtrader.com.app.http.NetConfigBuilder;
@@ -23,6 +24,8 @@ public class AppApplication extends Application{
     private static SharedPreferences preferences;
 
     private MarketEntity mMarketEntity;
+
+    private UserEntity mUser;
 
     @Override
     public void onCreate() {
@@ -77,5 +80,13 @@ public class AppApplication extends Application{
 
     public void setMarketEntity(MarketEntity mMarketEntity) {
         this.mMarketEntity = mMarketEntity;
+    }
+
+    public UserEntity getUser() {
+        return mUser;
+    }
+
+    public void setUser(UserEntity mUser) {
+        this.mUser = mUser;
     }
 }

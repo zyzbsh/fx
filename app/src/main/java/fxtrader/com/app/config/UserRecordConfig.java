@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import fxtrader.com.app.AppApplication;
+import fxtrader.com.app.tools.LogZ;
 
 /**
  * Created by pc on 2016/12/24.
@@ -18,6 +19,9 @@ public class UserRecordConfig {
 
     private UserRecordConfig(){
         sSp = AppApplication.getInstance().getBaseContext().getSharedPreferences("record", Context.MODE_PRIVATE);
+        if (sSp == null) {
+            LogZ.i("null");
+        }
     }
 
     public static UserRecordConfig getInstance(){
