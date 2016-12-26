@@ -20,10 +20,11 @@
             android:layout_alignParentRight="true"
             android:textSize="14sp"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             android:layout_height="wrap_content" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView
         android:id="@+id/find_recycler_view"
         android:layout_width="match_parent"
         android:layout_marginLeft="0.5dp"
@@ -33,7 +34,7 @@
         android:background="@drawable/shape_white_corner_5"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+    </fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView>
 
 
 </LinearLayout>

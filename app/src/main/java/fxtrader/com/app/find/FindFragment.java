@@ -1,5 +1,6 @@
 package fxtrader.com.app.find;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -19,13 +20,15 @@ import fxtrader.com.app.tools.UIUtil;
  * 发现
  * Created by zhangyuzhu on 2016/12/1.
  */
-public class FindFragment extends BaseFragment implements View.OnClickListener {
+public class FindFragment extends BaseFragment implements View.OnClickListener, HeadListener{
 
-    private BaseFragment mWinStreamFragment;
+    private ImageView mAdIm;
 
-    private BaseFragment mProfitFragment;
+    private WinStreamFragment mWinStreamFragment;
 
-    private BaseFragment mRedEnvelopeFragment;
+    private ProfitFragment mProfitFragment;
+
+    private RedEnvelopeFragment mRedEnvelopeFragment;
 
     private enum TabIndex {
         INDEX_WIN_STREAM, INDEX_PROFIT, INDEX_RED_ENVELOPE
@@ -49,14 +52,36 @@ public class FindFragment extends BaseFragment implements View.OnClickListener {
         initTabLayout(view);
     }
 
+    @Override
+    public void show() {
+        if (mAdIm != null) {
+//            ObjectAnimator animator = ObjectAnimator.ofFloat(mAdIm, View.TRANSLATION_Y, -mAdImHeight, 0);
+//            animator.setDuration(500);
+//            animator.start();
+            mAdIm.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void hide() {
+        if (mAdIm != null) {
+//            ObjectAnimator animator = ObjectAnimator.ofFloat(mAdIm, View.TRANSLATION_Y, 0, -mAdImHeight);
+//            animator.setDuration(500);
+//            animator.start();
+            mAdIm.setVisibility(View.GONE);
+        }
+    }
+
+    private int mAdImHeight;
     private void initAdIm(View view) {
-        ImageView im = (ImageView) view.findViewById(R.id.find_ad_im);
+        mAdIm = (ImageView) view.findViewById(R.id.find_ad_im);
         int width = UIUtil.getScreenWidth(getActivity());
         int height = width * 257 / 640;
-        ViewGroup.LayoutParams params = im.getLayoutParams();
+        ViewGroup.LayoutParams params = mAdIm.getLayoutParams();
         params.width = width;
         params.height = height;
-        im.setLayoutParams(params);
+        mAdImHeight = height;
+        mAdIm.setLayoutParams(params);
     }
 
 
@@ -137,6 +162,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener {
         } else if (index == TabIndex.INDEX_RED_ENVELOPE.ordinal()) {
             if (mRedEnvelopeFragment == null) {
                 mRedEnvelopeFragment = new RedEnvelopeFragment();
+                mRedEnvelopeFragment.addHeadListener(this);
                 transaction.add(R.id.find_content_layout, mRedEnvelopeFragment);
             } else {
                 transaction.show(mRedEnvelopeFragment);

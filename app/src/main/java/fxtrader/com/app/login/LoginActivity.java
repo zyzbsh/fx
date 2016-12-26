@@ -163,7 +163,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onSuccess(UserEntity user) {
                 UserInfoHelper.getInstance().save(user);
-                LoginConfig.getInstance().saveInfo("" + user.getObject().getId(), user.getObject().getTelNumber());
+                UserEntity.ObjectBean bean = user.getObject();
+                LoginConfig.getInstance().saveInfo("" + bean.getId(), bean.getTelNumber(), bean.getOrganId());
                 mHandler.sendEmptyMessage(0);
             }
 

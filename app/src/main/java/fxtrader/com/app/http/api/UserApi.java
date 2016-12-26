@@ -8,6 +8,7 @@ import fxtrader.com.app.entity.CurrencyListEntity;
 import fxtrader.com.app.entity.LoginResponseEntity;
 import fxtrader.com.app.entity.OpenPacket;
 import fxtrader.com.app.entity.PacketListEntity;
+import fxtrader.com.app.entity.RedEnvelopeListEntity;
 import fxtrader.com.app.entity.TicketListEntity;
 import fxtrader.com.app.entity.UserEntity;
 import okhttp3.ResponseBody;
@@ -65,4 +66,6 @@ public interface UserApi {
     @GET("/api/openRedPack")
     Call<OpenPacket> openPacket(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 
+    @GET("gdiex.community.getRiseOrFall")
+    Call<RedEnvelopeListEntity> redEnvelopeList(@QueryMap Map<String, String> params);
 }

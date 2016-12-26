@@ -6,27 +6,48 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseFragment;
+import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.entity.RedEnvelopeListEntity;
 import fxtrader.com.app.homepage.ProfitListActivity;
+import fxtrader.com.app.http.HttpConstant;
+import fxtrader.com.app.http.ParamsUtil;
+import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.api.UserApi;
+import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
+import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
+import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.view.CircleImageView;
 import fxtrader.com.app.view.MyDecoration;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 发现红包榜
  * Created by zhangyuzhu on 2016/12/4.
  */
-public class RedEnvelopeFragment extends BaseFragment implements View.OnClickListener{
-    private RecyclerView mRecyclerView;
+public class RedEnvelopeFragment extends BaseFragment implements View.OnClickListener {
+    private LRecyclerView mRecyclerView;
+    private HeadListener mHeadListener;
+    private boolean mIsShow = true;
+    private int mDisy;
+
+    private boolean mIsTitleHide = false;
+    private boolean mIsAnim = false;
+    private float lastX = 0;
+    private float lastY = 0;
 
     @Nullable
     @Override
@@ -39,15 +60,20 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.find_more_tv).setOnClickListener(this);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.find_recycler_view);
+        mRecyclerView = (LRecyclerView) view.findViewById(R.id.find_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        mRecyclerView.setPullRefreshEnabled(false);
         List<String> data = getTestData();
         DataAdapter adapter = new DataAdapter(getActivity());
         adapter.setDataList(data);
-        mRecyclerView.setAdapter(adapter);
+        LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(getContext(), adapter);
+        mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
         mRecyclerView.addItemDecoration(new MyDecoration(getActivity(), MyDecoration.VERTICAL_LIST));
 
+    }
+
+    public void addHeadListener(HeadListener listener) {
+        mHeadListener = listener;
     }
 
     private List<String> getTestData() {
@@ -55,6 +81,15 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
         list.add("1");
         list.add("2");
         list.add("3");
+        list.add("4");
+        list.add("4");
+        list.add("4");
+        list.add("4");
+        list.add("4");
+        list.add("4");
+        list.add("4");
+        list.add("4");
+        list.add("4");
         list.add("4");
         return list;
     }
@@ -70,6 +105,35 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
                 break;
         }
     }
+
+    private void requestRedEnvelopes() {
+        UserApi dataApi = RetrofitUtils.createApi(UserApi.class);
+        final Call<RedEnvelopeListEntity> respon = dataApi.redEnvelopeList(getParams());
+        respon.enqueue(new Callback<RedEnvelopeListEntity>() {
+            @Override
+            public void onResponse(Call<RedEnvelopeListEntity> call, Response<RedEnvelopeListEntity> response) {
+            }
+
+            @Override
+            public void onFailure(Call<RedEnvelopeListEntity> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String, String> getParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.community.getRiseOrFall");
+        int id = HttpConstant.DEFAULT_ORGAN_ID;
+        if (LoginConfig.getInstance().isLogin()) {
+            id = LoginConfig.getInstance().getOrganId();
+        }
+        params.put("organ_id", id + "");
+        params.put("limit", "10");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
 
     class DataAdapter extends ListBaseAdapter<String> {
 

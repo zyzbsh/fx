@@ -15,6 +15,8 @@ public final class HttpConstant {
 
     public final static int REFRESH_USER_INFO = 10000;
 
+    public static final int DEFAULT_ORGAN_ID = 0;
+
     public static class PriceCode{
         public static final String YDHF = "YDHF";
         public static final String YDCL = "YDCL";
