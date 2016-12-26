@@ -39,6 +39,7 @@ import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.ContractListEntity;
 import fxtrader.com.app.entity.MarketEntity;
+import fxtrader.com.app.entity.ParticipantsEntity;
 import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PositionListEntity;
 import fxtrader.com.app.entity.PriceEntity;
@@ -139,6 +140,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             mBalanceLayout.setVisibility(View.GONE);
             mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, " -"));
         }
+        registerLoginReceiver();
+        requestParticipant();
     }
 
     @Override
@@ -146,6 +149,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         super.onDestroy();
         if (mPriceReceiver != null) {
             getActivity().unregisterReceiver(mPriceReceiver);
+        }
+        if (mLoginReceiver != null) {
+            getActivity().unregisterReceiver(mLoginReceiver);
         }
         getActivity().stopService(new Intent(getActivity(), PriceService.class));
     }
@@ -172,13 +178,17 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             startPositionTimer();
             openWithdrawActivity();
         }
+        setLoginView();
+    }
+
+    private void setLoginView() {
         if (isLogin()) {
             mLoginTv.setVisibility(View.GONE);
             mBalanceLayout.setVisibility(View.VISIBLE);
         } else {
             mLoginTv.setVisibility(View.VISIBLE);
             mBalanceLayout.setVisibility(View.GONE);
-            mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, " -"));
+            mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, "-"));
         }
     }
 
@@ -658,6 +668,54 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
             }
         });
+    }
+
+    private BroadcastReceiver mLoginReceiver;
+
+    private void registerLoginReceiver() {
+        mLoginReceiver = new mLoginReceiver();
+        IntentFilter filter = new IntentFilter(IntentItem.ACTION_LOGIN);
+        getActivity().registerReceiver(mLoginReceiver, filter);
+    }
+
+
+    class mLoginReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            startUserTimer();
+            startPositionTimer();
+            setLoginView();
+        }
+    }
+
+    private void requestParticipant() {
+        ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
+        final Call<ParticipantsEntity> respon = dataApi.participants(getParticipantParams());
+        respon.enqueue(new Callback<ParticipantsEntity>() {
+            @Override
+            public void onResponse(Call<ParticipantsEntity> call, Response<ParticipantsEntity> response) {
+                ParticipantsEntity entity = response.body();
+                if (entity != null && entity.isSuccess()) {
+                    if (entity.getObject() != null) {
+                        mExpectRaiseDesTv.setText(getActivity().getString(R.string.expect_raise_num, entity.getObject().getUp()));
+                        mExpectFallDesTv.setText(getActivity().getString(R.string.expect_fall_num, entity.getObject().getDrop()));
+                    }
+                }
+//                mExpectRaiseDesTv
+            }
+
+            @Override
+            public void onFailure(Call<ParticipantsEntity> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String, String> getParticipantParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.community.getRiseOrFall");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
     }
 
 }

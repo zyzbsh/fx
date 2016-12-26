@@ -163,7 +163,7 @@
     <string name="cash_coupon_num">现金券：%1$s</string>
     <string name="expect_raise">看涨</string>
     <string name="expect_raise_num">%1$s人买涨</string>
-    <string name="expect_fall_num">%1$s买跌</string>
+    <string name="expect_fall_num">%1$s人买跌</string>
     <string name="expect_fall">看跌</string>
     <string name="master_hot">高手热点</string>
     <string name="money_unit">元</string>

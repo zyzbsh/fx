@@ -387,7 +387,6 @@
                         android:layout_marginTop="5dp"
                         android:background="@mipmap/bg_homepage_buy_raise"
                         android:gravity="center"
-                        android:text="@string/expect_raise_num"
                         android:textColor="@color/yellow_text"
                         android:textSize="10sp" />
 
@@ -436,7 +435,6 @@
                         android:layout_marginTop="5dp"
                         android:background="@mipmap/bg_homepage_buy_fall"
                         android:gravity="center"
-                        android:text="@string/expect_fall_num"
                         android:textColor="@color/yellow_text"
                         android:textSize="10sp" />
 

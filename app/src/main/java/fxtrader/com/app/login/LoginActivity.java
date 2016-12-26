@@ -50,11 +50,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private int mRequest = 0;
 
+    private boolean mFromMine;
+
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             mRequest--;
             if (mRequest == 0) {
+                if (mFromMine) {
+                    Intent intent=new Intent();
+                    intent.setAction(IntentItem.ACTION_LOGIN);
+                    sendBroadcast(intent);
+                }
                 setResult(RESULT_OK);
                 finish();
             }
@@ -65,6 +72,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mFromMine = getIntent().getBooleanExtra(IntentItem.MINE, false);
         initViews();
         setView();
     }

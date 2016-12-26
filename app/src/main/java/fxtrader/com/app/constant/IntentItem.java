@@ -11,6 +11,7 @@ public final class IntentItem {
     public static final int REQUEST_WITHDRAW = 104;
     public static final String LOGIN = "login";
     public static final String ACTION_PRICE = "fxtrader.com.app.price";
+    public static final String ACTION_LOGIN = "fxtrader.com.app.login";
     public static final String PRICE = "price";
     public static final String EXCEPTION = "up";
     public static final String DATA_TYPE = "data_type";
@@ -21,4 +22,5 @@ public final class IntentItem {
     public static final String POSITION_INFO = "position_info";
     public static final String USER_INFO = "user_info";
     public static final String RECHARGE_HTML = "recharge_html";
+    public static final String MINE = "mine";
 }
