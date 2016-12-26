@@ -1,9 +1,10 @@
-package fxtrader.com.app.http;
+package fxtrader.com.app.http.manager;
 
 import java.util.Map;
 
-import fxtrader.com.app.db.helper.UserInfoHelper;
 import fxtrader.com.app.entity.UserEntity;
+import fxtrader.com.app.http.ParamsUtil;
+import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.UserApi;
 import retrofit2.Call;
 import retrofit2.Callback;

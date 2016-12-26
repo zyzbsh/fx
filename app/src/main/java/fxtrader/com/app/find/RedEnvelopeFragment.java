@@ -69,7 +69,7 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
         LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(getContext(), adapter);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
         mRecyclerView.addItemDecoration(new MyDecoration(getActivity(), MyDecoration.VERTICAL_LIST));
-
+        requestRedEnvelopes();
     }
 
     public void addHeadListener(HeadListener listener) {

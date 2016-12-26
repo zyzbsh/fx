@@ -14,8 +14,7 @@ import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.db.helper.UserInfoHelper;
 import fxtrader.com.app.entity.UserEntity;
-import fxtrader.com.app.http.UserInfoManager;
-import fxtrader.com.app.tools.LogZ;
+import fxtrader.com.app.http.manager.UserInfoManager;
 
 /**
  * Created by zhangyuzhu on 2016/11/26.

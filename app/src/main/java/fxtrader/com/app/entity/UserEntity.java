@@ -3,6 +3,7 @@ package fxtrader.com.app.entity;
 import java.io.Serializable;
 
 /**
+ * 登录用户
  * Created by zhangyuzhu on 2016/12/7.
  */
 public class UserEntity implements Serializable{

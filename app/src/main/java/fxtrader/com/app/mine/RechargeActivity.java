@@ -20,7 +20,7 @@ import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
-import fxtrader.com.app.http.UserInfoManager;
+import fxtrader.com.app.http.manager.UserInfoManager;
 import fxtrader.com.app.http.api.UserApi;
 import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.LogZ;

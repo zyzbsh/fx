@@ -11,8 +11,7 @@ import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.db.helper.UserInfoHelper;
 import fxtrader.com.app.entity.UserEntity;
-import fxtrader.com.app.homepage.RedEnvelopListActivity;
-import fxtrader.com.app.http.UserInfoManager;
+import fxtrader.com.app.http.manager.UserInfoManager;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.PersonalInfoView;
 
