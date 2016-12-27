@@ -17,6 +17,7 @@ import java.util.List;
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseFragment;
+import fxtrader.com.app.entity.RedEnvelopeEntity;
 import fxtrader.com.app.homepage.WinStreamListActivity;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
@@ -44,23 +45,11 @@ public class WinStreamFragment extends BaseFragment implements View.OnClickListe
         view.findViewById(R.id.find_more_tv).setOnClickListener(this);
         mRecyclerView = (LRecyclerView) view.findViewById(R.id.find_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        List<String> data = getTestData();
         DataAdapter adapter = new DataAdapter(getActivity());
-        adapter.setDataList(data);
         LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(getContext(), adapter);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
         mRecyclerView.addItemDecoration(new MyDecoration(getActivity(), MyDecoration.VERTICAL_LIST));
 
-    }
-
-    private List<String> getTestData() {
-        List<String> list = new ArrayList<>();
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        list.add("4");
-        return list;
     }
 
 
@@ -75,7 +64,7 @@ public class WinStreamFragment extends BaseFragment implements View.OnClickListe
         }
     }
 
-    class DataAdapter extends ListBaseAdapter<String> {
+    class DataAdapter extends ListBaseAdapter<RedEnvelopeEntity> {
 
         private LayoutInflater mLayoutInflater;
 

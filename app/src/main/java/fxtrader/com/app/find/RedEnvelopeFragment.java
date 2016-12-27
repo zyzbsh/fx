@@ -19,6 +19,7 @@ import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.entity.RedEnvelopeEntity;
 import fxtrader.com.app.entity.RedEnvelopeListEntity;
 import fxtrader.com.app.homepage.ProfitListActivity;
 import fxtrader.com.app.http.HttpConstant;
@@ -27,6 +28,7 @@ import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.UserApi;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
+import fxtrader.com.app.tools.DateTools;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.view.CircleImageView;
 import fxtrader.com.app.view.MyDecoration;
@@ -40,6 +42,7 @@ import retrofit2.Response;
  */
 public class RedEnvelopeFragment extends BaseFragment implements View.OnClickListener {
     private LRecyclerView mRecyclerView;
+    private DataAdapter mAdapter;
     private HeadListener mHeadListener;
     private boolean mIsShow = true;
     private int mDisy;
@@ -63,10 +66,8 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
         mRecyclerView = (LRecyclerView) view.findViewById(R.id.find_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setPullRefreshEnabled(false);
-        List<String> data = getTestData();
-        DataAdapter adapter = new DataAdapter(getActivity());
-        adapter.setDataList(data);
-        LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(getContext(), adapter);
+        mAdapter = new DataAdapter(getActivity());
+        LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(getContext(), mAdapter);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
         mRecyclerView.addItemDecoration(new MyDecoration(getActivity(), MyDecoration.VERTICAL_LIST));
         requestRedEnvelopes();
@@ -75,25 +76,6 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
     public void addHeadListener(HeadListener listener) {
         mHeadListener = listener;
     }
-
-    private List<String> getTestData() {
-        List<String> list = new ArrayList<>();
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        list.add("4");
-        list.add("4");
-        list.add("4");
-        list.add("4");
-        list.add("4");
-        list.add("4");
-        list.add("4");
-        list.add("4");
-        list.add("4");
-        list.add("4");
-        return list;
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -112,6 +94,10 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
         respon.enqueue(new Callback<RedEnvelopeListEntity>() {
             @Override
             public void onResponse(Call<RedEnvelopeListEntity> call, Response<RedEnvelopeListEntity> response) {
+                RedEnvelopeListEntity entity = response.body();
+                if (entity.isSuccess()) {
+                    mAdapter.setDataList(entity.getObject());
+                }
             }
 
             @Override
@@ -135,7 +121,7 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-    class DataAdapter extends ListBaseAdapter<String> {
+    class DataAdapter extends ListBaseAdapter<RedEnvelopeEntity> {
 
         private LayoutInflater mLayoutInflater;
 
@@ -148,17 +134,17 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(mLayoutInflater.inflate(R.layout.item_red_envelop_list, parent, false));
+            return new ViewHolder(mLayoutInflater.inflate(R.layout.item_red_envelop, parent, false));
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            RedEnvelopeEntity entity = getDataList().get(position);
             ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.nameTv.setText("EDITD");
-            viewHolder.timeTv.setText("20:00");
+            viewHolder.nameTv.setText(entity.getNickname());
+            viewHolder.timeTv.setText(DateTools.changeToDate2(entity.getCreateTime()));
             viewHolder.contentTv.setText("给高手发出1个红包");
-            viewHolder.profitTv.setText("盈利   101元");
-            viewHolder.stateTv.setText("跟单");
+            viewHolder.profitTv.setText(String.valueOf(entity.getAllAmount()));
         }
 
 
@@ -169,7 +155,6 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
             private TextView timeTv;
             private TextView contentTv;
             private TextView profitTv;
-            private TextView stateTv;
 
             public ViewHolder(View view) {
                 super(view);
@@ -177,17 +162,8 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
                 nameTv = (TextView) view.findViewById(R.id.item_red_envelop_name_tv);
                 timeTv = (TextView) view.findViewById(R.id.item_red_envelop_time_tv);
                 contentTv = (TextView) view.findViewById(R.id.item_red_envelop_content_tv);
-                profitTv = (TextView) view.findViewById(R.id.item_red_envelop_profit_tv);
-                stateTv = (TextView) view.findViewById(R.id.item_red_envelop_state_tv);
+                profitTv = (TextView) view.findViewById(R.id.item_red_envelop_profit_num_tv);
             }
         }
-    }
-
-    class ItemModel {
-        public String breakEven = "+100";
-        public String production = "3000g粤油";
-        public String buyType = "3手买跌";
-        public String price = "买入价：3606";
-
     }
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="83dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <fxtrader.com.app.view.CircleImageView
+        android:id="@+id/item_red_envelop_avatar_im"
+        android:layout_width="@dimen/main_item_avatar"
+        android:layout_height="@dimen/main_item_avatar"
+        android:src="@mipmap/avatar_item_normal"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/item_red_envelop_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_red_envelop_avatar_im"
+        android:layout_alignLeft="@id/item_red_envelop_avatar_im"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/gray_6"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/item_red_envelop_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/item_red_envelop_avatar_im"
+        android:layout_toLeftOf="@id/item_red_envelop_state_tv"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_marginTop="15dp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/item_red_envelop_profit_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/item_red_envelop_time_tv"
+        android:layout_alignBottom="@id/item_red_envelop_time_tv"
+        android:textColor="@color/gray_6"/>
+
+    <TextView
+        android:id="@+id/item_red_envelop_profit_num_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/item_red_envelop_profit_tv"
+        android:layout_alignBottom="@id/item_red_envelop_time_tv"
+        android:textColor="@color/red_text"/>
+
+
+
+    <TextView
+        android:id="@+id/item_red_envelop_content_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/item_red_envelop_state_tv"
+        android:textColor="@color/gray_6"
+        android:textSize="14sp"
+        android:gravity="bottom"
+        android:layout_alignBottom="@id/item_red_envelop_profit_tv"
+        android:layout_marginTop="5dp"/>
+
+</RelativeLayout>
