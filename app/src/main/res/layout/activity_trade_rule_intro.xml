@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout style="@style/TitleLayout">
+
+            <TextView
+                android:id="@id/title_back"
+                style="@style/TiTleBackTv" />
+
+            <TextView
+                android:id="@id/title_content_tv"
+                style="@style/TiTleContentTv"
+                android:text="@string/trade_rule_intro_title" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/rules_intro_im"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY" />
+
+    </LinearLayout>
+</ScrollView>

@@ -126,7 +126,17 @@
         <activity android:name=".mine.MyFollowActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".mine.RuleIntroActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".mine.PositionsFollowedActivity"
+            android:screenOrientation="portrait"/>
+
         <service android:name=".service.PriceService" />
+
+        <meta-data
+            android:name="fxtrader.com.app.GlideModelConfig"
+            android:value="GlideModule" />
 
     </application>
 

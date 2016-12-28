@@ -83,12 +83,10 @@ public class PersonalInfoView extends RelativeLayout implements View.OnClickList
                 break;
             case R.id.personal_info_withdraw_layout://提现
                 mIsWithdraw = true;
-                showDialog();
                 mListener.onWithdrawTvClicked();
                 break;
             case R.id.personal_info_recharge_layout://充值
                 mIsWithdraw = false;
-                showDialog();
                 mListener.onRechargeTvClicked();
                 break;
             case R.id.cash_coupon_tv: //现金券

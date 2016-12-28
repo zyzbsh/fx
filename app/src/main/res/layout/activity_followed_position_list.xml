@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_ed"
     android:orientation="vertical">
 
     <RelativeLayout style="@style/TitleLayout">
@@ -14,8 +13,24 @@
         <TextView
             android:id="@id/title_content_tv"
             style="@style/TiTleContentTv"
-            android:text="@string/my_follow" />
+            android:text="@string/my_buy" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/followed_position_state_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        android:text="@string/remind_followed_position_state"
+        android:textColor="@color/red_text"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="10dp"
+        android:background="#666666" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,7 +51,7 @@
             android:textSize="13sp" />
 
         <TextView
-            android:id="@+id/follow_list_person_tv"
+            android:id="@+id/followed_position_person_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -46,7 +61,7 @@
             android:textSize="13sp" />
 
         <TextView
-            android:id="@+id/follow_person_num_tv"
+            android:id="@+id/followed_position_person_num_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -56,11 +71,11 @@
     </RelativeLayout>
 
     <fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView
-        android:id="@+id/follow_list_rec"
+        android:id="@+id/followed_position_rec"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"></fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView>
+        android:paddingRight="10dp"/>
 
 </LinearLayout>

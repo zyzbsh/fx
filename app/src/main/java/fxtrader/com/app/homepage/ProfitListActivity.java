@@ -48,7 +48,7 @@ public class ProfitListActivity extends BaseActivity {
         mTotalBreakEvenTv = (TextView) findViewById(R.id.position_list_break_even_num_tv);
         mPositionListSizeTv = (TextView) findViewById(R.id.position_list_size_tv);
 
-        mRecyclerView = (LRecyclerView) findViewById(R.id.position_list_rec);
+        mRecyclerView = (LRecyclerView) findViewById(R.id.profit_list_rec);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setPullRefreshEnabled(false);
 

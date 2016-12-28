@@ -40,7 +40,7 @@
                 android:textColor="@color/white" />
 
             <fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView
-                android:id="@+id/position_list_rec"
+                android:id="@+id/profit_list_rec"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="8dp"

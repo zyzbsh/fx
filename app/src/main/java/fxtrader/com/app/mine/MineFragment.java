@@ -111,7 +111,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             case R.id.mine_announcement_layout://公告
                 openActivity(AnnouncementActivity.class);
                 break;
-            case R.id.mine_follow_tv://我的关注
+            case R.id.mine_follow_layout://我的关注
+                openActivity(MyFollowActivity.class);
                 break;
             case R.id.mine_my_gift_layout://我的礼券
                 openActivity(ExperienceVoucherActivity.class);

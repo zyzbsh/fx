@@ -16,8 +16,6 @@ public class TradeRulesActivity extends BaseActivity implements View.OnClickList
 
     private TextView mProductionRulesTv;
 
-    private TextView mAccountRulesTv;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,17 +25,16 @@ public class TradeRulesActivity extends BaseActivity implements View.OnClickList
 
     private void initViews() {
         mProductionRulesTv = (TextView) findViewById(R.id.trade_rules_production_intro_tv);
-        mAccountRulesTv = (TextView) findViewById(R.id.trade_rules_account_rules_tv);
         mProductionRulesTv.setOnClickListener(this);
-        mAccountRulesTv.setOnClickListener(this);
+        findViewById(R.id.trade_rules_layout).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.trade_rules_layout:
             case R.id.trade_rules_production_intro_tv:
-                break;
-            case R.id.trade_rules_account_rules_tv:
+                openActivity(RuleIntroActivity.class);
                 break;
             default:
                 break;

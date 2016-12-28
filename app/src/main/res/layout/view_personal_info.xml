@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/cash_coupon_icon_im"
-                android:layout_alignLeft="@id/cash_coupon_count_tv"
+                android:layout_alignLeft="@id/cash_coupon_tv"
                 android:layout_toRightOf="@id/cash_coupon_icon_im"
                 android:textColor="@color/tv_cash_coupon_count"
                 android:textSize="@dimen/person_cash_coupon_tv" />
