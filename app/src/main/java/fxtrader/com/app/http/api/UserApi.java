@@ -66,6 +66,6 @@ public interface UserApi {
     @GET("/api/openRedPack")
     Call<OpenPacket> openPacket(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 
-    @GET("gdiex.community.getRiseOrFall")
+    @GET("/api/getP2PRedPacket")
     Call<RedEnvelopeListEntity> redEnvelopeList(@QueryMap Map<String, String> params);
 }

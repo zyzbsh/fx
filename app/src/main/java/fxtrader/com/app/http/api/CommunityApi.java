@@ -4,6 +4,7 @@ import java.util.Map;
 
 import fxtrader.com.app.entity.MasterListEntity;
 import fxtrader.com.app.entity.ProfitListEntity;
+import fxtrader.com.app.entity.SubscribeListEntity;
 import fxtrader.com.app.entity.WinerStreamListEntity;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -32,4 +33,6 @@ public interface CommunityApi {
     @GET("/api/aceBuyInfo")
     Call<ProfitListEntity> profitListLogined(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 
+    @GET("/api/getSubscripts")
+    Call<SubscribeListEntity> subscribes(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 }

@@ -15,14 +15,12 @@ import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.tools.UIUtil;
 
 /**
- * 发现
- * Created by zhangyuzhu on 2016/12/1.
+ * Created by zhangyuzhu on 2016/12/28.
  */
-public class FindFragment extends BaseFragment implements View.OnClickListener, HeadListener{
-
+public class FindTestFragment extends BaseFragment implements View.OnClickListener, HeadListener{
     private ImageView mAdIm;
 
-    private MasterHotFragment mMasterHotFragment;
+    private WinStreamFragment mWinStreamFragment;
 
     private ProfitFragment mProfitFragment;
 
@@ -141,14 +139,14 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void onFragmentChange(int index) {
-       FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         hideAllFragment(transaction);
         if (index == TabIndex.INDEX_WIN_STREAM.ordinal()) {
-            if (mMasterHotFragment == null) {
-                mMasterHotFragment = new MasterHotFragment();
-                transaction.add(R.id.find_content_layout, mMasterHotFragment);
+            if (mWinStreamFragment == null) {
+                mWinStreamFragment = new WinStreamFragment();
+                transaction.add(R.id.find_content_layout, mWinStreamFragment);
             } else {
-                transaction.show(mMasterHotFragment);
+                transaction.show(mWinStreamFragment);
             }
         } else if (index == TabIndex.INDEX_PROFIT.ordinal()) {
             if (mProfitFragment == null) {
@@ -170,7 +168,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void hideAllFragment(FragmentTransaction fragmentTransaction) {
-        if (mMasterHotFragment != null) fragmentTransaction.hide(mMasterHotFragment);
+        if (mWinStreamFragment != null) fragmentTransaction.hide(mWinStreamFragment);
         if (mProfitFragment != null) fragmentTransaction.hide(mProfitFragment);
         if (mRedEnvelopeFragment != null) fragmentTransaction.hide(mRedEnvelopeFragment);
     }

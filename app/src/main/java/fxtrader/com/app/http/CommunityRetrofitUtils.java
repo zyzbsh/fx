@@ -1,7 +1,5 @@
 package fxtrader.com.app.http;
 
-import android.content.Context;
-
 import fxtrader.com.app.AppApplication;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -9,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by zhangyuzhu on 2016/12/6.
  */
-public class RetrofitUtils {
+public class CommunityRetrofitUtils {
 
     private static Retrofit singleton;
 
@@ -17,10 +15,10 @@ public class RetrofitUtils {
 
     public static <T> T createApi(Class<T> clazz){
         if(singleton == null){
-            synchronized (RetrofitUtils.class){
+            synchronized (CommunityRetrofitUtils.class){
                 if(singleton == null){
                     singleton = new Retrofit.Builder()
-                            .baseUrl(HttpConstant.BASE_URL)
+                            .baseUrl(HttpConstant.TEST_URL)
                             .addConverterFactory(GsonConverterFactory.create())
                             .client(OkHttpUtils.getSingleton(AppApplication.getInstance().getBaseContext()))
                             .build();
@@ -31,10 +29,10 @@ public class RetrofitUtils {
 
         return singleton.create(clazz);
     }
-
+    
     public static <T> T createTestApi(Class<T> clazz){
         if(testSingleton == null){
-            synchronized (RetrofitUtils.class){
+            synchronized (CommunityRetrofitUtils.class){
                 if(testSingleton == null){
                     testSingleton = new Retrofit.Builder()
 //                            .baseUrl("http://125.88.152.51:15516/")

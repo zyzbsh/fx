@@ -653,10 +653,12 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onSuccess(UserEntity user) {
                 mUserEntity = user;
-                mAccountInfoLayout.setVisibility(View.VISIBLE);
-                mBalanceAmountTv.setText(String.valueOf(user.getObject().getFunds()));
-                String couponNum = String.valueOf(user.getObject().getCouponAmount());
-                mCashCouponTv.setText("现金券：" + couponNum);
+                if (user != null && user.getObject() != null) {
+                    mAccountInfoLayout.setVisibility(View.VISIBLE);
+                    mBalanceAmountTv.setText(String.valueOf(user.getObject().getFunds()));
+                    String couponNum = String.valueOf(user.getObject().getCouponAmount());
+                    mCashCouponTv.setText("现金券：" + couponNum);
+                }
             }
 
             @Override

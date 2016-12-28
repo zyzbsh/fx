@@ -42,7 +42,7 @@ public final class LoginConfig {
         editor.commit();
     }
 
-    public void saveInfo(String id, String telNumber, int organId) {
+    public void saveInfo(String id, String telNumber, int organId, int customerId) {
         SharedPreferences.Editor editor = mSp.edit();
         editor.putString(id, id);
         editor.putString(telNumber, telNumber);

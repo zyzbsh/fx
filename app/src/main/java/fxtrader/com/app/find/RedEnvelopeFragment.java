@@ -6,13 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.bumptech.glide.Glide;
+
 import java.util.Map;
 
 import fxtrader.com.app.R;
@@ -22,6 +21,7 @@ import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.entity.RedEnvelopeEntity;
 import fxtrader.com.app.entity.RedEnvelopeListEntity;
 import fxtrader.com.app.homepage.ProfitListActivity;
+import fxtrader.com.app.http.CommunityRetrofitUtils;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
@@ -29,7 +29,6 @@ import fxtrader.com.app.http.api.UserApi;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
 import fxtrader.com.app.tools.DateTools;
-import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.view.CircleImageView;
 import fxtrader.com.app.view.MyDecoration;
 import retrofit2.Call;
@@ -70,7 +69,15 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
         LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(getContext(), mAdapter);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
         mRecyclerView.addItemDecoration(new MyDecoration(getActivity(), MyDecoration.VERTICAL_LIST));
-        requestRedEnvelopes();
+        requestData();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            requestData();
+        }
     }
 
     public void addHeadListener(HeadListener listener) {
@@ -88,7 +95,7 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    private void requestRedEnvelopes() {
+    private void requestData() {
         UserApi dataApi = RetrofitUtils.createApi(UserApi.class);
         final Call<RedEnvelopeListEntity> respon = dataApi.redEnvelopeList(getParams());
         respon.enqueue(new Callback<RedEnvelopeListEntity>() {
@@ -109,7 +116,7 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
 
     private Map<String, String> getParams() {
         final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.community.getRiseOrFall");
+        params.put("method", "gdiex.community.getP2PRedPacket");
         int id = HttpConstant.DEFAULT_ORGAN_ID;
         if (LoginConfig.getInstance().isLogin()) {
             id = LoginConfig.getInstance().getOrganId();
@@ -141,6 +148,12 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             RedEnvelopeEntity entity = getDataList().get(position);
             ViewHolder viewHolder = (ViewHolder) holder;
+            Glide.with(mContext)
+                    .load(entity.getHeadImg())
+                    .centerCrop()
+//                    .placeholder(R.drawable.loading_spinner)
+                    .crossFade()
+                    .into(viewHolder.avatarIm);
             viewHolder.nameTv.setText(entity.getNickname());
             viewHolder.timeTv.setText(DateTools.changeToDate2(entity.getCreateTime()));
             viewHolder.contentTv.setText("给高手发出1个红包");

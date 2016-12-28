@@ -35,8 +35,10 @@ public class MarketEntity extends CommonResponse implements Serializable{
         if (data == null) {
             data = new HashMap<>();
         }
-        data.put(HttpConstant.PriceCode.YDCL, object.YDCL);
-        data.put(HttpConstant.PriceCode.YDHF, object.YDHF);
+        if (object != null) {
+            data.put(HttpConstant.PriceCode.YDCL, object.YDCL);
+            data.put(HttpConstant.PriceCode.YDHF, object.YDHF);
+        }
     }
 
     public String getData(String type) {

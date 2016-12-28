@@ -29,7 +29,7 @@ public class ProfitListManager {
     }
 
 
-    public void getProfitListWithLogined(final ResponseListener<ProfitListEntity> listener, String organId, String customerId){
+    public void getProfitListWithLogined(String organId, String customerId, final ResponseListener<ProfitListEntity> listener){
         if (listener == null) {
             throw new IllegalArgumentException("MasterListener is null");
         }
@@ -52,7 +52,7 @@ public class ProfitListManager {
 
     private Map<String, String> getLoginedParams(String organId, String customerId){
         final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.community.getRiseOrFall");
+        params.put("method", "gdiex.community.getAceBuyInfo");
         params.put("organ_id", organId);
         params.put("limit", "10");
         params.put("customerId", customerId);
@@ -82,7 +82,7 @@ public class ProfitListManager {
 
     private Map<String, String> getParams(){
         final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.community.getAceHot");
+        params.put("method", "gdiex.community.getAceBuyInfo2");
         params.put("organ_id", HttpConstant.DEFAULT_ORGAN_ID + "");
         params.put("limit", "10");
         params.put("sign", ParamsUtil.sign(params));

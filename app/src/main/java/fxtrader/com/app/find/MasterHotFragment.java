@@ -13,28 +13,30 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.entity.MasterEntity;
+import fxtrader.com.app.entity.MasterListEntity;
 import fxtrader.com.app.entity.ProfitEntity;
 import fxtrader.com.app.entity.ProfitListEntity;
 import fxtrader.com.app.homepage.ProfitListActivity;
+import fxtrader.com.app.http.HttpConstant;
+import fxtrader.com.app.http.manager.MasterListManager;
 import fxtrader.com.app.http.manager.ProfitListManager;
 import fxtrader.com.app.http.manager.ResponseListener;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
+import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.view.CircleImageView;
 import fxtrader.com.app.view.MyDecoration;
 
 /**
- * 发现盈利榜
+ * 高手热点
  * Created by zhangyuzhu on 2016/12/4.
  */
-public class ProfitFragment extends BaseFragment implements View.OnClickListener {
+public class MasterHotFragment extends BaseFragment implements View.OnClickListener {
 
     private LRecyclerView mRecyclerView;
 
@@ -74,15 +76,15 @@ public class ProfitFragment extends BaseFragment implements View.OnClickListener
         if (LoginConfig.getInstance().isLogin()) {
             String organId = "" + LoginConfig.getInstance().getOrganId();
             String customerId = LoginConfig.getInstance().getId();
-            ProfitListManager.getInstance().getProfitListWithLogined(organId, customerId, listener);
+            MasterListManager.getInstance().getMastersWithLogined(organId, customerId, listener);
         } else {
-            ProfitListManager.getInstance().getProfitList(listener);
+            MasterListManager.getInstance().getMasters(listener);
         }
     }
 
-    private class MyResponseLisntener implements ResponseListener<ProfitListEntity>{
+    private class MyResponseLisntener implements ResponseListener<MasterListEntity>{
         @Override
-        public void success(ProfitListEntity object) {
+        public void success(MasterListEntity object) {
             if (object != null && object.isSuccess()) {
                 mAdapter.setDataList(object.getObject());
             }
@@ -106,7 +108,7 @@ public class ProfitFragment extends BaseFragment implements View.OnClickListener
         }
     }
 
-    class DataAdapter extends ListBaseAdapter<ProfitEntity> {
+    class DataAdapter extends ListBaseAdapter<MasterEntity> {
 
         private LayoutInflater mLayoutInflater;
 
@@ -119,63 +121,64 @@ public class ProfitFragment extends BaseFragment implements View.OnClickListener
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(mLayoutInflater.inflate(R.layout.find_item_profit, parent, false));
+            return new ViewHolder(mLayoutInflater.inflate(R.layout.item_master_hot, parent, false));
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ProfitEntity entity = getDataList().get(position);
-            ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.nameTv.setText(entity.getNickname());
-            viewHolder.contractNameTv.setText(entity.getContractName());
-            viewHolder.maxPercentTv.setText(entity.getWeekProfitRate() + "%");
-            setTagImWithPosition(viewHolder.tagIm, position);
-            Glide.with(mContext)
-                    .load(entity.getHeadimgurl())
-                    .centerCrop()
-//                    .placeholder(R.drawable.loading_spinner)
-                    .crossFade()
-                    .into(viewHolder.avatarIm);
-        }
+            MasterEntity item = mDataList.get(position);
 
-        private void setTagImWithPosition(ImageView im, int position) {
-            if (position == 0) {
-                im.setVisibility(View.VISIBLE);
-                im.setImageResource(R.mipmap.icon_rank_first);
-            } else if (position == 1) {
-                im.setVisibility(View.VISIBLE);
-                im.setImageResource(R.mipmap.icon_rank_second);
-            } else if (position == 2) {
-                im.setVisibility(View.VISIBLE);
-                im.setImageResource(R.mipmap.icon_rank_third);
-            } else if(position == 3) {
-                im.setVisibility(View.VISIBLE);
-                im.setImageResource(R.mipmap.icon_rank_forth);
-            } else {
-                im.setVisibility(View.INVISIBLE);
-            }
+            ViewHolder viewHolder = (ViewHolder) holder;
+            viewHolder.avatarNameTv.setText(item.getNickname());
+            viewHolder.amountTv.setText("" + ContractUtil.getDouble(item.getProfit(), 1));
+            viewHolder.buyPriceTv.setText("买入价");
+            viewHolder.buyPriceNumTv.setText("1930.2");
+            viewHolder.buyNameTv.setText(item.getCodeName());
+            String dealDirection = (item.getDealDirection() == 1) ? "买涨" : "买跌";
+            viewHolder.buySelectTv.setText(dealDirection);
+            viewHolder.buySelectNumTv.setText(item.getDealCount() + "手");
+            viewHolder.followTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO
+                }
+            });
         }
 
 
         class ViewHolder extends RecyclerView.ViewHolder {
 
-            ImageView tagIm;
-            CircleImageView avatarIm;
-            TextView nameTv;
-            TextView contractNameTv;
-            TextView maxPercentTv;
-            TextView followTv;
+            private ImageView avatarIm;
+            private TextView avatarNameTv;
+            private TextView amountTv;
+            private TextView buyPriceTv;
+            private TextView buyPriceNumTv;
+            private TextView buyNameTv;
+            private TextView buySelectTv;
+            private TextView buySelectNumTv;
+            private TextView followTv;
 
             public ViewHolder(View view) {
                 super(view);
-                tagIm = (ImageView) view.findViewById(R.id.find_item_profit_tag_im);
-                avatarIm = (CircleImageView) view.findViewById(R.id.find_item_profit_avatar_im);
-                nameTv = (TextView) view.findViewById(R.id.find_item_profit_name_tv);
-                contractNameTv = (TextView) view.findViewById(R.id.find_item_contract_name_tv);
-                maxPercentTv = (TextView) view.findViewById(R.id.find_item_max_percent_tv);
-                followTv = (TextView) view.findViewById(R.id.find_item_profit_follow_tv);
+                avatarIm = (CircleImageView) view.findViewById(R.id.main_item_master_avatar_im);
+                avatarNameTv = (TextView) view.findViewById(R.id.main_item_master_avatar_name_tv);
+                amountTv = (TextView) view.findViewById(R.id.main_item_master_amount_tv);
+                buyPriceTv = (TextView) view.findViewById(R.id.main_item_master_buy_price_tv);
+                buyPriceNumTv = (TextView) view.findViewById(R.id.main_item_master_buy_price_num_tv);
+                buyNameTv = (TextView) view.findViewById(R.id.main_item_master_buy_name_tv);
+                buySelectTv = (TextView) view.findViewById(R.id.main_item_master_buy_select_tv);
+                buySelectNumTv = (TextView) view.findViewById(R.id.main_item_master_buy_select_num_tv);
+                followTv = (TextView) view.findViewById(R.id.main_item_master_follow_tv);
             }
         }
+    }
+
+    class ItemModel {
+        public String breakEven = "+100";
+        public String production = "3000g粤油";
+        public String buyType = "3手买跌";
+        public String price = "买入价：3606";
+
     }
 
 }
