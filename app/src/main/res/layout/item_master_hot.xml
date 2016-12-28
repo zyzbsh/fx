@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/main_item_height"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/main_item_master_profit_amount_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:text="@string/profit_amount"
+        android:textColor="#e83743"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/main_item_master_amount_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_item_master_profit_amount_tv"
+        android:layout_marginTop="12dp"
+        android:textSize="14.7sp" />
+
+    <TextView
+        android:id="@+id/main_item_master_unit_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/main_item_master_amount_tv"
+        android:layout_toRightOf="@id/main_item_master_amount_tv"
+        android:text="@string/account_unit"
+        android:textColor="#999999"
+        android:textSize="12sp" />
+
+    <View
+        android:id="@+id/main_item_master_split_view"
+        android:layout_width="0.5dp"
+        android:layout_height="55dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@id/main_item_master_profit_amount_tv"
+        android:background="#3495f9" />
+
+    <LinearLayout
+        android:id="@+id/main_item_master_avatar_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/main_item_master_split_view"
+        android:orientation="horizontal">
+
+        <fxtrader.com.app.view.CircleImageView
+            android:id="@+id/main_item_master_avatar_im"
+            android:layout_width="@dimen/main_item_avatar"
+            android:layout_height="@dimen/main_item_avatar" />
+
+        <TextView
+            android:id="@+id/main_item_master_avatar_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/main_item_master_follow_tv"
+        style="@style/FollowTv"
+        android:layout_alignBottom="@id/main_item_master_avatar_layout"
+        android:layout_alignParentRight="true"
+        android:textColor="#e83743" />
+
+    <TextView
+        android:id="@+id/main_item_master_buy_price_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/main_item_master_unit_tv"
+        android:layout_alignLeft="@id/main_item_master_avatar_layout"
+        android:layout_below="@+id/main_item_master_avatar_layout"
+        android:layout_toRightOf="@id/main_item_master_unit_tv"
+        android:gravity="bottom"
+        android:text="@string/buy_price" />
+
+    <TextView
+        android:id="@+id/main_item_master_buy_price_num_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/main_item_master_buy_price_tv"
+        android:layout_toRightOf="@id/main_item_master_buy_price_tv"
+        android:textColor="#3495f9" />
+
+    <TextView
+        android:id="@+id/main_item_master_buy_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/main_item_master_buy_price_num_tv"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/main_item_master_buy_price_num_tv"
+        android:textColor="#999999" />
+
+    <TextView
+        android:id="@+id/main_item_master_buy_select_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/main_item_master_buy_name_tv"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/main_item_master_buy_name_tv"
+        android:textColor="#999999" />
+
+    <TextView
+        android:id="@+id/main_item_master_buy_select_num_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/main_item_master_buy_select_tv"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/main_item_master_buy_select_tv"
+        android:textColor="#999999" />
+
+</RelativeLayout>

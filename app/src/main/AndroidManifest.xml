@@ -123,6 +123,9 @@
             android:name=".mine.WebHtmlActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".mine.MyFollowActivity"
+            android:screenOrientation="portrait"/>
+
         <service android:name=".service.PriceService" />
 
     </application>

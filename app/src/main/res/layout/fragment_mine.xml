@@ -110,8 +110,8 @@
                     <TextView
                         android:id="@+id/mine_follow_tv"
                         style="@style/MineItemTv"
-                        android:drawableTop="@mipmap/icon_share_to_friends"
-                        android:text="@string/share_to_friends" />
+                        android:drawableTop="@mipmap/icon_my_follow"
+                        android:text="@string/my_follow" />
                 </LinearLayout>
 
 

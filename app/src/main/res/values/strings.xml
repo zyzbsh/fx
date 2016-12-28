@@ -173,7 +173,7 @@
     <string name="protection_safe_des">随充随提、当天提现即日到账。</string>
     <string name="protection_sys_safe">系统安全保证</string>
     <string name="protection_sys_safe_des">系统由具有多年金融和互联网行业相关经验研发团队精心打造，成熟安全可靠。</string>
-    <string name="production_max_profit_percent">粤东油 单笔最高盈利率</string>
+    <string name="production_max_profit_percent">单笔最高盈利率</string>
     <string name="win">胜</string>
     <string name="contract_price_num">%1$s %2$s</string>
     <string name="homepage_profit_num">17点收益</string>
@@ -222,4 +222,5 @@
     <string name="name">姓名</string>
     <string name="withdraw_remind">请输入持卡人姓名</string>
     <string name="red_envelope">红包</string>
+    <string name="my_follow">我的关注</string>
 </resources>

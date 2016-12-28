@@ -26,7 +26,6 @@
         android:id="@+id/item_red_envelop_name_tv"
         android:layout_width="wrap_content"
         android:layout_toRightOf="@id/item_red_envelop_avatar_im"
-        android:layout_toLeftOf="@id/item_red_envelop_state_tv"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:singleLine="true"
@@ -60,10 +59,10 @@
         android:id="@+id/item_red_envelop_content_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/item_red_envelop_state_tv"
         android:textColor="@color/gray_6"
         android:textSize="14sp"
         android:gravity="bottom"
+        android:layout_alignParentRight="true"
         android:layout_alignBottom="@id/item_red_envelop_profit_tv"
         android:layout_marginTop="5dp"/>
 
