@@ -2,9 +2,12 @@ package fxtrader.com.app.http.api;
 
 import java.util.Map;
 
+import fxtrader.com.app.entity.FollowOrderCountEntity;
 import fxtrader.com.app.entity.MasterListEntity;
 import fxtrader.com.app.entity.ProfitListEntity;
+import fxtrader.com.app.entity.SubscribedPositionListEntity;
 import fxtrader.com.app.entity.SubscribeListEntity;
+import fxtrader.com.app.entity.SubscribedOrderEntity;
 import fxtrader.com.app.entity.WinerStreamListEntity;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -35,4 +38,13 @@ public interface CommunityApi {
 
     @GET("/api/getSubscripts")
     Call<SubscribeListEntity> subscribes(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/metalOrderOne")
+    Call<SubscribedOrderEntity> subscribedOrder(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/getSubscriptBuyInfo")
+    Call<SubscribedPositionListEntity> subscribedPosition(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/getFollowOrder")
+    Call<FollowOrderCountEntity> followOrderCount(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 }

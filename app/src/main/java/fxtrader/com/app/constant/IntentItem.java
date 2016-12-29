@@ -23,4 +23,6 @@ public final class IntentItem {
     public static final String USER_INFO = "user_info";
     public static final String RECHARGE_HTML = "recharge_html";
     public static final String MINE = "mine";
+    public static final String CUSTOMER_ID = "customer_id";
+    public static final String ORDER_ID = "order_id";
 }

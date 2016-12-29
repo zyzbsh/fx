@@ -39,6 +39,13 @@ public class DateTools {
 		return formatter.format(calendar.getTime());
 	}
 
+	public static String changeToDate3(long time) {
+		DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(time);
+		return formatter.format(calendar.getTime());
+	}
+
 	public static String changeToDay(long time) {
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar calendar = Calendar.getInstance();

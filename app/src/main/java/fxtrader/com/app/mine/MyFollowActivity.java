@@ -1,6 +1,7 @@
 package fxtrader.com.app.mine;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.SubscribeListEntity;
 import fxtrader.com.app.entity.UserSubscribeEntity;
 import fxtrader.com.app.http.ParamsUtil;
@@ -63,7 +65,9 @@ public class MyFollowActivity extends BaseActivity{
         mHeaderAndFooterRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                Intent intent = new Intent(MyFollowActivity.this, PositionsFollowedActivity.class);
+                intent.putExtra(IntentItem.CUSTOMER_ID, mAdapter.getDataList().get(position).getCustomerId() + "");
+                startActivity(intent);
             }
 
             @Override
