@@ -76,7 +76,7 @@
                     style="@style/FindTab"
                     android:clickable="false"
                     android:drawableLeft="@drawable/sel_tab_win_stream"
-                    android:text="@string/win_stream_list" />
+                    android:text="@string/master_hot_list" />
             </RelativeLayout>
 
             <RelativeLayout

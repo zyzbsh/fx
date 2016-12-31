@@ -22,11 +22,14 @@ import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.entity.SubscribeEntity;
 import fxtrader.com.app.entity.SubscribeListEntity;
 import fxtrader.com.app.entity.UserSubscribeEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.CommunityApi;
+import fxtrader.com.app.http.manager.ResponseListener;
+import fxtrader.com.app.http.manager.SubscribeManager;
 import fxtrader.com.app.lrececlerview.interfaces.OnItemClickListener;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
@@ -39,7 +42,7 @@ import retrofit2.Response;
 /**
  * Created by zhangyuzhu on 2016/12/28.
  */
-public class MyFollowActivity extends BaseActivity{
+public class MyFollowActivity extends BaseActivity {
 
     private LRecyclerView mRecyclerView;
 
@@ -55,7 +58,7 @@ public class MyFollowActivity extends BaseActivity{
         requestData();
     }
 
-    private void initViews(){
+    private void initViews() {
         mPersonNumTv = (TextView) findViewById(R.id.follow_person_num_tv);
         mRecyclerView = (LRecyclerView) findViewById(R.id.follow_list_rec);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -77,7 +80,7 @@ public class MyFollowActivity extends BaseActivity{
         });
     }
 
-    private void requestData(){
+    private void requestData() {
         showProgressDialog();
         CommunityApi communityApi = RetrofitUtils.createApi(CommunityApi.class);
         String token = ParamsUtil.getToken();
@@ -103,7 +106,7 @@ public class MyFollowActivity extends BaseActivity{
         });
     }
 
-    private Map<String, String> getParams(){
+    private Map<String, String> getParams() {
         final Map<String, String> params = ParamsUtil.getCommonParams();
         params.put("method", "gdiex.community.getSubscripts");
         params.put("customerId", LoginConfig.getInstance().getId());
@@ -127,8 +130,8 @@ public class MyFollowActivity extends BaseActivity{
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            UserSubscribeEntity entity = mDataList.get(position);
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+            final UserSubscribeEntity entity = mDataList.get(position);
             ViewHolder viewHolder = (ViewHolder) holder;
             Glide.with(mContext)
                     .load(entity.getHeadImgUrl())
@@ -137,16 +140,32 @@ public class MyFollowActivity extends BaseActivity{
                     .crossFade()
                     .into(viewHolder.avatarIm);
             viewHolder.nameTv.setText(entity.getNickname());
-            boolean isFollowed = entity.isSubscribe();
-            if (isFollowed) {
-                viewHolder.followTv.setText(getString(R.string.follow));
-            } else {
-                viewHolder.followTv.setText(getString(R.string.cancel_follow));
-            }
-            viewHolder.followTv.setTag(isFollowed);
             viewHolder.followTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    cancelFollow(entity, position);
+                }
+            });
+        }
+
+        private void cancelFollow(UserSubscribeEntity entity, final int position) {
+            SubscribeManager.getInstance().cancel(LoginConfig.getInstance().getId(), "" + entity.getCustomerId(), new ResponseListener<SubscribeEntity>() {
+                @Override
+                public void success(SubscribeEntity object) {
+                    if (object.isSuccess()) {
+                        if (position < getDataList().size()) {
+                            getDataList().remove(position);
+                            mPersonNumTv.setText(getDataList().size() + "");
+                            notifyDataSetChanged();
+                            showToastShort(object.getObject());
+                        }
+                    } else {
+                        showToastShort(object.getMessage());
+                    }
+                }
+
+                @Override
+                public void error(String error) {
 
                 }
             });

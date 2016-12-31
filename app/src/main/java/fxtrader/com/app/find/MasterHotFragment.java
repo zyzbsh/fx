@@ -10,8 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
+import android.widget.Toast;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
@@ -20,15 +19,15 @@ import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.entity.MasterEntity;
 import fxtrader.com.app.entity.MasterListEntity;
 import fxtrader.com.app.entity.ProfitEntity;
-import fxtrader.com.app.entity.ProfitListEntity;
+import fxtrader.com.app.entity.SubscribeEntity;
 import fxtrader.com.app.homepage.ProfitListActivity;
-import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.manager.MasterListManager;
-import fxtrader.com.app.http.manager.ProfitListManager;
 import fxtrader.com.app.http.manager.ResponseListener;
+import fxtrader.com.app.http.manager.SubscribeManager;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
 import fxtrader.com.app.tools.ContractUtil;
+import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.view.CircleImageView;
 import fxtrader.com.app.view.MyDecoration;
 
@@ -42,6 +41,8 @@ public class MasterHotFragment extends BaseFragment implements View.OnClickListe
 
     private DataAdapter mAdapter;
 
+    private boolean mIsLogin;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class MasterHotFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mIsLogin = LoginConfig.getInstance().isLogin();
         view.findViewById(R.id.find_more_tv).setOnClickListener(this);
         mRecyclerView = (LRecyclerView) view.findViewById(R.id.find_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -64,15 +66,23 @@ public class MasterHotFragment extends BaseFragment implements View.OnClickListe
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mIsLogin = LoginConfig.getInstance().isLogin();
+        requestData();
+    }
+
+    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
+            mIsLogin = LoginConfig.getInstance().isLogin();
             requestData();
         }
     }
 
     private void requestData(){
-        MyResponseLisntener listener = new MyResponseLisntener();
+        MyResponseListener listener = new MyResponseListener();
         if (LoginConfig.getInstance().isLogin()) {
             String organId = "" + LoginConfig.getInstance().getOrganId();
             String customerId = LoginConfig.getInstance().getId();
@@ -82,7 +92,7 @@ public class MasterHotFragment extends BaseFragment implements View.OnClickListe
         }
     }
 
-    private class MyResponseLisntener implements ResponseListener<MasterListEntity>{
+    private class MyResponseListener implements ResponseListener<MasterListEntity>{
         @Override
         public void success(MasterListEntity object) {
             if (object != null && object.isSuccess()) {
@@ -137,12 +147,92 @@ public class MasterHotFragment extends BaseFragment implements View.OnClickListe
             String dealDirection = (item.getDealDirection() == 1) ? "买涨" : "买跌";
             viewHolder.buySelectTv.setText(dealDirection);
             viewHolder.buySelectNumTv.setText(item.getDealCount() + "手");
-            viewHolder.followTv.setOnClickListener(new View.OnClickListener() {
+            setFollowTv(viewHolder.followTv, item, position);
+        }
+
+        private void setFollowTv(TextView followTv, final MasterEntity entity, final int position) {
+
+            if (mIsLogin) {
+                final String subscribeId = entity.getCustomerId() + "";
+                if (subscribeId.equals(LoginConfig.getInstance().getId())) {
+                    followTv.setVisibility(View.GONE);
+                    return;
+                } else {
+                    followTv.setVisibility(View.VISIBLE);
+                }
+                followTv.setVisibility(View.VISIBLE);
+                boolean isSubscribed = entity.isSubscribe();
+
+                if (isSubscribed){
+                    followTv.setText("取消关注");
+                } else {
+                    followTv.setText("关注");
+                }
+                followTv.setTag(isSubscribed);
+                followTv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        boolean subscribe = (boolean) view.getTag();
+                        LogZ.i(entity.toString());
+                        LogZ.i("subscribe = " + subscribe);
+                        if (subscribe) {
+                            cancelFollow(subscribeId, position);
+                        } else {
+                            addFollow(subscribeId, position);
+                        }
+                    }
+                });
+            } else {
+                followTv.setVisibility(View.GONE);
+            }
+        }
+
+        private void addFollow(final String subscribeId, final int position){
+            SubscribeManager.getInstance().add(LoginConfig.getInstance().getId(), subscribeId, new ResponseListener<SubscribeEntity>() {
                 @Override
-                public void onClick(View view) {
-                    //TODO
+                public void success(SubscribeEntity object) {
+                    if (object.isSuccess()) {
+                        if (position < getDataList().size()) {
+                            getDataList().get(position).setSubscribe(true);
+                            notifyDataSetChanged();
+                            showToast(object.getObject());
+                        }
+                    } else {
+                        showToast(object.getMessage());
+                    }
+                }
+
+                @Override
+                public void error(String error) {
+                    LogZ.e(error);
                 }
             });
+        }
+
+        private void cancelFollow(final String subscribeId, final int position){
+            SubscribeManager.getInstance().cancel(LoginConfig.getInstance().getId(), subscribeId, new ResponseListener<SubscribeEntity>() {
+                @Override
+                public void success(SubscribeEntity object) {
+                    if (object.isSuccess()) {
+                        if (position < getDataList().size()) {
+                            getDataList().get(position).setSubscribe(false);
+                            notifyDataSetChanged();
+                            showToast(object.getObject());
+                        }
+                    } else {
+                        showToast(object.getMessage());
+                    }
+                }
+
+                @Override
+                public void error(String error) {
+                    LogZ.e(error);
+                }
+            });
+        }
+
+        private void showToast(String msg) {
+            Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
         }
 
 
@@ -170,15 +260,9 @@ public class MasterHotFragment extends BaseFragment implements View.OnClickListe
                 buySelectNumTv = (TextView) view.findViewById(R.id.main_item_master_buy_select_num_tv);
                 followTv = (TextView) view.findViewById(R.id.main_item_master_follow_tv);
             }
+
+
         }
-    }
-
-    class ItemModel {
-        public String breakEven = "+100";
-        public String production = "3000g粤油";
-        public String buyType = "3手买跌";
-        public String price = "买入价：3606";
-
     }
 
 }

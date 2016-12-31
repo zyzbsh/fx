@@ -91,12 +91,14 @@
     </style>
 
     <style name="FollowTv">
-        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">28dp</item>
         <item name="android:textColor">#e83743</item>
         <item name="android:textSize">13sp</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/shape_follow</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
         <item name="android:text">@string/follow</item>
     </style>
 

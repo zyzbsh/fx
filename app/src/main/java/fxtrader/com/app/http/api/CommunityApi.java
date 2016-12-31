@@ -5,6 +5,7 @@ import java.util.Map;
 import fxtrader.com.app.entity.FollowOrderCountEntity;
 import fxtrader.com.app.entity.MasterListEntity;
 import fxtrader.com.app.entity.ProfitListEntity;
+import fxtrader.com.app.entity.SubscribeEntity;
 import fxtrader.com.app.entity.SubscribedPositionListEntity;
 import fxtrader.com.app.entity.SubscribeListEntity;
 import fxtrader.com.app.entity.SubscribedOrderEntity;
@@ -47,4 +48,13 @@ public interface CommunityApi {
 
     @GET("/api/getFollowOrder")
     Call<FollowOrderCountEntity> followOrderCount(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/checkSubscriber")
+    Call<SubscribeEntity> checkSubscribe(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/addSubscriber")
+    Call<SubscribeEntity> addSubscribe(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/unsubscribe")
+    Call<SubscribeEntity> cancelSubscribe(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 }

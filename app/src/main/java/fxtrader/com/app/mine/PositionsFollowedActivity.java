@@ -26,7 +26,6 @@ import fxtrader.com.app.entity.UserSubscribeEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.CommunityApi;
-import fxtrader.com.app.lrececlerview.interfaces.OnItemClickListener;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
 import fxtrader.com.app.tools.ContractUtil;

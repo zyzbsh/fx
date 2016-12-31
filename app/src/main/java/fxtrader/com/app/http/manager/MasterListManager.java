@@ -20,6 +20,10 @@ import retrofit2.Response;
  */
 public class MasterListManager {
 
+    public static final int LIMIT_LOGINED = 10;
+
+    public static final int LIMIT_UNLOGINED = 4;
+
     private static MasterListManager sMasterManager;
 
     private MasterListManager(){
@@ -58,10 +62,13 @@ public class MasterListManager {
         final Map<String, String> params = ParamsUtil.getCommonParams();
         params.put("method", "gdiex.community.getAceHot2");
         params.put("organ_id", organId);
-        params.put("limit", "10");
+        params.put("limit", String.valueOf(LIMIT_LOGINED));
         params.put("customerId", customerId);
-        params.put("ydRate", "10.00");
-        params.put("hfRate", "10.00");
+        MarketEntity market = AppApplication.getInstance().getMarketEntity();
+        PriceEntity ydPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDCL));
+        params.put("ydRate", ydPrice.getLatestPrice());
+        PriceEntity hfPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDHF));
+        params.put("hfRate", hfPrice.getLatestPrice());
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }
@@ -90,11 +97,11 @@ public class MasterListManager {
         final Map<String, String> params = ParamsUtil.getCommonParams();
         params.put("method", "gdiex.community.getAceHot");
         params.put("organ_id", HttpConstant.DEFAULT_ORGAN_ID + "");
-        params.put("limit", "10");
+        params.put("limit", String.valueOf(LIMIT_UNLOGINED));
         MarketEntity market = AppApplication.getInstance().getMarketEntity();
-        PriceEntity ydPrice = new PriceEntity(HttpConstant.PriceCode.YDCL);
+        PriceEntity ydPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDCL));
         params.put("ydRate", ydPrice.getLatestPrice());
-        PriceEntity hfPrice = new PriceEntity(HttpConstant.PriceCode.YDHF);
+        PriceEntity hfPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDHF));
         params.put("hfRate", hfPrice.getLatestPrice());
         params.put("sign", ParamsUtil.sign(params));
         return params;
