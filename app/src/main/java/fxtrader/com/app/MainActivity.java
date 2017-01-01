@@ -14,7 +14,7 @@ import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.find.FindFragment;
 import fxtrader.com.app.homepage.HomepageFragment;
-import fxtrader.com.app.login.LoginActivity;
+import fxtrader.com.app.login.LoginNewActivity;
 import fxtrader.com.app.mine.MineFragment;
 import fxtrader.com.app.protection.ProtectionFragment;
 
@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 }
                 transaction.commit();
             } else {
-                Intent intent = new Intent(this, LoginActivity.class);
+                Intent intent = new Intent(this, LoginNewActivity.class);
                 intent.putExtra(IntentItem.MINE, true);
                 startActivity(intent);
                 int size = mCheckedIdRecords.size();

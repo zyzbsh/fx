@@ -10,6 +10,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +31,7 @@ import java.util.TimerTask;
 
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
+import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
@@ -35,6 +40,8 @@ import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.ContractListEntity;
 import fxtrader.com.app.entity.MarketEntity;
+import fxtrader.com.app.entity.MasterEntity;
+import fxtrader.com.app.entity.MasterListEntity;
 import fxtrader.com.app.entity.ParticipantsEntity;
 import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PositionListEntity;
@@ -43,15 +50,18 @@ import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.manager.MasterListManager;
+import fxtrader.com.app.http.manager.ResponseListener;
 import fxtrader.com.app.http.manager.UserInfoManager;
 import fxtrader.com.app.http.api.ContractApi;
-import fxtrader.com.app.login.LoginActivity;
+import fxtrader.com.app.login.LoginNewActivity;
 import fxtrader.com.app.mine.RechargeActivity;
 import fxtrader.com.app.mine.WithdrawActivity;
 import fxtrader.com.app.service.PriceService;
 import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
+import fxtrader.com.app.view.CircleImageView;
 import fxtrader.com.app.view.ProfitListPop;
 import fxtrader.com.app.view.ctr.MainTitleProfitCtr;
 import retrofit2.Call;
@@ -116,6 +126,10 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private String mLatestPrice = "";
 
+    private RecyclerView mRececlerView;
+
+    private DataAdapter mMasterAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
@@ -138,6 +152,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
         registerLoginReceiver();
         requestParticipant();
+        requestMaster();
     }
 
     @Override
@@ -196,6 +211,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         initMasterLayout(view);
         initViewPager(view);
         initLineBtn(view);
+        initMasterList(view);
     }
 
     private void initTitleProfitLayout(View view) {
@@ -268,6 +284,14 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
         btnLineType[0].performClick();
         btnLineBg[0].setVisibility(View.VISIBLE);
+    }
+
+    private void initMasterList(View view){
+        mRececlerView = (RecyclerView) view.findViewById(R.id.homepage_master_list_recycler_view);
+        mRececlerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRececlerView.setNestedScrollingEnabled(false);
+        mMasterAdapter = new DataAdapter(getActivity());
+        mRececlerView.setAdapter(mMasterAdapter);
     }
 
 
@@ -362,7 +386,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.homepage_login_tv:
-                openActivityForResult(LoginActivity.class, IntentItem.REQUEST_LOGIN);
+                openActivityForResult(LoginNewActivity.class, IntentItem.REQUEST_LOGIN);
                 break;
             case R.id.homepage_recharge_tv://充值
                 recharge();
@@ -401,7 +425,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             }
 
         } else {
-            openActivityForResult(LoginActivity.class, IntentItem.REQUEST_RECHARGE);
+            openActivityForResult(LoginNewActivity.class, IntentItem.REQUEST_RECHARGE);
         }
     }
 
@@ -421,7 +445,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             }
 
         } else {
-            openActivityForResult(LoginActivity.class, IntentItem.REQUEST_WITHDRAW);
+            openActivityForResult(LoginNewActivity.class, IntentItem.REQUEST_WITHDRAW);
         }
     }
 
@@ -436,7 +460,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         if (isLogin()) {
             openBuildPositionActivity(raise);
         } else {
-            openActivityForResult(LoginActivity.class, IntentItem.REQUEST_LOGIN);
+            openActivityForResult(LoginNewActivity.class, IntentItem.REQUEST_LOGIN);
         }
     }
 
@@ -714,6 +738,107 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         params.put("method", "gdiex.community.getRiseOrFall");
         params.put("sign", ParamsUtil.sign(params));
         return params;
+    }
+
+    private void requestMaster(){
+        MasterResponseListener listener = new MasterResponseListener();
+        if (LoginConfig.getInstance().isLogin()) {
+            String organId = LoginConfig.getInstance().getOrganId() + "";
+            String id = LoginConfig.getInstance().getId();
+            MasterListManager.getInstance().getMastersWithLogined(organId, id, listener);
+        } else {
+            MasterListManager.getInstance().getMasters(listener);
+        }
+    }
+
+    class MasterResponseListener implements ResponseListener<MasterListEntity> {
+        @Override
+        public void success(MasterListEntity object) {
+            if (object != null && object.isSuccess()) {
+                int size = object.getObject().size();
+                if (size <= 4) {
+                    mMasterAdapter.setDataList(object.getObject());
+                } else {
+                    size = 4;
+                    List<MasterEntity> list = new ArrayList<>();
+                    for (int i = 0; i < size; i++){
+                        list.add(object.getObject().get(i));
+                    }
+                }
+                ViewGroup.LayoutParams mParams = mRececlerView.getLayoutParams();
+                mParams.height = UIUtil.dip2px(getActivity(), 48) * size;
+                mRececlerView.setLayoutParams(mParams);
+            }
+        }
+
+        @Override
+        public void error(String error) {
+            LogZ.e(error);
+        }
+    }
+
+    class DataAdapter extends ListBaseAdapter<MasterEntity> {
+
+        private LayoutInflater mLayoutInflater;
+
+        public DataAdapter(Context context) {
+            mLayoutInflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new ViewHolder(mLayoutInflater.inflate(R.layout.item_homepage_master, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            MasterEntity item = mDataList.get(position);
+
+            ViewHolder viewHolder = (ViewHolder) holder;
+            setTagImWithPosition(viewHolder.rankTv, viewHolder.rankTv2, position);
+            viewHolder.nameTv.setText(item.getNickname());
+            viewHolder.profitTv.setText(item.getProfit() +"");
+            Glide.with(mContext)
+                    .load(item.getHeadImg())
+                    .centerCrop()
+//                    .placeholder(R.drawable.loading_spinner)
+                    .crossFade()
+                    .into(viewHolder.avatarIm);
+        }
+
+        private void setTagImWithPosition(TextView rankTv, TextView rankTv2, int position) {
+            rankTv.setText((position + 1) + "");
+            if (position == 0) {
+                rankTv2.setBackgroundResource(R.mipmap.icon_rank_first);
+            } else if (position == 1) {
+                rankTv2.setBackgroundResource(R.mipmap.icon_rank_second);
+            } else if (position == 2) {
+                rankTv2.setBackgroundResource(R.mipmap.icon_rank_third);
+            } else if(position == 3) {
+                rankTv2.setText("4");
+                rankTv2.setBackgroundResource(R.mipmap.bg_circle_yellow);
+            }
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+
+            private TextView rankTv;
+            private TextView rankTv2;
+            private ImageView avatarIm;
+            private TextView profitTv;
+            private TextView nameTv;
+
+            public ViewHolder(View view) {
+                super(view);
+                rankTv = (TextView) view.findViewById(R.id.homepage_master_rank_tv);
+                rankTv2 = (TextView) view.findViewById(R.id.homepage_master_rank_tv_2);
+                avatarIm = (CircleImageView) view.findViewById(R.id.homepage_master_avatar_im);
+                profitTv = (TextView) view.findViewById(R.id.homepage_master_profit_tv);
+                nameTv = (TextView) view.findViewById(R.id.homepage_master_name_tv);
+            }
+
+
+        }
     }
 
 }

@@ -36,7 +36,9 @@ public class UserInfoHelper extends ColumnHelper<UserEntity> {
     }
 
     public void save(UserEntity user) {
-
+        if (user == null || user.getObject() == null) {
+            return;
+        }
         String[] args = new String[] {user.getObject().getAccount()};
         Cursor c = DBHelper.getInstance(mContext).rawQuery(
                 "SELECT * FROM " + UserInfoColumn.TABLE_NAME + " WHERE " + UserInfoColumn.ACCOUNT

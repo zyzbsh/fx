@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f6812e" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="47dp">
+
+        <TextView
+            android:id="@+id/homepage_master_rank_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/bg_homepage_master_rank"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/homepage_master_rank_tv_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
+
+        <ImageView
+            android:id="@+id/homepage_master_divider_left_im"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/homepage_master_rank_tv_2"
+            android:src="@mipmap/icon_divider_vector" />
+
+        <fxtrader.com.app.view.CircleImageView
+            android:id="@+id/homepage_master_avatar_im"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/homepage_master_divider_left_im"
+            android:src="@mipmap/avatar_item_normal" />
+
+        <TextView
+            android:id="@+id/homepage_master_money_unit_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/money_unit"
+            android:textSize="13sp"
+            android:textColor="@color/red_text"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/homepage_master_profit_tv"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textColor="@color/red_text"
+            android:textSize="15sp"
+            android:layout_toLeftOf="@id/homepage_master_money_unit_tv"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:id="@+id/homepage_master_divider_right_im"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/homepage_master_profit_tv"
+            android:src="@mipmap/icon_divider_vector" />
+
+        <TextView
+            android:id="@+id/homepage_master_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/homepage_master_divider_right_im"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:singleLine="true"
+            android:textColor="@color/black_33"
+            android:layout_toRightOf="@id/homepage_master_avatar_im" />
+
+    </RelativeLayout>
+
+</LinearLayout>

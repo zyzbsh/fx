@@ -1,7 +1,9 @@
 package fxtrader.com.app.mine;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,15 +16,21 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.List;
 import java.util.Map;
 
+import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.FollowOrderCountEntity;
+import fxtrader.com.app.entity.MarketEntity;
+import fxtrader.com.app.entity.PositionInfoEntity;
+import fxtrader.com.app.entity.PriceEntity;
 import fxtrader.com.app.entity.SubscribedPositionListEntity;
 import fxtrader.com.app.entity.UserSubscribeEntity;
+import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.CommunityApi;
@@ -42,8 +50,6 @@ public class PositionsFollowedActivity extends BaseActivity{
 
     private String mCustomerId;
 
-    private String mCurrentPrice = "";
-
     private LRecyclerView mRecyclerView;
 
     private TextView mPersonNumTv;
@@ -56,8 +62,17 @@ public class PositionsFollowedActivity extends BaseActivity{
         setContentLayout(R.layout.activity_followed_position_list);
         mCustomerId = getIntent().getStringExtra(IntentItem.CUSTOMER_ID);
         initViews();
+        registerPriceReceiver();
         requestFollowOrderCount();
         requestFollowedPosition();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mPriceReceiver != null) {
+            unregisterReceiver(mPriceReceiver);
+        }
     }
 
     private void initViews() {
@@ -129,6 +144,38 @@ public class PositionsFollowedActivity extends BaseActivity{
         return params;
     }
 
+    private BroadcastReceiver mPriceReceiver;
+
+    private void registerPriceReceiver() {
+        mPriceReceiver = new PriceReceiver();
+        IntentFilter filter = new IntentFilter(IntentItem.ACTION_PRICE);
+        registerReceiver(mPriceReceiver, filter);
+    }
+
+
+    class PriceReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MarketEntity vo = (MarketEntity) intent.getSerializableExtra(IntentItem.PRICE);
+            vo.init();
+            List<UserSubscribeEntity> list = mAdapter.getDataList();
+            if (list != null && !list.isEmpty()) {
+                for (UserSubscribeEntity entity : list){
+                    String contractCode = entity.getContractCode();
+                    if (HttpConstant.PriceCode.YDOIL.equals(contractCode)) {
+                        contractCode = HttpConstant.PriceCode.YDCL;
+                    }
+                    String data = vo.getData(contractCode);
+                    PriceEntity price = new PriceEntity(data);
+                    entity.setLatestPrice(price.getLatestPrice());
+                }
+            }
+
+            mAdapter.notifyDataSetChanged();
+
+        }
+    }
+
     class DataAdapter extends ListBaseAdapter<UserSubscribeEntity> {
         private LayoutInflater mLayoutInflater;
 
@@ -176,7 +223,7 @@ public class PositionsFollowedActivity extends BaseActivity{
 
             viewHolder.buildTimeTv.setText(DateTools.changeToDate3(entity.getBuyingDate()));
             viewHolder.buildPriceTv.setText(ContractUtil.getDouble(entity.getBuyingRate(), 1) + "");
-            viewHolder.currentPriceTv.setText(mCurrentPrice);
+            viewHolder.currentPriceTv.setText(entity.getLatestPrice());
             viewHolder.handChargeTv.setText(entity.getHandingChargeAmount() + "");
             viewHolder.profitAndLossTv.setText(entity.getProfitAndLoss() + "");
             if (entity.getProfit() < 10E-6) {

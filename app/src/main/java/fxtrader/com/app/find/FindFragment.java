@@ -1,5 +1,6 @@
 package fxtrader.com.app.find;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -10,9 +11,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+
+import java.util.Map;
+
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseFragment;
+import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.entity.AdEntity;
+import fxtrader.com.app.http.ParamsUtil;
+import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.api.CommunityApi;
 import fxtrader.com.app.tools.UIUtil;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 发现
@@ -48,6 +63,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         super.onViewCreated(view, savedInstanceState);
         initAdIm(view);
         initTabLayout(view);
+        requestAd();
     }
 
     @Override
@@ -179,5 +195,46 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onClick(View v) {
 
+    }
+
+    private void requestAd(){
+        CommunityApi communityApi = RetrofitUtils.createApi(CommunityApi.class);
+        Call<AdEntity> request = communityApi.boards(getAdParams());
+        request.enqueue(new Callback<AdEntity>() {
+            @Override
+            public void onResponse(Call<AdEntity> call, Response<AdEntity> response) {
+                AdEntity entity = response.body();
+                if (entity.isSuccess()) {
+                    Glide.with(getActivity()).load(entity.getObject().get(0).getBackgroundImageUrl()).asBitmap()
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap bitmap,
+                                                            GlideAnimation<? super Bitmap> glideAnimation) {
+                                    int width = bitmap.getWidth();
+                                    int height = bitmap.getHeight();
+                                    ViewGroup.LayoutParams lp = mAdIm.getLayoutParams();
+                                    lp.width = UIUtil.getScreenWidth(getActivity());
+                                    float tempHeight=height * ((float)lp.width / width);
+                                    lp.height =(int)tempHeight ;
+                                    mAdIm.setLayoutParams(lp);
+                                    mAdIm.setImageBitmap(bitmap);
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AdEntity> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String,String> getAdParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.community.getBulletinBoards");
+        params.put("organ_id", LoginConfig.getInstance().getOrganId() + "");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
     }
 }

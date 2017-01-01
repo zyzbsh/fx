@@ -2,6 +2,7 @@ package fxtrader.com.app.http.api;
 
 import java.util.Map;
 
+import fxtrader.com.app.entity.AdEntity;
 import fxtrader.com.app.entity.FollowOrderCountEntity;
 import fxtrader.com.app.entity.MasterListEntity;
 import fxtrader.com.app.entity.ProfitListEntity;
@@ -57,4 +58,7 @@ public interface CommunityApi {
 
     @GET("/api/unsubscribe")
     Call<SubscribeEntity> cancelSubscribe(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/getBulletinBoards")
+    Call<AdEntity> boards(@QueryMap Map<String, String> params);
 }

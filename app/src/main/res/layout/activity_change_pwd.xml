@@ -41,7 +41,7 @@
         android:background="@drawable/shape_edt_change_pwd"
         android:gravity="center"
         android:textSize="14sp"
-        android:hint="@string/hint_recharge_pwd"
+        android:hint="@string/hint_new_pwd"
         android:textColor="@color/gray_6"
         android:textColorHint="@color/gray_6" />
 
@@ -55,7 +55,7 @@
         android:background="@drawable/shape_edt_change_pwd"
         android:gravity="center"
         android:textSize="14sp"
-        android:hint="@string/hint_recharge_pwd"
+        android:hint="@string/hint_confirm_pwd"
         android:textColor="@color/gray_6"
         android:textColorHint="@color/gray_6" />
 

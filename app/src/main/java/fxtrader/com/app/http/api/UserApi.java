@@ -20,6 +20,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.QueryMap;
 
 /**
@@ -68,4 +69,10 @@ public interface UserApi {
 
     @GET("/api/getP2PRedPacket")
     Call<RedEnvelopeListEntity> redEnvelopeList(@QueryMap Map<String, String> params);
+
+    @PUT("/api/v3/users")
+    Call<CommonResponse> findPwd(@QueryMap Map<String, String> params);
+
+    @PUT("/api/v3/users")
+    Call<CommonResponse> changePwd(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 }

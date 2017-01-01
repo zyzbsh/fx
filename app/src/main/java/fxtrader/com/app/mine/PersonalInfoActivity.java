@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import fxtrader.com.app.MainActivity;
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.config.LoginConfig;
@@ -59,6 +60,7 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.personal_info_sex_layout).setOnClickListener(this);
         findViewById(R.id.personal_info_bind_layout).setOnClickListener(this);
         findViewById(R.id.personal_info_change_pwd_layout).setOnClickListener(this);
+        findViewById(R.id.personal_info_login_out_layout).setOnClickListener(this);
     }
 
     @Override
@@ -73,6 +75,9 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.personal_info_change_pwd_layout://修改密码
                 openActivity(ChangePwdActivity.class);
+                break;
+            case R.id.personal_info_login_out_layout:
+                loginOut();
                 break;
             default:
                 break;
@@ -134,6 +139,10 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
 
         String telNumber = mUser.getObject().getTelNumber();
         return !TextUtils.isEmpty(telNumber);
+    }
+
+    private void loginOut(){
+        openActivity(MainActivity.class);
     }
 
 }

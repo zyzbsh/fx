@@ -7,7 +7,9 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +28,12 @@ import fxtrader.com.app.entity.TicketListEntity;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
-import fxtrader.com.app.http.manager.UserInfoManager;
 import fxtrader.com.app.http.api.UserApi;
+import fxtrader.com.app.http.manager.UserInfoManager;
 import fxtrader.com.app.tools.Base64;
 import fxtrader.com.app.tools.EncryptionTool;
+import fxtrader.com.app.tools.LogZ;
+import fxtrader.com.app.tools.UIUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +42,11 @@ import retrofit2.Response;
  * 登录
  * Created by pc on 2016/11/17.
  */
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class LoginNewActivity extends BaseActivity implements View.OnClickListener {
+
+    private ImageView mAdIm;
+
+    private int mAdImHeight;
 
     private EditText mAccountEdt;
 
@@ -54,6 +62,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         @Override
         public void handleMessage(Message msg) {
             mRequest--;
+            LogZ.i("mRequest = " + mRequest);
             if (mRequest == 0) {
                 if (mFromMine) {
                     Intent intent=new Intent();
@@ -69,7 +78,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login_new);
         mFromMine = getIntent().getBooleanExtra(IntentItem.MINE, false);
         initViews();
         setView();
@@ -81,6 +90,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void initViews() {
+        initAdIm();
         mAccountEdt = (EditText) findViewById(R.id.login_account_edt);
         mPwdEdt = (EditText) findViewById(R.id.login_pwd_edt);
         mRegisterTipTv = (TextView) findViewById(R.id.login_register_tv);
@@ -91,6 +101,19 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mAccountEdt.setText("13668902696");
         mPwdEdt.setText("123456");
     }
+
+    private void initAdIm() {
+        mAdIm = (ImageView) findViewById(R.id.login_ad_im);
+        int width = UIUtil.getScreenWidth(this);
+        int height = width * 257 / 640;
+        ViewGroup.LayoutParams params = mAdIm.getLayoutParams();
+        params.width = width;
+        params.height = height;
+        mAdImHeight = height;
+        mAdIm.setLayoutParams(params);
+    }
+
+
 
     private void setView() {
         boolean login = getIntent().getBooleanExtra(IntentItem.LOGIN, false);
@@ -108,7 +131,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 login();
                 break;
             case R.id.login_pwd_forgot_tv:
-                forgetPwd();
+                findPwd();
                 break;
             case R.id.login_register_tv:
                 register();
@@ -141,13 +164,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     String token = entity.getAccess_token();
                     if (TextUtils.isEmpty(token)) {
                         dismissProgressDialog();
+                        mRequest--;
                         showToastShort("账户或密码错误");
                         return;
                     }
-                    mHandler.sendEmptyMessage(0);
                     LoginConfig.getInstance().saveUser(account, entity.getAccess_token());
                     getTickets();
                     getUserInfo();
+                    mHandler.sendEmptyMessage(0);
                 }
 
                 @Override
@@ -179,8 +203,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         });
     }
 
-    private void forgetPwd() {
-        //TODO
+    private void findPwd() {
+        openActivity(FindPwdActivity.class);
     }
 
     private void register() {
@@ -206,10 +230,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         repos.enqueue(new Callback<TicketListEntity>() {
             @Override
             public void onResponse(Call<TicketListEntity> call, Response<TicketListEntity> response) {
-                mHandler.sendEmptyMessage(0);
                 TicketListEntity entity = response.body();
                 TicketsHelper.getInstance().save(entity);
                 getUserCoupon();
+                mHandler.sendEmptyMessage(0);
             }
 
             @Override

@@ -93,7 +93,8 @@
         android:layout_marginRight="8.5dp"
         android:layout_marginTop="5dp"
         android:background="#eaeaeb"
-        android:paddingLeft="13dp">
+        android:paddingLeft="13dp"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -165,6 +166,28 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="25dp"
             android:text="@string/change"
+            android:textColor="@color/red_text"
+            android:textSize="14sp" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/personal_info_login_out_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8.5dp"
+        android:layout_marginRight="8.5dp"
+        android:layout_marginTop="5dp"
+        android:background="#eaeaeb"
+        android:paddingLeft="13dp">
+
+        <TextView
+            android:id="@+id/personal_login_out_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/login_out"
             android:textColor="@color/red_text"
             android:textSize="14sp" />
 

@@ -56,6 +56,8 @@ public class UserSubscribeEntity {
     private int ticketCount;
     private int usedTicketCount;
 
+    private String latestPrice;
+
     public int getBLAST_LOSS() {
         return bLAST_LOSS;
     }
@@ -240,6 +242,14 @@ public class UserSubscribeEntity {
         this.usedTicketCount = usedTicketCount;
     }
 
+    public String getLatestPrice() {
+        return latestPrice;
+    }
+
+    public void setLatestPrice(String latestPrice) {
+        this.latestPrice = latestPrice;
+    }
+
     @Override
     public String toString() {
         return "UserSubscribeEntity{" +
@@ -266,6 +276,7 @@ public class UserSubscribeEntity {
                 ", subscribe=" + subscribe +
                 ", ticketCount=" + ticketCount +
                 ", usedTicketCount=" + usedTicketCount +
+                ", latestPrice=" + latestPrice +
                 '}';
     }
 }

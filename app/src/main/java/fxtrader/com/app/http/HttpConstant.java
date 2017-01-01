@@ -20,6 +20,7 @@ public final class HttpConstant {
     public static class PriceCode{
         public static final String YDHF = "YDHF";
         public static final String YDCL = "YDCL";
+        public static final String YDOIL = "YDOIL";
     }
 
     public static class ContractUnit{
@@ -52,5 +53,18 @@ public final class HttpConstant {
     public static class DealDirection{
         public static final String UP = "UP";
         public static final String DROP = "DROP";
+    }
+
+    public static class VerificationCode {
+        /**注册经纪人**/
+        public static final String APPLY_BROKER = "APPLY_BROKER";
+        /**找回密码**/
+        public static final String FIND_PWD = "FIND_PWD";
+        /**注册**/
+        public static final String REGISTER = "REGISTER";
+        /**经纪人找回密码**/
+        public static final String BROKER_FIND_PWD = "BROKER_FIND_PWD";
+        /**申请提现**/
+        public static final String WITHDRAW_PWD = "WITHDRAW_PWD";
     }
 }

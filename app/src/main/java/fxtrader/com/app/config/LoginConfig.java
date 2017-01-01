@@ -59,7 +59,12 @@ public final class LoginConfig {
     }
 
     public int getOrganId(){
-        return  mSp.getInt(ORGAN_ID, HttpConstant.DEFAULT_ORGAN_ID);
+        if (isLogin()) {
+            return  mSp.getInt(ORGAN_ID, HttpConstant.DEFAULT_ORGAN_ID);
+        } else {
+            return HttpConstant.DEFAULT_ORGAN_ID;
+        }
+
     }
 
     public String getAccount(){
