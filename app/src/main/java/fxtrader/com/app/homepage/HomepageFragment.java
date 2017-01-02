@@ -94,8 +94,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private TextView mExpectFallDesTv;
 
-    private RelativeLayout mMasterLayout;
-
     private ImageView mMasterAvatarIm;
 
     private TextView mMasterNameTv;
@@ -152,7 +150,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
         registerLoginReceiver();
         requestParticipant();
-        requestMaster();
+
     }
 
     @Override
@@ -252,10 +250,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initMasterLayout(View view) {
-        mMasterLayout = (RelativeLayout) view.findViewById(R.id.homepage_master_layout);
-        mMasterAvatarIm = (ImageView) view.findViewById(R.id.homepage_master_avatar_im);
-        mMasterNameTv = (TextView) view.findViewById(R.id.homepage_master_name_tv);
-        mMastarProfitTv = (TextView) view.findViewById(R.id.homepage_master_profit_tv);
         view.findViewById(R.id.homepage_master_more_tv).setOnClickListener(this);
     }
 
@@ -530,6 +524,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         getActivity().registerReceiver(mPriceReceiver, filter);
     }
 
+    private boolean masterRequested = false;
 
     class PriceReceiver extends BroadcastReceiver {
         @Override
@@ -537,6 +532,10 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             MarketEntity vo = (MarketEntity) intent.getSerializableExtra(IntentItem.PRICE);
             vo.init();
             AppApplication.getInstance().setMarketEntity(vo);
+            if (!masterRequested) {
+                masterRequested = true;
+                requestMaster();
+            }
             if (mCurDataLineFragment != null) {
                 String dataType = mCurDataLineFragment.getDataType();
                 String data = vo.getData(dataType);
@@ -704,6 +703,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     class mLoginReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            requestMaster();
             startUserTimer();
             startPositionTimer();
             setLoginView();

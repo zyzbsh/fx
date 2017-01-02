@@ -89,4 +89,15 @@ public class ProfitAndLossView extends LinearLayout implements View.OnClickListe
     public int getPercent() {
         return mCount;
     }
+
+    public void setPercent(int percent){
+        if (percent == 0 && percent == 10){
+            mCount = 0;
+            mPercentTv.setText("不设");
+        } else {
+            mCount = percent;
+            mPercentTv.setText(mCount * 10 + "%");
+        }
+
+    }
 }

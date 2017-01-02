@@ -25,4 +25,5 @@ public final class IntentItem {
     public static final String MINE = "mine";
     public static final String CUSTOMER_ID = "customer_id";
     public static final String ORDER_ID = "order_id";
+    public static final String ORDER_FOLLOWED = "order_followed";
 }

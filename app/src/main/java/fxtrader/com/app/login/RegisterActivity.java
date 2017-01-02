@@ -15,6 +15,7 @@ import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.UserApi;
+import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.view.ValidationCode;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,6 +88,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void getVerificationCode() {
+        showProgressDialog();
         String phoneNum = mAccountEdt.getText().toString().trim();
         UserApi userApi = RetrofitUtils.createApi(UserApi.class);
         final Call<CommonResponse> respo = userApi.versificationCode(getVersificationCodeParams(phoneNum));
@@ -94,11 +96,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
                 Log.i("zyu", response.body().toString());
+                dismissProgressDialog();
             }
 
             @Override
             public void onFailure(Call<CommonResponse> call, Throwable t) {
-                Log.i("zyu", t.getMessage());
+                dismissProgressDialog();
+                if (t != null && t.getMessage() != null) {
+                    Log.i("zyu", t.getMessage());
+                }
             }
         });
     }
@@ -127,16 +133,16 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
                 CommonResponse entity = response.body();
-                if (entity.isSuccess()) {
-                    //auto login
-                } else {
-
+                if (entity != null) {
+                    showToastShort(entity.getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<CommonResponse> call, Throwable t) {
-
+                if (t != null && t.getMessage() != null) {
+                    LogZ.e(t.getMessage());
+                }
             }
         });
     }

@@ -1,9 +1,11 @@
 package fxtrader.com.app.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by zhangyuzhu on 2016/12/28.
  */
-public class UserSubscribeEntity {
+public class UserSubscribeEntity implements Serializable{
 
 
     /**

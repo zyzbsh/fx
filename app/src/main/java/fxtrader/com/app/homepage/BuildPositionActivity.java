@@ -40,10 +40,13 @@ import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PositionEntity;
 import fxtrader.com.app.entity.PriceEntity;
 import fxtrader.com.app.entity.TicketEntity;
+import fxtrader.com.app.entity.UserSubscribeEntity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.api.CommunityApi;
 import fxtrader.com.app.http.api.ContractApi;
+import fxtrader.com.app.http.api.UserApi;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.ProfitAndLossView;
@@ -115,6 +118,8 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
     private String mLatestPrice;
 
+    private boolean isOrderFollowed = false;//跟单
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,7 +151,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         setPriceLayout(mLatestPrice);
         setMarginLayout();
 
-
+        orderFollowed();
     }
 
     @Override
@@ -462,6 +467,18 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         mFeeTv.setText(getString(R.string.fee_num, fee));
     }
 
+    private void orderFollowed(){
+        isOrderFollowed = getIntent().hasExtra(IntentItem.ORDER_FOLLOWED);
+        if (isOrderFollowed) {
+            UserSubscribeEntity userSubscribeEntity = (UserSubscribeEntity) getIntent().getSerializableExtra(IntentItem.ORDER_FOLLOWED);
+            int profit = (int) (userSubscribeEntity.getProfit() * 10);
+            mStopProfitView.setPercent(profit);
+            int loss = (int) (Math.abs(userSubscribeEntity.getLoss()) * 10);
+            mStopLossView.setPercent(loss);
+            mSeekBar.setProgress(userSubscribeEntity.getHandingChargeAmount());
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -574,11 +591,62 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         int stopLossPercent = mStopLossView.getPercent();
         String stop = "";
         if (stopLossPercent == 0) {
-            stop = "-0.0";
+            stop = "-1";
         } else {
             stop = "-0." + stopLossPercent;
         }
         params.put("loss", stop);
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    private void orderFollowedRequest(){
+        CommunityApi communityApi = RetrofitUtils.createApi(CommunityApi.class);
+        String token = ParamsUtil.getToken();
+        Call<CommonResponse> request = communityApi.orderFollowed(token, getOrderFollowedParams());
+        request.enqueue(new Callback<CommonResponse>() {
+            @Override
+            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<CommonResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String, String> getOrderFollowedParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.metalOrder.metalOrdersFollow");
+        String direction = "";
+        if (mIsUp) {
+            direction = HttpConstant.DealDirection.UP;
+        } else {
+            direction = HttpConstant.DealDirection.DROP;
+        }
+        params.put("dealDirection", direction);
+        int ticketId = 1;
+        if (mValidCoupons != null && !mValidCoupons.isEmpty()) {
+            for (CouponDetailEntity coupon : mValidCoupons) {
+                if (coupon.getLastUseTime() < System.currentTimeMillis()) {
+                    ticketId = coupon.getTicketId();
+                }
+            }
+        }
+
+        int dealCount = mDealCount;
+        int ticketCount = 0;
+        if (ticketId != 1) {
+            dealCount = 0;
+            ticketCount = 1;
+        }
+        params.put("dealCount", String.valueOf(dealCount));
+        params.put("ticketCount", String.valueOf(ticketCount));
+        params.put("code", mCurContractInfo.getCode());
+        params.put("ticketId", String.valueOf(ticketId));
+        params.put("followMetalOrderId", "");
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

@@ -87,7 +87,9 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onFailure(Call<CommonResponse> call, Throwable t) {
-                Log.i("zyu", t.getMessage());
+                if (t != null && t.getMessage() != null) {
+                    Log.i("zyu", t.getMessage());
+                }
                 dismissProgressDialog();
             }
         });
@@ -97,7 +99,7 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
         final Map<String, String> params = ParamsUtil.getCommonParams();
         params.put("method", "gdiex.sms.send");
         params.put("telNumber", phoneNum);
-        params.put("reason", HttpConstant.VerificationCode.FIND_PWD);
+        params.put("reason", HttpConstant.VerificationCode.REGISTER);
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

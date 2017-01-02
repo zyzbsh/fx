@@ -24,12 +24,15 @@ import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.FollowOrderCountEntity;
 import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PriceEntity;
 import fxtrader.com.app.entity.SubscribedPositionListEntity;
 import fxtrader.com.app.entity.UserSubscribeEntity;
+import fxtrader.com.app.homepage.BuildPositionActivity;
+import fxtrader.com.app.homepage.HFBuildPositionActivity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
@@ -193,7 +196,7 @@ public class PositionsFollowedActivity extends BaseActivity{
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            UserSubscribeEntity entity = mDataList.get(position);
+            final UserSubscribeEntity entity = mDataList.get(position);
             ViewHolder viewHolder = (ViewHolder) holder;
             Glide.with(mContext)
                     .load(entity.getHeadImgUrl())
@@ -238,10 +241,30 @@ public class PositionsFollowedActivity extends BaseActivity{
                 viewHolder.stopLossTv.setText(Math.abs(entity.getLoss()) * 100 + "%");
             }
 
+            final String dataType = entity.getContractCode();
+            final boolean up;
+            if (entity.getDealDirection() == 1){
+                up = true;
+            } else {
+                up = false;
+            }
+
             viewHolder.myButTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //参考下单
+                    Intent intent;
+                    if (dataType.equals(HttpConstant.PriceCode.YDHF)) {
+                        intent = new Intent(mContext, HFBuildPositionActivity.class);
+                    } else {
+                        intent = new Intent(mContext, BuildPositionActivity.class);
+                    }
+                    intent.putExtra(IntentItem.ORDER_FOLLOWED, entity);
+                    ContractEntity contractEntity = ContractUtil.getContractMap().get(dataType);
+                    intent.putExtra(IntentItem.PRICE, entity.getLatestPrice());
+                    intent.putExtra(IntentItem.CONTARCT_INFO, contractEntity);
+                    intent.putExtra(IntentItem.EXCEPTION, up);
+                    intent.putExtra(IntentItem.DATA_TYPE, dataType);
+                    startActivityForResult(intent, IntentItem.REQUEST_BUILD_POSITION);
                 }
             });
 

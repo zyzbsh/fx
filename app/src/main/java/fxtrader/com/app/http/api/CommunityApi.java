@@ -3,6 +3,7 @@ package fxtrader.com.app.http.api;
 import java.util.Map;
 
 import fxtrader.com.app.entity.AdEntity;
+import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.FollowOrderCountEntity;
 import fxtrader.com.app.entity.MasterListEntity;
 import fxtrader.com.app.entity.ProfitListEntity;
@@ -12,8 +13,11 @@ import fxtrader.com.app.entity.SubscribeListEntity;
 import fxtrader.com.app.entity.SubscribedOrderEntity;
 import fxtrader.com.app.entity.WinerStreamListEntity;
 import retrofit2.Call;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 
 /**
@@ -61,4 +65,8 @@ public interface CommunityApi {
 
     @GET("/api/getBulletinBoards")
     Call<AdEntity> boards(@QueryMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/api/metalOrdersFollow")
+    Call<CommonResponse> orderFollowed(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
 }
