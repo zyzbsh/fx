@@ -206,7 +206,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         initSystemBulletinLayout(view);
         initAccountInfoLayout(view);
         initExpectLayout(view);
-        initMasterLayout(view);
         initViewPager(view);
         initLineBtn(view);
         initMasterList(view);
@@ -249,10 +248,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         view.findViewById(R.id.homepage_expect_fall_layout).setOnClickListener(this);
     }
 
-    private void initMasterLayout(View view) {
-        view.findViewById(R.id.homepage_master_more_tv).setOnClickListener(this);
-    }
-
     private void initViewPager(View view) {
         mViewPager = (ViewPager) view.findViewById(R.id.homepage_view_pager);
         ViewGroup.LayoutParams params = mViewPager.getLayoutParams();
@@ -280,7 +275,10 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         btnLineBg[0].setVisibility(View.VISIBLE);
     }
 
+    private TextView mMasterListEmptyTv;
     private void initMasterList(View view){
+        view.findViewById(R.id.homepage_master_more_tv).setOnClickListener(this);
+        mMasterListEmptyTv = (TextView) view.findViewById(R.id.homepage_master_list_empty_tv);
         mRececlerView = (RecyclerView) view.findViewById(R.id.homepage_master_list_recycler_view);
         mRececlerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRececlerView.setNestedScrollingEnabled(false);
@@ -395,7 +393,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 expect(false);
                 break;
             case R.id.homepage_master_more_tv://更多
-                openActivity(MasterListActivity.class);
+                if (mMasterMoreListener != null) {
+                    mMasterMoreListener.more();
+                }
                 break;
             case R.id.btn_timeline:
             case R.id.btn_kline5:
@@ -755,19 +755,26 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void success(MasterListEntity object) {
             if (object != null && object.isSuccess()) {
-                int size = object.getObject().size();
-                if (size <= 4) {
-                    mMasterAdapter.setDataList(object.getObject());
+                if (object.getObject().isEmpty()) {
+                    mRececlerView.setVisibility(View.GONE);
+                    mMasterListEmptyTv.setVisibility(View.VISIBLE);
                 } else {
-                    size = 4;
-                    List<MasterEntity> list = new ArrayList<>();
-                    for (int i = 0; i < size; i++){
-                        list.add(object.getObject().get(i));
+                    mRececlerView.setVisibility(View.VISIBLE);
+                    mMasterListEmptyTv.setVisibility(View.GONE);
+                    int size = object.getObject().size();
+                    if (size <= 4) {
+                        mMasterAdapter.setDataList(object.getObject());
+                    } else {
+                        size = 4;
+                        List<MasterEntity> list = new ArrayList<>();
+                        for (int i = 0; i < size; i++) {
+                            list.add(object.getObject().get(i));
+                        }
                     }
+                    ViewGroup.LayoutParams mParams = mRececlerView.getLayoutParams();
+                    mParams.height = UIUtil.dip2px(getActivity(), 48) * size;
+                    mRececlerView.setLayoutParams(mParams);
                 }
-                ViewGroup.LayoutParams mParams = mRececlerView.getLayoutParams();
-                mParams.height = UIUtil.dip2px(getActivity(), 48) * size;
-                mRececlerView.setLayoutParams(mParams);
             }
         }
 
@@ -839,6 +846,16 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
 
         }
+    }
+
+    private MasterMoreListener mMasterMoreListener;
+
+    public void setMasterMoreListener(MasterMoreListener listener) {
+        mMasterMoreListener = listener;
+    }
+
+    public interface MasterMoreListener {
+        public void more();
     }
 
 }

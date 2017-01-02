@@ -27,11 +27,11 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     private RadioGroup mRadioGroup;
 
-    private BaseFragment mHomepageFragment;
+    private HomepageFragment mHomepageFragment;
 
     private BaseFragment mProtectionFragment;
 
-    private BaseFragment mFindFragment;
+    private FindFragment mFindFragment;
 
     private BaseFragment mMineFragment;
 
@@ -93,6 +93,15 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 checkTabBg(0);
                 if (mHomepageFragment == null) {
                     mHomepageFragment = new HomepageFragment();
+                    mHomepageFragment.setMasterMoreListener(new HomepageFragment.MasterMoreListener() {
+                        @Override
+                        public void more() {
+                            if (mFindFragment != null) {
+                                mFindFragment.setMasterListState();
+                            }
+                            mRadioGroup.check(R.id.main_tab_find_btn);
+                        }
+                    });
                     transaction.add(R.id.main_content_layout, mHomepageFragment);
                 } else {
                     transaction.show(mHomepageFragment);

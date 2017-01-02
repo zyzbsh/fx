@@ -47,6 +47,8 @@ public class ProfitFragment extends BaseFragment implements View.OnClickListener
 
     private boolean mIsLogin;
 
+    private TextView mEmptyTv;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,13 +61,16 @@ public class ProfitFragment extends BaseFragment implements View.OnClickListener
         super.onViewCreated(view, savedInstanceState);
         mIsLogin = LoginConfig.getInstance().isLogin();
         view.findViewById(R.id.find_more_tv).setOnClickListener(this);
+        mEmptyTv = (TextView) view.findViewById(R.id.find_empty_tv);
+
         mRecyclerView = (LRecyclerView) view.findViewById(R.id.find_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new DataAdapter(getActivity());
         LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(getContext(), mAdapter);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
         mRecyclerView.addItemDecoration(new MyDecoration(getActivity(), MyDecoration.VERTICAL_LIST));
-
+        View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.view_empty_recycler_view, null);
+        mRecyclerView.setEmptyView(emptyView);
         requestData();
     }
 
@@ -99,7 +104,14 @@ public class ProfitFragment extends BaseFragment implements View.OnClickListener
         @Override
         public void success(ProfitListEntity object) {
             if (object != null && object.isSuccess()) {
-                mAdapter.setDataList(object.getObject());
+                if (object.getObject() != null && !object.getObject().isEmpty()) {
+                    mEmptyTv.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    mAdapter.setDataList(object.getObject());
+                } else {
+                    mRecyclerView.setVisibility(View.GONE);
+                    mEmptyTv.setVisibility(View.VISIBLE);
+                }
             }
         }
 

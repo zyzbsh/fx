@@ -41,6 +41,7 @@ import retrofit2.Response;
  */
 public class RedEnvelopeFragment extends BaseFragment implements View.OnClickListener {
     private LRecyclerView mRecyclerView;
+    private TextView mEmptyTv;
     private DataAdapter mAdapter;
     private HeadListener mHeadListener;
     private boolean mIsShow = true;
@@ -62,6 +63,8 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.find_more_tv).setOnClickListener(this);
+        mEmptyTv = (TextView) view.findViewById(R.id.find_empty_tv);
+
         mRecyclerView = (LRecyclerView) view.findViewById(R.id.find_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setPullRefreshEnabled(false);
@@ -69,6 +72,8 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
         LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(getContext(), mAdapter);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
         mRecyclerView.addItemDecoration(new MyDecoration(getActivity(), MyDecoration.VERTICAL_LIST));
+        View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.view_empty_recycler_view, null);
+        mRecyclerView.setEmptyView(emptyView);
         requestData();
     }
 
@@ -101,9 +106,16 @@ public class RedEnvelopeFragment extends BaseFragment implements View.OnClickLis
         respon.enqueue(new Callback<RedEnvelopeListEntity>() {
             @Override
             public void onResponse(Call<RedEnvelopeListEntity> call, Response<RedEnvelopeListEntity> response) {
-                RedEnvelopeListEntity entity = response.body();
-                if (entity.isSuccess()) {
-                    mAdapter.setDataList(entity.getObject());
+                RedEnvelopeListEntity object = response.body();
+                if (object.isSuccess()) {
+                    if (object.getObject() != null && !object.getObject().isEmpty()) {
+                        mEmptyTv.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        mAdapter.setDataList(object.getObject());
+                    } else {
+                        mRecyclerView.setVisibility(View.GONE);
+                        mEmptyTv.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 

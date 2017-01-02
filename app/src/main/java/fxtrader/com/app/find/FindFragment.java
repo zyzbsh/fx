@@ -66,6 +66,26 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         requestAd();
     }
 
+    private boolean mMasterListState = false;
+    public void setMasterListState(){
+        mMasterListState = true;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            if (mMasterListState) {
+                mMasterListState = false;
+                if (mTabBtns[0].isChecked()) {
+                    mMasterHotFragment.refresh();
+                } else {
+                    mMasterView.performClick();
+                }
+            }
+        }
+    }
+
     @Override
     public void show() {
         if (mAdIm != null) {
@@ -98,6 +118,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         mAdIm.setLayoutParams(params);
     }
 
+    private View mMasterView;
 
     private void initTabLayout(View view) {
         mTabBgViews[TabIndex.INDEX_WIN_STREAM.ordinal()] = view.findViewById(R.id.find_tab_bg_win_stream);
@@ -109,14 +130,14 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         mTabBtns[TabIndex.INDEX_RED_ENVELOPE.ordinal()] = (RadioButton) view.findViewById(R.id.find_tab_red_envelope_btn);
 
         TabOnClickListener listener = new TabOnClickListener();
-        View showView = view.findViewById(R.id.find_tab_win_stream_layout);
-        showView.setOnClickListener(listener);
+        mMasterView = view.findViewById(R.id.find_tab_win_stream_layout);
+        mMasterView.setOnClickListener(listener);
         view.findViewById(R.id.find_tab_profit_layout).setOnClickListener(listener);
         view.findViewById(R.id.find_tab_red_envelope_layout).setOnClickListener(listener);
 
 //        mTabBgViews[TabIndex.INDEX_WIN_STREAM.ordinal()].setVisibility(View.VISIBLE);
 //        mTabBtns[TabIndex.INDEX_WIN_STREAM.ordinal()].setChecked(true);
-        showView.performClick();
+        mMasterView.performClick();
     }
 
     private class TabOnClickListener implements View.OnClickListener {
@@ -204,7 +225,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
             @Override
             public void onResponse(Call<AdEntity> call, Response<AdEntity> response) {
                 AdEntity entity = response.body();
-                if (entity.isSuccess()) {
+                if (entity.isSuccess() && entity.getObject() != null && !entity.getObject().isEmpty()) {
                     Glide.with(getActivity()).load(entity.getObject().get(0).getBackgroundImageUrl()).asBitmap()
                             .into(new SimpleTarget<Bitmap>() {
                                 @Override
