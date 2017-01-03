@@ -17,7 +17,7 @@ public class TicketEntity {
      */
 
     private int id;
-    private int value;
+    private double value;
     private List<String> canUseList;
 
     public int getId() {
@@ -28,11 +28,11 @@ public class TicketEntity {
         this.id = id;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

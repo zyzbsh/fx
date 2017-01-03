@@ -30,6 +30,7 @@ public class CouponDetailEntity {
     private String status;
     private int ticketId;
     private int userId;
+    private double money;
 
     public int getActivityId() {
         return activityId;
@@ -119,6 +120,14 @@ public class CouponDetailEntity {
         this.userId = userId;
     }
 
+    public double getMoney() {
+        return money;
+    }
+
+    public void setMoney(double money) {
+        this.money = money;
+    }
+
     @Override
     public String toString() {
         return "CouponEntity{" +
@@ -133,6 +142,7 @@ public class CouponDetailEntity {
                 ", status='" + status + '\'' +
                 ", ticketId=" + ticketId +
                 ", userId=" + userId +
+                ", money=" + money +
                 '}';
     }
 }

@@ -120,6 +120,8 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
     private boolean isOrderFollowed = false;//跟单
 
+    private CustomAdapter mAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -233,13 +235,13 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         int raw = getData().size() / 2 + getData().size() % 2;
         mParams.height = UIUtil.dip2px(this, 70) * raw + space * 2;
         recyclerView.setLayoutParams(mParams);
-        final CustomAdapter adapter = new CustomAdapter(this, getData());
+        mAdapter = new CustomAdapter(this, getData());
         GridLayoutManager manager = new GridLayoutManager(this, 2);
         manager.setOrientation(GridLayoutManager.VERTICAL);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new CustomAdapter.OnRecyclerViewItemClickListener() {
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new CustomAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, ContractInfoEntity data, int position) {
                 setContractInfoLayout(data);
@@ -665,6 +667,10 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         public CustomAdapter(Context context, List<ContractInfoEntity> data) {
             this.context = context;
             this.data = data;
+        }
+
+        public void performClick(int position){
+            layoutPosition = position;
         }
 
         public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
