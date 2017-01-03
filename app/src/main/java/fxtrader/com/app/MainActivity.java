@@ -50,6 +50,17 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.hasExtra(IntentItem.LOG_OUT)) {
+            if (mHomepageFragment != null) {
+                mHomepageFragment.logOut();
+            }
+            mRadioGroup.check(R.id.main_tab_homepage_btn);
+        }
+    }
+
     private void initBottomLayout() {
 
         mBottomTabBgViews[0] = findViewById(R.id.main_tab_bg_homepage);

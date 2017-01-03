@@ -92,4 +92,9 @@ public final class LoginConfig {
     }
 
 
+    public void clear() {
+        SharedPreferences.Editor editor = mSp.edit();
+        editor.clear();
+        editor.commit();
+    }
 }

@@ -9,7 +9,7 @@ public final class HttpConstant {
 
     public static String TEST_URL = " http://125.88.152.51:15516/";
 
-    public final static long REFRESH_TIME = 500;
+    public final static long REFRESH_TIME = 15000;
 
     public final static int REFRESH_POSITION_LIST = 10000;
 

@@ -508,6 +508,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
                 BuildPositionResponseEntity entity = response.body();
                 if (entity.isSuccess()) {
                     if (mStopProfitView.getPercent() == 0 && mStopLossView.getPercent() == 0) {
+                        dismissProgressDialog();
                         setResult(RESULT_OK);
                         finish();
                     } else {

@@ -479,6 +479,7 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
                 BuildPositionResponseEntity entity = response.body();
                 if (entity.isSuccess()) {
                     PositionEntity positionEntity = entity.getObject();
+                    dismissProgressDialog();
                 } else {
                     dismissProgressDialog();
                     showToastLong(entity.getMessage());

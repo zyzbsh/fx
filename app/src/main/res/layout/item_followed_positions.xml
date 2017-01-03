@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:background="@color/white"
-        android:padding="10dp">
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <fxtrader.com.app.view.CircleImageView
             android:id="@+id/followed_position_avatar_im"
@@ -23,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/item_follow_avatar_im"
+            android:layout_toRightOf="@id/followed_position_avatar_im"
             android:textSize="12sp" />
 
         <TextView
@@ -48,6 +49,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
+        android:paddingLeft="10dp"
         android:text="@string/contract_name_2"
         android:textColor="@color/gray_6"
         android:textSize="13.6sp" />
@@ -56,19 +58,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="5dp">
+        android:paddingTop="2dp">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingBottom="5dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="5dp"
             android:orientation="horizontal">
 
             <TextView
@@ -89,8 +88,8 @@
             android:id="@+id/followed_position_build_time_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             android:text="@string/followed_position_time"
             android:textColor="@color/gray_6"
             android:textSize="13.6sp" />
@@ -101,16 +100,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="5dp">
+        android:paddingTop="2dp">
 
         <TextView
             android:id="@+id/followed_position_build_price_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_weight="1"
             android:text="@string/followed_position_build_price"
             android:textColor="@color/gray_6"
@@ -120,7 +120,7 @@
             android:id="@+id/followed_position_current_price_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:text="@string/followed_position_current_price"
             android:textColor="@color/gray_6"
@@ -132,17 +132,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="5dp">
+        android:paddingTop="2dp">
 
         <TextView
             android:id="@+id/followed_position_hand_charge_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="@string/followed_position_hand_charge"
             android:textColor="@color/gray_6"
             android:textSize="13.6sp" />
@@ -151,10 +152,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
             android:orientation="horizontal">
 
             <TextView
@@ -177,16 +174,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="5dp">
+        android:paddingTop="2dp">
 
         <TextView
             android:id="@+id/followed_position_stop_profit_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:text="@string/followed_position_stop_profit"
             android:textColor="@color/gray_6"
@@ -196,7 +194,8 @@
             android:id="@+id/followed_position_stop_loss_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:text="@string/followed_position_stop_loss"
             android:textColor="@color/gray_6"
@@ -207,11 +206,14 @@
     <TextView
         android:id="@+id/followed_position_my_buy_tv"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
+        android:text="@string/followed_buy"
+        android:gravity="center"
+        android:textSize="16sp"
         android:background="@drawable/shape_red_corner_3"
         android:textColor="@color/white" />
 

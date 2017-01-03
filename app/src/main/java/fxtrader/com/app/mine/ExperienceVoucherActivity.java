@@ -71,7 +71,7 @@ public class ExperienceVoucherActivity extends BaseActivity {
                 if (tickets != null && tickets.isSuccess()) {
                     if (tickets.getObject() != null && !tickets.getObject().isEmpty()){
                         for (TicketEntity ticket : tickets.getObject()){
-                            mTicketMap.put(ticket.getId(), ContractUtil.getDouble(ticket.getValue(), 0) + "");
+                            mTicketMap.put(ticket.getId(), ticket.getValue() + "");
                         }
                         TicketsHelper.getInstance().save(tickets);
                         getUserCoupon();

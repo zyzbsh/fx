@@ -236,11 +236,12 @@
     <string name="followed_position_direction">方向:&#160;&#160;</string>
     <string name="followed_position_time">建仓时间:&#160;&#160;%1$s</string>
     <string name="followed_position_build_price">建仓价:&#160;&#160;%1$s</string>
-    <string name="followed_position_current_price">&#160;&#160;当前价:&#160;&#160;%1$s</string>
+    <string name="followed_position_current_price">&#160;&#160;&#160;&#160;当前价:&#160;&#160;%1$s</string>
     <string name="followed_position_hand_charge">手数:&#160;&#160;%1$s</string>
     <string name="followed_position_profit_and_loss">盈亏金额:&#160;&#160;</string>
     <string name="followed_position_stop_profit">止盈:&#160;&#160;%1$s</string>
-    <string name="followed_position_stop_loss">&#160;&#160;&#160;&#160;止损:&#160;&#160;%1$s</string>
+    <string name="followed_position_stop_loss">&#160;&#160;&#160;&#160;&#160;&#160;&#160;止损:&#160;&#160;%1$s</string>
     <string name="forget_pwd">忘记密码</string>
     <string name="no_data">暂时没有数据</string>
+    <string name="followed_buy">参与合买</string>
 </resources>

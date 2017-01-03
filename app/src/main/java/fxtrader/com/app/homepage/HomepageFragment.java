@@ -146,7 +146,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         } else {
             mLoginTv.setVisibility(View.VISIBLE);
             mBalanceLayout.setVisibility(View.GONE);
-            mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, " -"));
+            mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, "--"));
         }
         registerLoginReceiver();
         requestParticipant();
@@ -190,6 +190,14 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         setLoginView();
     }
 
+    public void logOut(){
+        mIsLogOut = true;
+        stopUserTimer();
+        mLoginTv.setVisibility(View.VISIBLE);
+        mBalanceLayout.setVisibility(View.GONE);
+        mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, "--"));
+    }
+
     private void setLoginView() {
         if (isLogin()) {
             mLoginTv.setVisibility(View.GONE);
@@ -197,7 +205,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         } else {
             mLoginTv.setVisibility(View.VISIBLE);
             mBalanceLayout.setVisibility(View.GONE);
-            mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, "-"));
+            mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, "--"));
         }
     }
 
@@ -671,12 +679,14 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private UserEntity mUserEntity;
 
+    private boolean mIsLogOut = false;
+
     private void getUserInfo() {
         UserInfoManager.getInstance().get(new UserInfoManager.UserInfoListener() {
             @Override
             public void onSuccess(UserEntity user) {
                 mUserEntity = user;
-                if (user != null && user.getObject() != null) {
+                if (user != null && user.getObject() != null && !mIsLogOut) {
                     mAccountInfoLayout.setVisibility(View.VISIBLE);
                     mBalanceAmountTv.setText(String.valueOf(user.getObject().getFunds()));
                     String couponNum = String.valueOf(user.getObject().getCouponAmount());
@@ -805,12 +815,14 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             setTagImWithPosition(viewHolder.rankTv, viewHolder.rankTv2, position);
             viewHolder.nameTv.setText(item.getNickname());
             viewHolder.profitTv.setText(item.getProfit() +"");
-            Glide.with(mContext)
-                    .load(item.getHeadImg())
-                    .centerCrop()
+            if (mContext != null) {
+                Glide.with(mContext)
+                        .load(item.getHeadImg())
+                        .centerCrop()
 //                    .placeholder(R.drawable.loading_spinner)
-                    .crossFade()
-                    .into(viewHolder.avatarIm);
+                        .crossFade()
+                        .into(viewHolder.avatarIm);
+            }
         }
 
         private void setTagImWithPosition(TextView rankTv, TextView rankTv2, int position) {

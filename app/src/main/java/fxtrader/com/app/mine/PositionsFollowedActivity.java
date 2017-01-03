@@ -41,6 +41,7 @@ import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
 import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.DateTools;
+import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.view.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,7 +75,11 @@ public class PositionsFollowedActivity extends BaseActivity{
     protected void onStop() {
         super.onStop();
         if (mPriceReceiver != null) {
-            unregisterReceiver(mPriceReceiver);
+            try {
+                unregisterReceiver(mPriceReceiver);
+            }catch (Exception e) {
+                LogZ.e(e.getMessage());
+            }
         }
     }
 
@@ -191,7 +196,7 @@ public class PositionsFollowedActivity extends BaseActivity{
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(mLayoutInflater.inflate(R.layout.item_follow, parent, false));
+            return new ViewHolder(mLayoutInflater.inflate(R.layout.item_followed_positions, parent, false));
         }
 
         @Override
@@ -224,23 +229,33 @@ public class PositionsFollowedActivity extends BaseActivity{
                 viewHolder.dealDirectionTv.setText("买跌");
             }
 
-            viewHolder.buildTimeTv.setText(DateTools.changeToDate3(entity.getBuyingDate()));
-            viewHolder.buildPriceTv.setText(ContractUtil.getDouble(entity.getBuyingRate(), 1) + "");
-            viewHolder.currentPriceTv.setText(entity.getLatestPrice());
-            viewHolder.handChargeTv.setText(entity.getHandingChargeAmount() + "");
-            viewHolder.profitAndLossTv.setText(entity.getProfitAndLoss() + "");
-            if (entity.getProfit() < 10E-6) {
-                viewHolder.stopProfitTv.setText("不设");
-            } else {
-                viewHolder.stopProfitTv.setText(entity.getProfit() * 100 + "%");
-            }
+            String buildTime = DateTools.changeToDate3(entity.getBuyingDate());
+            viewHolder.buildTimeTv.setText(getString(R.string.followed_position_time, buildTime));
 
+            String buildPrice = ContractUtil.getDouble(entity.getBuyingRate(), 1) + "";
+            viewHolder.buildPriceTv.setText(getString(R.string.followed_position_build_price, buildPrice));
+
+            viewHolder.currentPriceTv.setText(getString(R.string.followed_position_current_price, entity.getLatestPrice()));
+
+            viewHolder.handChargeTv.setText(getString(R.string.followed_position_hand_charge, entity.getHandingChargeAmount() + ""));
+
+            viewHolder.profitAndLossTv.setText(entity.getProfitAndLoss() + "");
+            String stopProfit;
+            if (entity.getProfit() < 10E-6) {
+                stopProfit = "不设";
+            } else {
+                stopProfit = entity.getProfit() * 100 + "%";
+            }
+            viewHolder.stopProfitTv.setText(getString(R.string.followed_position_stop_profit, stopProfit));
+
+            String stopLoss;
             if (Math.abs(entity.getLoss()) == 1) {
+                stopLoss = "不设";
                 viewHolder.stopLossTv.setText("不设");
             } else {
-                viewHolder.stopLossTv.setText(Math.abs(entity.getLoss()) * 100 + "%");
+                stopLoss = Math.abs(entity.getLoss()) * 100 + "%";
             }
-
+            viewHolder.stopLossTv.setText(getString(R.string.followed_position_stop_loss, stopLoss));
             final String dataType = entity.getContractCode();
             final boolean up;
             if (entity.getDealDirection() == 1){
@@ -271,7 +286,7 @@ public class PositionsFollowedActivity extends BaseActivity{
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            ImageView avatarIm;
+            CircleImageView avatarIm;
             TextView nameTv;
             TextView followTv;
             TextView dealDirectionTv;

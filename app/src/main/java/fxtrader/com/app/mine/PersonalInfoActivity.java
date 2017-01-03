@@ -1,5 +1,6 @@
 package fxtrader.com.app.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -13,6 +14,7 @@ import fxtrader.com.app.MainActivity;
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.db.helper.UserInfoHelper;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.manager.UserInfoManager;
@@ -142,6 +144,9 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void loginOut(){
+        LoginConfig.getInstance().clear();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(IntentItem.LOG_OUT, true);
         openActivity(MainActivity.class);
     }
 
