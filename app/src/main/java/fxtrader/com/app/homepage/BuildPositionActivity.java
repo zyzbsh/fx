@@ -28,6 +28,7 @@ import java.util.Map;
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
+import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.db.helper.TicketsHelper;
 import fxtrader.com.app.db.helper.UserCouponsHelper;
@@ -102,6 +103,8 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
     private int mTicketCount = 0;
 
+    private CheckBox mRedEnvelopeCb;
+
     private CheckBox mCouponCb;
 
     private TextView mCouponNumTv;
@@ -144,6 +147,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         initContractInfo();
         initInfoRec();
         initSeekBar();
+        initRedEnvelope();
         initProfitAndLoss();
         initCouponLayout();
         initMarginLayout();
@@ -428,6 +432,10 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+    private void initRedEnvelope(){
+        mRedEnvelopeCb = (CheckBox) findViewById(R.id.dialog_build_red_envelope_cb);
+    }
+
     private void initProfitAndLoss() {
         mStopProfitView = (ProfitAndLossView) findViewById(R.id.dialog_build_stop_profit_layout);
         mStopLossView = (ProfitAndLossView) findViewById(R.id.dialog_build_stop_loss_layout);
@@ -485,7 +493,11 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dialog_buy_build_position_tv:
-                buildPosition();
+                if (isOrderFollowed) {
+                    orderFollowedRequest();
+                } else {
+                    buildPosition();
+                }
                 break;
             case R.id.dialog_buy_cancel_tv:
                 finish();
@@ -650,6 +662,9 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         params.put("code", mCurContractInfo.getCode());
         params.put("ticketId", String.valueOf(ticketId));
         params.put("followMetalOrderId", "");
+        params.put("organId", LoginConfig.getInstance().getOrganId() + "");
+        int sendRedEnvelope = mRedEnvelopeCb.isChecked() ? HttpConstant.RedPacketType.SEND : HttpConstant.RedPacketType.UNSEND;
+        params.put("sendRedPacket", "" + sendRedEnvelope);
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

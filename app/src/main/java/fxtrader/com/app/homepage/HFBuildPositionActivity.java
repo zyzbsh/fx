@@ -28,6 +28,7 @@ import java.util.Map;
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
+import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.db.helper.TicketsHelper;
 import fxtrader.com.app.db.helper.UserCouponsHelper;
@@ -40,9 +41,11 @@ import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PositionEntity;
 import fxtrader.com.app.entity.PriceEntity;
 import fxtrader.com.app.entity.TicketEntity;
+import fxtrader.com.app.entity.UserSubscribeEntity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.api.CommunityApi;
 import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.LogZ;
@@ -96,6 +99,8 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
 
     private int mTicketCount = 0;
 
+    private CheckBox mRedEnvelopeCb;
+
     private CheckBox mCouponCb;
 
     private TextView mCouponNumTv;
@@ -111,6 +116,8 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
     private TextView mFeeTv;
 
     private String mLatestPrice;
+
+    private boolean isOrderFollowed = false;//跟单
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,6 +141,7 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
         initContractInfo();
         initInfoRec();
         initSeekBar();
+        initRedEnvelope();
         initCouponLayout();
         initMarginLayout();
         initOkTv();
@@ -142,7 +150,7 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
         setPriceLayout(mLatestPrice);
         setMarginLayout();
 
-
+        orderFollowed();
     }
 
     @Override
@@ -418,6 +426,10 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
         }
     }
 
+    private void initRedEnvelope(){
+        mRedEnvelopeCb = (CheckBox) findViewById(R.id.dialog_build_red_envelope_cb);
+    }
+
     private void initOkTv() {
         mOkTv = (TextView) findViewById(R.id.dialog_buy_build_position_tv);
         mOkTv.setOnClickListener(this);
@@ -452,11 +464,23 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
         mFeeTv.setText(getString(R.string.fee_num, fee));
     }
 
+    private void orderFollowed(){
+        isOrderFollowed = getIntent().hasExtra(IntentItem.ORDER_FOLLOWED);
+        if (isOrderFollowed) {
+            UserSubscribeEntity userSubscribeEntity = (UserSubscribeEntity) getIntent().getSerializableExtra(IntentItem.ORDER_FOLLOWED);
+            mSeekBar.setProgress(userSubscribeEntity.getHandingChargeAmount());
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dialog_buy_build_position_tv:
-                buildPosition();
+                if (isOrderFollowed) {
+                    orderFollowedRequest();
+                } else {
+                    buildPosition();
+                }
                 break;
             case R.id.dialog_buy_cancel_tv:
                 finish();
@@ -482,8 +506,8 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
                     dismissProgressDialog();
                 } else {
                     dismissProgressDialog();
-                    showToastLong(entity.getMessage());
                 }
+                showToastLong(entity.getMessage());
             }
 
             @Override
@@ -524,6 +548,60 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
         params.put("ticketCount", String.valueOf(ticketCount));
         params.put("code", mCurContractInfo.getCode());
         params.put("ticketId", String.valueOf(ticketId));
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    private void orderFollowedRequest(){
+        CommunityApi communityApi = RetrofitUtils.createApi(CommunityApi.class);
+        String token = ParamsUtil.getToken();
+        Call<CommonResponse> request = communityApi.orderFollowed(token, getOrderFollowedParams());
+        request.enqueue(new Callback<CommonResponse>() {
+            @Override
+            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<CommonResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String, String> getOrderFollowedParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.metalOrder.metalOrdersFollow");
+        String direction = "";
+        if (mIsUp) {
+            direction = HttpConstant.DealDirection.UP;
+        } else {
+            direction = HttpConstant.DealDirection.DROP;
+        }
+        params.put("dealDirection", direction);
+        int ticketId = 1;
+        if (mValidCoupons != null && !mValidCoupons.isEmpty()) {
+            for (CouponDetailEntity coupon : mValidCoupons) {
+                if (coupon.getLastUseTime() < System.currentTimeMillis()) {
+                    ticketId = coupon.getTicketId();
+                }
+            }
+        }
+
+        int dealCount = mDealCount;
+        int ticketCount = 0;
+        if (ticketId != 1) {
+            dealCount = 0;
+            ticketCount = 1;
+        }
+        params.put("dealCount", String.valueOf(dealCount));
+        params.put("ticketCount", String.valueOf(ticketCount));
+        params.put("code", mCurContractInfo.getCode());
+        params.put("ticketId", String.valueOf(ticketId));
+        params.put("followMetalOrderId", "");
+        params.put("organId", LoginConfig.getInstance().getOrganId() + "");
+        int sendRedEnvelope = mRedEnvelopeCb.isChecked() ? HttpConstant.RedPacketType.SEND : HttpConstant.RedPacketType.UNSEND;
+        params.put("sendRedPacket", "" + sendRedEnvelope);
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

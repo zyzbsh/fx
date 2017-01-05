@@ -67,4 +67,9 @@ public final class HttpConstant {
         /**申请提现**/
         public static final String WITHDRAW_PWD = "WITHDRAW_PWD";
     }
+
+    public static class RedPacketType{
+        public static final int UNSEND = 0;
+        public static final int SEND = 1;
+    }
 }

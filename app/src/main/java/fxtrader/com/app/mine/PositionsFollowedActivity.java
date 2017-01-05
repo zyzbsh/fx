@@ -25,6 +25,7 @@ import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.ContractEntity;
+import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.FollowOrderCountEntity;
 import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PositionInfoEntity;
@@ -223,6 +224,9 @@ public class PositionsFollowedActivity extends BaseActivity{
 
                 }
             });
+
+            viewHolder.contractCodeTv.setText(entity.getContractName());
+
             if (entity.getDealDirection() == 1) {
                 viewHolder.dealDirectionTv.setText("买涨");
             } else {
@@ -256,7 +260,7 @@ public class PositionsFollowedActivity extends BaseActivity{
                 stopLoss = Math.abs(entity.getLoss()) * 100 + "%";
             }
             viewHolder.stopLossTv.setText(getString(R.string.followed_position_stop_loss, stopLoss));
-            final String dataType = entity.getContractCode();
+            final String contractCode = entity.getContractCode();
             final boolean up;
             if (entity.getDealDirection() == 1){
                 up = true;
@@ -268,6 +272,8 @@ public class PositionsFollowedActivity extends BaseActivity{
                 @Override
                 public void onClick(View view) {
                     Intent intent;
+                    ContractInfoEntity contractInfoEntity = ContractUtil.getContractInfoMap().get(contractCode);
+                    String dataType = contractInfoEntity.getDataType();
                     if (dataType.equals(HttpConstant.PriceCode.YDHF)) {
                         intent = new Intent(mContext, HFBuildPositionActivity.class);
                     } else {
@@ -288,6 +294,7 @@ public class PositionsFollowedActivity extends BaseActivity{
         class ViewHolder extends RecyclerView.ViewHolder {
             CircleImageView avatarIm;
             TextView nameTv;
+            TextView contractCodeTv;
             TextView followTv;
             TextView dealDirectionTv;
             TextView buildTimeTv;
@@ -303,6 +310,7 @@ public class PositionsFollowedActivity extends BaseActivity{
                 super(view);
                 avatarIm = (CircleImageView) view.findViewById(R.id.followed_position_avatar_im);
                 nameTv = (TextView) view.findViewById(R.id.followed_position_name_tv);
+                contractCodeTv = (TextView) view.findViewById(R.id.followed_position_contract_code_tv);
                 dealDirectionTv = (TextView) view.findViewById(R.id.followed_position_deal_direction_tv);
                 followTv = (TextView) view.findViewById(R.id.followed_position_follow_tv);
                 buildTimeTv = (TextView) view.findViewById(R.id.followed_position_build_time_tv);
