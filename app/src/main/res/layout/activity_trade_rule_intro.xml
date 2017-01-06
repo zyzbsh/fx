@@ -10,9 +10,9 @@
 
         <RelativeLayout style="@style/TitleLayout">
 
-            <TextView
+            <ImageButton
                 android:id="@id/title_back"
-                style="@style/TiTleBackTv" />
+                style="@style/TiTleBackBtn" />
 
             <TextView
                 android:id="@id/title_content_tv"

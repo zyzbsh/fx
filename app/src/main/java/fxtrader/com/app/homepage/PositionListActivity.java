@@ -216,10 +216,11 @@ public class PositionListActivity extends BaseActivity {
             ProfitInfo profitInfo = getProfit(info);
             if (profitInfo.isProfit){
                 viewHolder.breakEvenTv.setTextColor(Color.parseColor("#e83743"));
+                viewHolder.breakEvenTv.setText(profitInfo.floatProfit);
             } else {
                 viewHolder.breakEvenTv.setTextColor(Color.parseColor("#09cd29"));
+                viewHolder.breakEvenTv.setText("-" + profitInfo.floatProfit);
             }
-            viewHolder.breakEvenTv.setText(profitInfo.floatProfit);
             viewHolder.byuPriceTv.setText("买入价:" + String.valueOf(info.getBuyingRate()));
             viewHolder.productionTv.setText(info.getContractName());
             String type = String.valueOf(info.getDealCount()) + " 手";
@@ -252,7 +253,7 @@ public class PositionListActivity extends BaseActivity {
             } else {
                 info.isProfit = (diff > 0) ? false : true;
             }
-            double result = diff * rate * unit;
+            double result = diff * rate * unit * entity.getDealCount();
             BigDecimal big = new BigDecimal(result);
             double num = big.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
             if (info.isProfit && (num < 0)) {

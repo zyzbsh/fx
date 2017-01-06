@@ -11,6 +11,7 @@ import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PriceEntity;
+import fxtrader.com.app.http.HttpConstant;
 
 /**
  * Created by pc on 2016/12/22.
@@ -80,13 +81,19 @@ public class ContractUtil {
     }
 
     public static double getProfit(PositionInfoEntity entity) {
+        boolean up = entity.getDealDirection().equals(HttpConstant.DealDirection.UP);
         double rate = entity.getPlRate();
         double unit = entity.getPlUnit();
         double buyPrice = entity.getBuyingRate();
         double latestPrice = Double.valueOf(entity.getLatestPrice());
         double diff = latestPrice - buyPrice;
-        double result = diff * rate * unit;
-        return result;
+        double result = diff * rate * unit * entity.getDealCount();
+        if (up) {
+            return result;
+        } else {
+            double num = 0.0;
+            return num-result;
+        }
     }
 
     public static boolean isUpDirection(PositionInfoEntity entity) {

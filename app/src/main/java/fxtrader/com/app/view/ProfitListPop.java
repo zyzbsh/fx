@@ -113,7 +113,7 @@ public class ProfitListPop extends PopupWindow {
     }
 
     public void addData(List<PositionInfoEntity> data, int size) {
-        mRecordTv.setText(mContext.getString(R.string.profit_list_num, String.valueOf(size)));
+        mRecordTv.setText(String.valueOf(size));
         mAdapter.setDataList(data);
         mAdapter.notifyDataSetChanged();
     }
@@ -143,11 +143,13 @@ public class ProfitListPop extends PopupWindow {
             ProfitInfo profitInfo = getPrifit(info);
             if (profitInfo.isProfit){
                 holder.profitTv.setTextColor(Color.parseColor("#e83743"));
+                holder.profitTv.setText(profitInfo.floatProfit);
             } else {
                 holder.profitTv.setTextColor(Color.parseColor("#09cd29"));
+                holder.profitTv.setText("-" + profitInfo.floatProfit);
             }
-            holder.profitTv.setText(profitInfo.floatProfit);
-            holder.stopProfitTv.setText(info.getProfit() * 10 + "%");
+
+            holder.stopProfitTv.setText(info.getProfit() * 100 + "%");
             holder.buyPriceTv.setText("买入价:" + String.valueOf(info.getBuyingRate()));
             holder.specificationTv.setText(info.getSpecification());
             holder.dealCountTv.setText(String.valueOf(info.getDealCount()) + " 手");
@@ -180,7 +182,7 @@ public class ProfitListPop extends PopupWindow {
             } else {
                 info.isProfit = (diff > 0) ? false : true;
             }
-            double result = diff * rate * unit;
+            double result = diff * rate * unit * entity.getDealCount();
             BigDecimal big = new BigDecimal(result);
             double num = big.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
             if (info.isProfit && (num < 0)) {

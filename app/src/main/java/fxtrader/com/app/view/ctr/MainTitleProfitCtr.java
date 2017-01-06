@@ -1,6 +1,7 @@
 package fxtrader.com.app.view.ctr;
 
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import fxtrader.com.app.R;
@@ -14,7 +15,7 @@ public class MainTitleProfitCtr {
 
     private TextView mProfitTv;
 
-    private TextView mProfitListTv;
+    private ImageButton mProfitListBtn;
 
     public interface ProfitListListener {
         public void showList();
@@ -24,7 +25,7 @@ public class MainTitleProfitCtr {
     public MainTitleProfitCtr(View profitView) {
         mProfitView = profitView;
         mProfitTv = (TextView) profitView.findViewById(R.id.homepage_title_profit_tv);
-        mProfitListTv = (TextView) profitView.findViewById(R.id.homepage_title_profit_list_tv);
+        mProfitListBtn = (ImageButton) profitView.findViewById(R.id.homepage_title_profit_list_btn);
     }
 
     public View getProfitView(){
@@ -48,7 +49,7 @@ public class MainTitleProfitCtr {
     }
 
     public void setProfitListListener(final ProfitListListener listener) {
-        mProfitListTv.setOnClickListener(new View.OnClickListener() {
+        mProfitListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (listener != null) {

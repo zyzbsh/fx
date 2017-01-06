@@ -613,6 +613,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private List<PositionInfoEntity> getPopProfitList(MarketEntity vo, List<PositionInfoEntity> data) {
+        if (vo == null || data == null) {
+            return null;
+        }
         double sum = ContractUtil.initProfitInfoList(vo, data);
         mTitleProfitCtr.setProfit(String.valueOf(sum));
 
@@ -805,8 +808,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             setTagImWithPosition(viewHolder.rankTv, viewHolder.rankTv2, position);
             viewHolder.nameTv.setText(item.getNickname());
             viewHolder.profitTv.setText(ContractUtil.getDouble(item.getProfit(), 1) +"");
-            if (mContext != null) {
-                Glide.with(mContext)
+            if (getContext() != null) {
+                Glide.with(getContext())
                         .load(item.getHeadImg())
                         .centerCrop()
 //                    .placeholder(R.drawable.loading_spinner)

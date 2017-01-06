@@ -13,14 +13,16 @@
         android:background="@color/red_e63643"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/homepage_title_profit_list_tv"
+        <ImageButton
+            android:id="@+id/homepage_title_profit_list_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:text="列表"
+            android:paddingRight="20dp"
+            android:paddingLeft="10dp"
+            android:background="@null"
+            android:src="@mipmap/icon_arrow_down"
             android:textColor="@color/white" />
 
         <TextView
@@ -28,7 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="11111"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
