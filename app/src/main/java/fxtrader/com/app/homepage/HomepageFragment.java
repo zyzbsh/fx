@@ -82,8 +82,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private LinearLayout mBalanceLayout;
 
-    private TextView mSystemBulletinContentTv;
-
     private RelativeLayout mAccountInfoLayout;
 
     private TextView mBalanceAmountTv;
@@ -94,15 +92,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private TextView mExpectFallDesTv;
 
-    private ImageView mMasterAvatarIm;
-
-    private TextView mMasterNameTv;
-
-    private TextView mMastarProfitTv;
-
     private ViewPager mViewPager;
-
-    private DataLineFragment getmCurDataLineFragment;
 
     private final static int[] LINE_ID = {R.id.btn_timeline, R.id.btn_kline5,
             R.id.btn_kline15, R.id.btn_kline30, R.id.btn_kline60};
@@ -814,7 +804,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             ViewHolder viewHolder = (ViewHolder) holder;
             setTagImWithPosition(viewHolder.rankTv, viewHolder.rankTv2, position);
             viewHolder.nameTv.setText(item.getNickname());
-            viewHolder.profitTv.setText(item.getProfit() +"");
+            viewHolder.profitTv.setText(ContractUtil.getDouble(item.getProfit(), 1) +"");
             if (mContext != null) {
                 Glide.with(mContext)
                         .load(item.getHeadImg())

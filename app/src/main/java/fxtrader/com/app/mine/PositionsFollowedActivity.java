@@ -4,10 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseActivity;
+import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
@@ -30,6 +33,7 @@ import fxtrader.com.app.entity.FollowOrderCountEntity;
 import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PriceEntity;
+import fxtrader.com.app.entity.SubscribeEntity;
 import fxtrader.com.app.entity.SubscribedPositionListEntity;
 import fxtrader.com.app.entity.UserSubscribeEntity;
 import fxtrader.com.app.homepage.BuildPositionActivity;
@@ -38,6 +42,8 @@ import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.CommunityApi;
+import fxtrader.com.app.http.manager.ResponseListener;
+import fxtrader.com.app.http.manager.SubscribeManager;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
 import fxtrader.com.app.tools.ContractUtil;
@@ -51,15 +57,19 @@ import retrofit2.Response;
 /**
  * Created by pc on 2016/12/28.
  */
-public class PositionsFollowedActivity extends BaseActivity{
+public class PositionsFollowedActivity extends BaseActivity {
 
     private String mCustomerId;
 
     private LRecyclerView mRecyclerView;
 
-    private TextView mPersonNumTv;
+    private TextView mFollowedCountTv;
+
+    private TextView mBuildPositionCountTv;
 
     private DataAdapter mAdapter;
+
+    private int mCount;//参与的合买数量
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,9 +77,14 @@ public class PositionsFollowedActivity extends BaseActivity{
         setContentLayout(R.layout.activity_followed_position_list);
         mCustomerId = getIntent().getStringExtra(IntentItem.CUSTOMER_ID);
         initViews();
-        registerPriceReceiver();
         requestFollowOrderCount();
         requestFollowedPosition();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerPriceReceiver();
     }
 
     @Override
@@ -78,13 +93,28 @@ public class PositionsFollowedActivity extends BaseActivity{
         if (mPriceReceiver != null) {
             try {
                 unregisterReceiver(mPriceReceiver);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 LogZ.e(e.getMessage());
             }
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == IntentItem.REQUEST_BUILD_POSITION) {
+            mCount++;
+            mFollowedCountTv.setText("您参与了" + mCount + "个合买");
+        }
+    }
+
     private void initViews() {
+        mFollowedCountTv = (TextView) findViewById(R.id.followed_position_state_tv);
+        mBuildPositionCountTv = (TextView) findViewById(R.id.followed_position_person_num_tv);
         mRecyclerView = (LRecyclerView) findViewById(R.id.followed_position_rec);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new DataAdapter(this);
@@ -92,7 +122,7 @@ public class PositionsFollowedActivity extends BaseActivity{
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
     }
 
-    private void requestFollowedPosition(){
+    private void requestFollowedPosition() {
         CommunityApi communityApi = RetrofitUtils.createApi(CommunityApi.class);
         String token = ParamsUtil.getToken();
         Call<SubscribedPositionListEntity> request = communityApi.subscribedPosition(token, getFollowedPositionParams());
@@ -101,6 +131,17 @@ public class PositionsFollowedActivity extends BaseActivity{
             public void onResponse(Call<SubscribedPositionListEntity> call, Response<SubscribedPositionListEntity> response) {
                 SubscribedPositionListEntity entity = response.body();
                 if (entity.isSuccess()) {
+                    MarketEntity vo = AppApplication.getInstance().getMarketEntity();
+                    if (entity.getObject() != null && !entity.getObject().isEmpty()) {
+                        for (UserSubscribeEntity userSubscribeEntity : entity.getObject()) {
+                            String contractCode = userSubscribeEntity.getContractCode();
+                            String quaryParam = ContractUtil.getContractInfoMap().get(contractCode).getQueryParam();
+                            String data = vo.getData(quaryParam);
+                            PriceEntity price = new PriceEntity(data);
+                            userSubscribeEntity.setLatestPrice(price.getLatestPrice());
+                        }
+                    }
+                    mBuildPositionCountTv.setText(entity.getObject().size() + "");
                     mAdapter.setDataList(entity.getObject());
                 } else {
 
@@ -115,7 +156,7 @@ public class PositionsFollowedActivity extends BaseActivity{
 
     }
 
-    private Map<String, String> getFollowedPositionParams(){
+    private Map<String, String> getFollowedPositionParams() {
         final Map<String, String> params = ParamsUtil.getCommonParams();
         params.put("method", "gdiex.community.getSubscriptBuyInfo");
         params.put("customerId", mCustomerId);
@@ -123,7 +164,7 @@ public class PositionsFollowedActivity extends BaseActivity{
         return params;
     }
 
-    private void requestFollowOrderCount(){
+    private void requestFollowOrderCount() {
         CommunityApi communityApi = RetrofitUtils.createApi(CommunityApi.class);
         String token = ParamsUtil.getToken();
         Call<FollowOrderCountEntity> request = communityApi.followOrderCount(token, getFollowedOrderCountParams());
@@ -132,7 +173,12 @@ public class PositionsFollowedActivity extends BaseActivity{
             public void onResponse(Call<FollowOrderCountEntity> call, Response<FollowOrderCountEntity> response) {
                 FollowOrderCountEntity entity = response.body();
                 if (entity.isSuccess()) {
-
+                    mCount = entity.getObject().getCount();
+                    if (mCount != 0) {
+                        mFollowedCountTv.setText("您参与了" + mCount + "个合买");
+                    } else {
+                        mFollowedCountTv.setText(R.string.remind_followed_position_state);
+                    }
                 } else {
 
                 }
@@ -145,7 +191,7 @@ public class PositionsFollowedActivity extends BaseActivity{
         });
     }
 
-    private Map<String, String> getFollowedOrderCountParams(){
+    private Map<String, String> getFollowedOrderCountParams() {
         final Map<String, String> params = ParamsUtil.getCommonParams();
         params.put("method", "gdiex.community.getFollowOrder");
         params.put("customerId", mCustomerId);
@@ -169,12 +215,10 @@ public class PositionsFollowedActivity extends BaseActivity{
             vo.init();
             List<UserSubscribeEntity> list = mAdapter.getDataList();
             if (list != null && !list.isEmpty()) {
-                for (UserSubscribeEntity entity : list){
+                for (UserSubscribeEntity entity : list) {
                     String contractCode = entity.getContractCode();
-                    if (HttpConstant.PriceCode.YDOIL.equals(contractCode)) {
-                        contractCode = HttpConstant.PriceCode.YDCL;
-                    }
-                    String data = vo.getData(contractCode);
+                    String quaryParam = ContractUtil.getContractInfoMap().get(contractCode).getQueryParam();
+                    String data = vo.getData(quaryParam);
                     PriceEntity price = new PriceEntity(data);
                     entity.setLatestPrice(price.getLatestPrice());
                 }
@@ -221,15 +265,31 @@ public class PositionsFollowedActivity extends BaseActivity{
             viewHolder.followTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    SubscribeManager.getInstance().cancel(LoginConfig.getInstance().getId(), "" + entity.getCustomerId(), new ResponseListener<SubscribeEntity>() {
+                        @Override
+                        public void success(SubscribeEntity object) {
+                            showToastShort(object.getMessage());
+                            if (object.isSuccess()){
+                                setResult(RESULT_OK);
+                                finish();
+                            }
+                        }
 
+                        @Override
+                        public void error(String error) {
+                            showToastShort(error);
+                        }
+                    });
                 }
             });
 
-            viewHolder.contractCodeTv.setText(entity.getContractName());
-
-            if (entity.getDealDirection() == 1) {
+            viewHolder.contractCodeTv.setText(getString(R.string.contract_name_2, entity.getContractName()));
+            final boolean up;
+            if (entity.getDealDirection() == HttpConstant.DealDirection.C_UP) {
+                up = true;
                 viewHolder.dealDirectionTv.setText("买涨");
             } else {
+                up = false;
                 viewHolder.dealDirectionTv.setText("买跌");
             }
 
@@ -238,12 +298,31 @@ public class PositionsFollowedActivity extends BaseActivity{
 
             String buildPrice = ContractUtil.getDouble(entity.getBuyingRate(), 1) + "";
             viewHolder.buildPriceTv.setText(getString(R.string.followed_position_build_price, buildPrice));
-
             viewHolder.currentPriceTv.setText(getString(R.string.followed_position_current_price, entity.getLatestPrice()));
 
-            viewHolder.handChargeTv.setText(getString(R.string.followed_position_hand_charge, entity.getHandingChargeAmount() + ""));
+            viewHolder.handChargeTv.setText(getString(R.string.followed_position_hand_charge, entity.getDealCount() + ""));
 
-            viewHolder.profitAndLossTv.setText(entity.getProfitAndLoss() + "");
+            if (TextUtils.isEmpty(entity.getLatestPrice())) {
+                viewHolder.profitAndLossTv.setText("");
+            } else {
+                ContractInfoEntity contractInfoEntity = ContractUtil.getContractInfoMap().get(entity.getContractCode());
+                double profit = Double.parseDouble(entity.getLatestPrice()) - entity.getBuyingRate();
+                if (up) {
+                    if (profit > 10E-6) {
+                        viewHolder.profitAndLossTv.setTextColor(Color.parseColor("#e83743"));
+                    } else {
+                        viewHolder.profitAndLossTv.setTextColor(Color.parseColor("#09cd29"));
+                    }
+                } else {
+                    if (profit < -10E-6) {
+                        viewHolder.profitAndLossTv.setTextColor(Color.parseColor("#e83743"));
+                    } else {
+                        viewHolder.profitAndLossTv.setTextColor(Color.parseColor("#09cd29"));
+                    }
+                }
+                double result = Math.abs(profit) * entity.getDealCount() * contractInfoEntity.getPlRate() * contractInfoEntity.getPlUnit();
+                viewHolder.profitAndLossTv.setText(ContractUtil.getDouble(result, 1) + "");
+            }
             String stopProfit;
             if (entity.getProfit() < 10E-6) {
                 stopProfit = "不设";
@@ -261,12 +340,6 @@ public class PositionsFollowedActivity extends BaseActivity{
             }
             viewHolder.stopLossTv.setText(getString(R.string.followed_position_stop_loss, stopLoss));
             final String contractCode = entity.getContractCode();
-            final boolean up;
-            if (entity.getDealDirection() == 1){
-                up = true;
-            } else {
-                up = false;
-            }
 
             viewHolder.myButTv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -277,6 +350,7 @@ public class PositionsFollowedActivity extends BaseActivity{
                     if (dataType.equals(HttpConstant.PriceCode.YDHF)) {
                         intent = new Intent(mContext, HFBuildPositionActivity.class);
                     } else {
+                        dataType = HttpConstant.PriceCode.YDCL;
                         intent = new Intent(mContext, BuildPositionActivity.class);
                     }
                     intent.putExtra(IntentItem.ORDER_FOLLOWED, entity);

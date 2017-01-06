@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="@string/person_unit"
+            android:text="单"
             android:textColor="@color/black_33"
             android:textSize="13sp" />
 
@@ -67,6 +67,15 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/follow_list_person_tv"
             android:textColor="@color/red_text"
+            android:text="0"
+            android:textSize="13sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/followed_position_person_num_tv"
+            android:text="已建仓"
+            android:textColor="@color/black_33"
             android:textSize="13sp" />
     </RelativeLayout>
 

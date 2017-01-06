@@ -25,6 +25,7 @@ import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.CommunityApi;
 import fxtrader.com.app.tools.UIUtil;
+import fxtrader.com.app.view.ctr.BannerController;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,6 +35,8 @@ import retrofit2.Response;
  * Created by zhangyuzhu on 2016/12/1.
  */
 public class FindFragment extends BaseFragment implements View.OnClickListener, HeadListener{
+
+    private BannerController mBanerController;
 
     private ImageView mAdIm;
 
@@ -61,9 +64,16 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initBannerView(view);
         initAdIm(view);
         initTabLayout(view);
         requestAd();
+    }
+
+    private void initBannerView(View view) {
+        View bannerView = view.findViewById(R.id.banner_layout);
+        mBanerController = new BannerController(getActivity(), bannerView);
+        mBanerController.init();
     }
 
     private boolean mMasterListState = false;
@@ -226,6 +236,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
             public void onResponse(Call<AdEntity> call, Response<AdEntity> response) {
                 AdEntity entity = response.body();
                 if (entity.isSuccess() && entity.getObject() != null && !entity.getObject().isEmpty()) {
+                    mBanerController.setViewPager(entity.getObject());
                     Glide.with(getActivity()).load(entity.getObject().get(0).getBackgroundImageUrl()).asBitmap()
                             .into(new SimpleTarget<Bitmap>() {
                                 @Override

@@ -65,10 +65,16 @@ public class MasterListManager {
         params.put("limit", String.valueOf(LIMIT_LOGINED));
         params.put("customerId", customerId);
         MarketEntity market = AppApplication.getInstance().getMarketEntity();
-        PriceEntity ydPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDCL));
-        params.put("ydRate", ydPrice.getLatestPrice());
-        PriceEntity hfPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDHF));
-        params.put("hfRate", hfPrice.getLatestPrice());
+        String ydRate = "10";
+        String hfRate = "10";
+        if (market != null) {
+            PriceEntity ydPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDCL));
+            ydRate = ydPrice.getLatestPrice();
+            PriceEntity hfPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDHF));
+            hfRate = hfPrice.getLatestPrice();
+        }
+        params.put("ydRate", ydRate);
+        params.put("hfRate", hfRate);
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

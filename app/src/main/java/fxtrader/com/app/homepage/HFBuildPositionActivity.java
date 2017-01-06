@@ -119,6 +119,8 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
 
     private boolean isOrderFollowed = false;//跟单
 
+    private int mDefaultPosition;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +137,20 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
         }
         mCoupons = UserCouponsHelper.getInstance().getData();
         mTickets = TicketsHelper.getInstance().getData();
+        isOrderFollowed = getIntent().hasExtra(IntentItem.ORDER_FOLLOWED);
+        if (isOrderFollowed) {
+            mUserSubscribeEntity = (UserSubscribeEntity) getIntent().getSerializableExtra(IntentItem.ORDER_FOLLOWED);
+            String contractCode = mUserSubscribeEntity.getContractCode();
+            for (int i = 0; i < mContract.getData().size(); i++) {
+                ContractInfoEntity entity = mContract.getData().get(i);
+                if (entity.getCode().equals(contractCode)) {
+                    mDefaultPosition = i;
+                    mCurContractInfo = entity;
+                    break;
+                }
+            }
+        }
+
         setValidCoupons(mCurContractInfo);
         initParams();
         initTitle();
@@ -232,7 +248,7 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
         int raw = getData().size() / 2 + getData().size() % 2;
         mParams.height = UIUtil.dip2px(this, 70) * raw + space * 2;
         recyclerView.setLayoutParams(mParams);
-        final CustomAdapter adapter = new CustomAdapter(this, getData());
+        final CustomAdapter adapter = new CustomAdapter(this, getData(), mDefaultPosition);
         GridLayoutManager manager = new GridLayoutManager(this, 2);
         manager.setOrientation(GridLayoutManager.VERTICAL);
         recyclerView.setNestedScrollingEnabled(false);
@@ -464,11 +480,12 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
         mFeeTv.setText(getString(R.string.fee_num, fee));
     }
 
+    private UserSubscribeEntity mUserSubscribeEntity;
     private void orderFollowed(){
-        isOrderFollowed = getIntent().hasExtra(IntentItem.ORDER_FOLLOWED);
-        if (isOrderFollowed) {
-            UserSubscribeEntity userSubscribeEntity = (UserSubscribeEntity) getIntent().getSerializableExtra(IntentItem.ORDER_FOLLOWED);
-            mSeekBar.setProgress(userSubscribeEntity.getHandingChargeAmount());
+        if (isOrderFollowed && mUserSubscribeEntity != null) {
+            mDealCount = mUserSubscribeEntity.getDealCount();
+            mSeekBar.setProgress((mDealCount - DEFAULT_DEAL_COUNT) * 10);
+            mTradeCountTv.setText(String.valueOf(mDealCount));
         }
     }
 
@@ -559,12 +576,23 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
         request.enqueue(new Callback<CommonResponse>() {
             @Override
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
-
+                CommonResponse commonResponse = response.body();
+                dismissProgressDialog();
+                if (commonResponse != null) {
+                    showToastShort(commonResponse.getMessage());
+                    if (commonResponse.isSuccess()) {
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                }
             }
 
             @Override
             public void onFailure(Call<CommonResponse> call, Throwable t) {
-
+                dismissProgressDialog();
+                if (t != null && !TextUtils.isEmpty(t.getMessage())){
+                    LogZ.e(t.getMessage());
+                }
             }
         });
     }
@@ -598,7 +626,11 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
         params.put("ticketCount", String.valueOf(ticketCount));
         params.put("code", mCurContractInfo.getCode());
         params.put("ticketId", String.valueOf(ticketId));
-        params.put("followMetalOrderId", "");
+        String orderId = "";
+        if (mUserSubscribeEntity != null){
+            orderId = mUserSubscribeEntity.getId();
+        }
+        params.put("followMetalOrderId", orderId);
         params.put("organId", LoginConfig.getInstance().getOrganId() + "");
         int sendRedEnvelope = mRedEnvelopeCb.isChecked() ? HttpConstant.RedPacketType.SEND : HttpConstant.RedPacketType.UNSEND;
         params.put("sendRedPacket", "" + sendRedEnvelope);
@@ -617,9 +649,10 @@ public class HFBuildPositionActivity extends BaseActivity implements View.OnClic
             void onItemClick(View view, ContractInfoEntity data, int position);
         }
 
-        public CustomAdapter(Context context, List<ContractInfoEntity> data) {
+        public CustomAdapter(Context context, List<ContractInfoEntity> data, int position) {
             this.context = context;
             this.data = data;
+            layoutPosition = position;
         }
 
         public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {

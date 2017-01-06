@@ -53,6 +53,9 @@ public final class HttpConstant {
     public static class DealDirection{
         public static final String UP = "UP";
         public static final String DROP = "DROP";
+
+        public static final int C_UP = 0;
+        public static final int C_DROP = 1;
     }
 
     public static class VerificationCode {

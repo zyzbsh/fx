@@ -53,7 +53,7 @@
     <string name="how_to_trade">如何交易</string>
     <string name="three_guarantees">三大保障</string>
     <string name="contract_name">合约名称：%1$s</string>
-    <string name="contract_name_2">产品规格:$1$s</string>
+    <string name="contract_name_2">产品规格:%1$s</string>
     <string name="build_position_contract_name">合约名称&#160;&#160;&#160;&#160;%1$s</string>
     <string name="price_now">现价：%1$s</string>
     <string name="use_coupon">使用体验券</string>

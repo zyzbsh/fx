@@ -58,6 +58,18 @@ public class MyFollowActivity extends BaseActivity {
         requestData();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        if (requestCode == IntentItem.REQUEST_POSITIONS_FOLLOWED){
+            requestData();
+        }
+    }
+
     private void initViews() {
         mPersonNumTv = (TextView) findViewById(R.id.follow_person_num_tv);
         mRecyclerView = (LRecyclerView) findViewById(R.id.follow_list_rec);
@@ -70,7 +82,7 @@ public class MyFollowActivity extends BaseActivity {
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(MyFollowActivity.this, PositionsFollowedActivity.class);
                 intent.putExtra(IntentItem.CUSTOMER_ID, mAdapter.getDataList().get(position).getCustomerId() + "");
-                startActivity(intent);
+                startActivityForResult(intent, IntentItem.REQUEST_POSITIONS_FOLLOWED);
             }
 
             @Override
