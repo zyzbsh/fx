@@ -141,8 +141,8 @@
     <string name="see">查看</string>
     <string name="readed">已读</string>
     <string name="unread">未读</string>
-    <string name="time_num">时间：$1$s</string>
-    <string name="sum_num">总单数：$1$s</string>
+    <string name="time_num">时间：%1$s</string>
+    <string name="sum_num">总单数：%1$s</string>
     <string name="trade_rules">交易规则</string>
     <string name="production_intro_rules">产品规则介绍</string>
     <string name="account_rules">账号绑定注册</string>
@@ -244,4 +244,5 @@
     <string name="forget_pwd">忘记密码</string>
     <string name="no_data">暂时没有数据</string>
     <string name="followed_buy">参与合买</string>
+    <string name="return_homepage">返回首页</string>
 </resources>

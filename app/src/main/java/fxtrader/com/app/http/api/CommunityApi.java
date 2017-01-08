@@ -11,6 +11,7 @@ import fxtrader.com.app.entity.SubscribeEntity;
 import fxtrader.com.app.entity.SubscribedPositionListEntity;
 import fxtrader.com.app.entity.SubscribeListEntity;
 import fxtrader.com.app.entity.SubscribedOrderEntity;
+import fxtrader.com.app.entity.SystemBulletinEntity;
 import fxtrader.com.app.entity.WinerStreamListEntity;
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
@@ -69,4 +70,7 @@ public interface CommunityApi {
     @FormUrlEncoded
     @POST("/api/metalOrdersFollow")
     Call<CommonResponse> orderFollowed(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
+
+    @GET("/api/getSystemBulletin")
+    Call<SystemBulletinEntity> systembulletin(@QueryMap Map<String, String> params);
 }

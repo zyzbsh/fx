@@ -107,6 +107,10 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".mine.AnnouncementDetailActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".mine.TradeHistoryActivity"
             android:screenOrientation="portrait" />
 

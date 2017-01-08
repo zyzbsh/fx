@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        style="@style/TitleLayout">
+
+        <ImageButton
+            android:id="@id/title_back"
+            style="@style/TiTleBackBtn" />
+
+        <TextView
+            android:id="@id/title_content_tv"
+            style="@style/TiTleContentTv"
+            android:text="@string/announcement"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/announcement_detail_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_below="@id/title_layout"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/announcement_detail_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black_33"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/announcement_detail_title_tv"
+        android:textSize="13sp"
+        android:layout_centerHorizontal="true"/>
+
+    <View
+        android:id="@+id/announcement_detail_divider_view"
+        android:layout_width="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/announcement_detail_time_tv"
+        android:background="@color/black"
+        android:layout_height="0.5dp"/>
+
+    <TextView
+        android:id="@+id/announcement_detail_return_homepage_tv"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/shape_red_corner_5"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:text="@string/return_homepage"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp"
+        android:layout_below="@id/announcement_detail_divider_view"
+        android:layout_above="@id/announcement_detail_return_homepage_tv">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/announcement_detail_content_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black_33"
+                android:textSize="15sp"
+                android:layout_marginTop="20dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</RelativeLayout>

@@ -12,6 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/item_announcement_see_tv"
         android:orientation="vertical">
 
         <TextView
@@ -19,6 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/gray_6"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textSize="14sp" />
 
         <TextView
@@ -49,6 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_toLeftOf="@id/item_announcement_see_tv"
         android:layout_alignBottom="@id/item_announcement_info_layout"
+        android:layout_marginRight="5dp"
         android:textSize="14sp"
         android:layout_height="wrap_content" />
 </RelativeLayout>

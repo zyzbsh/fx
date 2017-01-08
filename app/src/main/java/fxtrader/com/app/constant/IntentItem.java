@@ -29,4 +29,5 @@ public final class IntentItem {
     public static final String ORDER_FOLLOWED = "order_followed";
     public static final String LOG_OUT = "log_out";
 
+    public static final String ANNOUNCEMENT_DETAIL = "announcement_detail";
 }

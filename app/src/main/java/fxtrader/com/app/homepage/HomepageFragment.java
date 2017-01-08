@@ -46,10 +46,12 @@ import fxtrader.com.app.entity.ParticipantsEntity;
 import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PositionListEntity;
 import fxtrader.com.app.entity.PriceEntity;
+import fxtrader.com.app.entity.SystemBulletinEntity;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.api.CommunityApi;
 import fxtrader.com.app.http.manager.MasterListManager;
 import fxtrader.com.app.http.manager.ResponseListener;
 import fxtrader.com.app.http.manager.UserInfoManager;
@@ -63,6 +65,7 @@ import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.CircleImageView;
 import fxtrader.com.app.view.ProfitListPop;
+import fxtrader.com.app.view.SystemBulletinDialog;
 import fxtrader.com.app.view.ctr.MainTitleProfitCtr;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -140,7 +143,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
         registerLoginReceiver();
         requestParticipant();
-
+        requestSystemBulletin();
     }
 
     @Override
@@ -739,6 +742,34 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private Map<String, String> getParticipantParams() {
         final Map<String, String> params = ParamsUtil.getCommonParams();
         params.put("method", "gdiex.community.getRiseOrFall");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    private void requestSystemBulletin(){
+        CommunityApi communityApi = RetrofitUtils.createApi(CommunityApi.class);
+        Call<SystemBulletinEntity> request = communityApi.systembulletin(getSystemBulletinParams());
+        request.enqueue(new Callback<SystemBulletinEntity>() {
+            @Override
+            public void onResponse(Call<SystemBulletinEntity> call, Response<SystemBulletinEntity> response) {
+                SystemBulletinEntity entity = response.body();
+                if (entity != null && entity.isSuccess()) {
+                    SystemBulletinDialog dialog = new SystemBulletinDialog(getContext(), entity);
+                    dialog.show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SystemBulletinEntity> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String, String> getSystemBulletinParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.community.getSystemBulletin");
+        params.put("organ_id", LoginConfig.getInstance().getOrganId() + "");
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

@@ -34,6 +34,7 @@ import fxtrader.com.app.tools.Base64;
 import fxtrader.com.app.tools.EncryptionTool;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
+import fxtrader.com.app.view.ctr.BannerController;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,9 +45,7 @@ import retrofit2.Response;
  */
 public class LoginNewActivity extends BaseActivity implements View.OnClickListener {
 
-    private ImageView mAdIm;
-
-    private int mAdImHeight;
+    private BannerController mBannerController;
 
     private EditText mAccountEdt;
 
@@ -90,7 +89,7 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initViews() {
-        initAdIm();
+        initBannerView();
         mAccountEdt = (EditText) findViewById(R.id.login_account_edt);
         mPwdEdt = (EditText) findViewById(R.id.login_pwd_edt);
         mRegisterTipTv = (TextView) findViewById(R.id.login_register_tv);
@@ -102,18 +101,11 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
         mPwdEdt.setText("123456");
     }
 
-    private void initAdIm() {
-        mAdIm = (ImageView) findViewById(R.id.login_ad_im);
-        int width = UIUtil.getScreenWidth(this);
-        int height = width * 257 / 640;
-        ViewGroup.LayoutParams params = mAdIm.getLayoutParams();
-        params.width = width;
-        params.height = height;
-        mAdImHeight = height;
-        mAdIm.setLayoutParams(params);
+    private void initBannerView(){
+        View bannerView = findViewById(R.id.banner_layout);
+        mBannerController = new BannerController(this, bannerView);
+        mBannerController.init();
     }
-
-
 
     private void setView() {
         boolean login = getIntent().getBooleanExtra(IntentItem.LOGIN, false);

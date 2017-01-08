@@ -16,11 +16,8 @@
             android:text="@string/login" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/login_ad_im"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/im_ad_find" />
+    <include
+        layout="@layout/view_banner"/>
 
     <LinearLayout
         android:layout_width="match_parent"

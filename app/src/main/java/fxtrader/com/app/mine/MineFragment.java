@@ -47,7 +47,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
         view.findViewById(R.id.mine_fund_list_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_trade_history_layout).setOnClickListener(this);
-        view.findViewById(R.id.mine_agent_platform_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_use_rules_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_announcement_layout).setOnClickListener(this);
         view.findViewById(R.id.mine_follow_layout).setOnClickListener(this);
@@ -102,8 +101,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 break;
             case R.id.mine_trade_history_layout://交易历史
                 openActivity(TradeHistoryActivity.class);
-                break;
-            case R.id.mine_agent_platform_layout://经纪人平台
                 break;
             case R.id.mine_use_rules_layout://冠东使用规则
                 openActivity(TradeRulesActivity.class);

@@ -2,6 +2,7 @@ package fxtrader.com.app.http.api;
 
 import java.util.Map;
 
+import fxtrader.com.app.entity.AnnouncementListEntity;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.CurrencyListEntity;
@@ -75,4 +76,14 @@ public interface UserApi {
 
     @PUT("/api/v3/users")
     Call<CommonResponse> changePwd(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @PUT("/api/v3/userFileUpload")
+    Call<CommonResponse> uploadAvatar(@QueryMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/api/v3/updateUserInfo")
+    Call<CommonResponse> updateUserInfo(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
+
+    @GET("/api/v3/msgs")
+    Call<AnnouncementListEntity> announcements(@QueryMap Map<String, String> params);
 }

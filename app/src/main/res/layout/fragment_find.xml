@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include layout="@layout/view_banner"/>
+    <include
+        layout="@layout/view_banner"/>
 
     <ImageView
         android:id="@+id/find_ad_im"
@@ -16,7 +17,6 @@
 
     <FrameLayout
         android:id="@+id/find_tab_layout"
-        android:layout_below="@id/find_ad_im"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -117,9 +117,8 @@
 
     <FrameLayout
         android:id="@+id/find_content_layout"
-        android:layout_below="@id/find_tab_layout"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"></FrameLayout>
 
-</RelativeLayout>
+</LinearLayout>

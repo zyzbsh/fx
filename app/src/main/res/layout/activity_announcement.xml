@@ -12,7 +12,8 @@
 
         <TextView
             android:id="@id/title_content_tv"
-            style="@style/TiTleContentTv" />
+            style="@style/TiTleContentTv"
+            android:text="@string/announcement"/>
     </RelativeLayout>
 
 

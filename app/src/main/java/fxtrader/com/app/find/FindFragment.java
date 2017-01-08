@@ -36,7 +36,7 @@ import retrofit2.Response;
  */
 public class FindFragment extends BaseFragment implements View.OnClickListener, HeadListener{
 
-    private BannerController mBanerController;
+    private BannerController mBannerController;
 
     private ImageView mAdIm;
 
@@ -67,13 +67,12 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         initBannerView(view);
         initAdIm(view);
         initTabLayout(view);
-        requestAd();
     }
 
     private void initBannerView(View view) {
         View bannerView = view.findViewById(R.id.banner_layout);
-        mBanerController = new BannerController(getActivity(), bannerView);
-        mBanerController.init();
+        mBannerController = new BannerController(getActivity(), bannerView);
+        mBannerController.init();
     }
 
     private boolean mMasterListState = false;
@@ -228,45 +227,5 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
 
     }
 
-    private void requestAd(){
-        CommunityApi communityApi = RetrofitUtils.createApi(CommunityApi.class);
-        Call<AdEntity> request = communityApi.boards(getAdParams());
-        request.enqueue(new Callback<AdEntity>() {
-            @Override
-            public void onResponse(Call<AdEntity> call, Response<AdEntity> response) {
-                AdEntity entity = response.body();
-                if (entity.isSuccess() && entity.getObject() != null && !entity.getObject().isEmpty()) {
-                    mBanerController.setViewPager(entity.getObject());
-                    Glide.with(getActivity()).load(entity.getObject().get(0).getBackgroundImageUrl()).asBitmap()
-                            .into(new SimpleTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(Bitmap bitmap,
-                                                            GlideAnimation<? super Bitmap> glideAnimation) {
-                                    int width = bitmap.getWidth();
-                                    int height = bitmap.getHeight();
-                                    ViewGroup.LayoutParams lp = mAdIm.getLayoutParams();
-                                    lp.width = UIUtil.getScreenWidth(getActivity());
-                                    float tempHeight=height * ((float)lp.width / width);
-                                    lp.height =(int)tempHeight ;
-                                    mAdIm.setLayoutParams(lp);
-                                    mAdIm.setImageBitmap(bitmap);
-                                }
-                            });
-                }
-            }
 
-            @Override
-            public void onFailure(Call<AdEntity> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private Map<String,String> getAdParams() {
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.community.getBulletinBoards");
-        params.put("organ_id", LoginConfig.getInstance().getOrganId() + "");
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
-    }
 }
