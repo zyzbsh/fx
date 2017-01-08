@@ -2,6 +2,7 @@ package fxtrader.com.app.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -130,5 +131,15 @@ public class PersonalInfoView extends RelativeLayout implements View.OnClickList
         mCouponTv.setText(String.valueOf(user.getObject().getCouponAmount()));
     }
 
+    public void setNickname(String nickname) {
+        mNameTv.setText(nickname);
+    }
+
+    public void loadAvatar(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+        Glide.with(getContext()).load(url).into(mAvatarIm);
+    }
 
 }

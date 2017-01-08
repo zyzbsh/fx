@@ -1,5 +1,6 @@
 package fxtrader.com.app.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.db.helper.UserInfoHelper;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.manager.UserInfoManager;
@@ -40,6 +42,20 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
         getUserInfo();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == IntentItem.REQUEST_PERSONAL_INFO) {
+            boolean update = data.getBooleanExtra(IntentItem.PERSONAL_INFO_UPDATE, false);
+            if (update) {
+                String nickname = data.getStringExtra(IntentItem.NICKNAME);
+                mPersonalInfoView.setNickname(nickname);
+                String avatarUrl = data.getStringExtra(IntentItem.AVATAR_URL);
+                mPersonalInfoView.loadAvatar(avatarUrl);
+            }
+        }
     }
 
     private void initViews(View view) {
@@ -115,7 +131,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 openActivity(ExperienceVoucherActivity.class);
                 break;
             case R.id.mine_info_layout: //个人资料
-                openActivity(PersonalInfoActivity.class);
+                openPersonalInfoActivity();
                 break;
             case R.id.mine_red_envelope_layout://我的红包
                 openActivity(RedEnvelopeActivity.class);
@@ -152,5 +168,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
 
     private void setUserView(){
         mPersonalInfoView.set(mUserEntity);
+    }
+
+    public void openPersonalInfoActivity(){
+        Intent intent = new Intent(getActivity(), PersonalInfoActivity.class);
+        startActivityForResult(intent, IntentItem.REQUEST_PERSONAL_INFO);
     }
 }

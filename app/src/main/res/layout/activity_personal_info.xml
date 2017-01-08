@@ -15,6 +15,17 @@
             android:id="@id/title_content_tv"
             style="@style/TiTleContentTv"
             android:text="@string/personal_info" />
+
+        <TextView
+            android:id="@+id/title_edt_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:text="@string/edit"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -29,31 +40,86 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15.8dp" />
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/person_info_change_avatar_layout"
+            android:layout_width="@dimen/person_avatar"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/person_info_avatar_im"
+            android:layout_marginLeft="15.8dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/shape_blue_corner_5"
+                android:paddingBottom="3dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="3dp"
+                android:text="更换头像"
+                android:textColor="@color/white"
+                android:textSize="11sp" />
+
+        </RelativeLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/person_info_avatar_im"
-            android:orientation="vertical">
+            android:layout_toRightOf="@id/person_info_avatar_im">
 
-            <TextView
-                android:id="@+id/personal_info_name_tv"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/personal_info_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/personal_info_account_tv"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/personal_info_name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/personal_info_account_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/balance_num"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/personal_info_nickname_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/balance_num"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="修改昵称"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/personal_info_nickname_edt"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="15dp"
+                    android:paddingLeft="5dp"
+                    android:background="@drawable/shape_white_corner_5" />
+            </LinearLayout>
+        </FrameLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -74,15 +140,26 @@
             android:textColor="@color/gray_6"
             android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/personal_info_sex_tv"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="25dp"
-            android:textColor="@color/red_text"
-            android:textSize="14sp" />
+            android:layout_marginRight="25dp">
+
+            <TextView
+                android:id="@+id/personal_info_sex_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red_text"
+                android:textSize="14sp" />
+
+            <Spinner
+                android:id="@+id/personal_info_sex_spinner"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content"></Spinner>
+        </FrameLayout>
     </RelativeLayout>
 
     <RelativeLayout

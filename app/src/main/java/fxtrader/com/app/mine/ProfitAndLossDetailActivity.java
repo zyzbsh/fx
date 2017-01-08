@@ -197,7 +197,6 @@ public class ProfitAndLossDetailActivity extends BaseActivity {
             viewHolder.accountTv.setText(getString(R.string.account_num, String.valueOf(item.getRemainingMoney())));
         }
 
-
         class ViewHolder extends RecyclerView.ViewHolder {
 
             private ImageView iconIm;

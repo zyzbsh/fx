@@ -28,6 +28,11 @@ public final class HttpConstant {
         public static final String T = "t";
     }
 
+    public static class SexType{
+        public static final int MALE = 1;
+        public static final int FEMALE = 2;
+    }
+
     /**
      * 交易类型
      */
@@ -74,5 +79,18 @@ public final class HttpConstant {
     public static class RedPacketType{
         public static final int UNSEND = 0;
         public static final int SEND = 1;
+    }
+
+    public static class SellingType{
+        /**手动结算**/
+        public static final String MANUAL = "MANUAL";
+        /**交易日结算**/
+        public static final String BUINESS_SETTLEMENT = "BUINESS_SETTLEMENT";
+        /**止盈平仓**/
+        public static final String AUTO_PROFIT = "AUTO_PROFIT";
+        /**止损平仓**/
+        public static final String AUTO_LOSS = "AUTO_LOSS";
+        /**爆仓**/
+        public static final String BLAST = "BLAST";
     }
 }

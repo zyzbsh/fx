@@ -73,4 +73,6 @@ public interface CommunityApi {
 
     @GET("/api/getSystemBulletin")
     Call<SystemBulletinEntity> systembulletin(@QueryMap Map<String, String> params);
+
+
 }

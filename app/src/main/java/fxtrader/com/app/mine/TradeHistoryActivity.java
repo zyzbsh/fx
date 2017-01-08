@@ -52,7 +52,6 @@ public class TradeHistoryActivity extends BaseActivity {
         initViews();
         setTitleContent(R.string.trade_history);
         getPositionHistoryList();
-        getPositionList();
     }
 
     private void initViews() {

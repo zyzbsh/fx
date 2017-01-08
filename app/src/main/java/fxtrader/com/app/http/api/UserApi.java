@@ -86,4 +86,8 @@ public interface UserApi {
 
     @GET("/api/v3/msgs")
     Call<AnnouncementListEntity> announcements(@QueryMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/api/v3/updateUserInfo")
+    Call<CommonResponse> updateInfo(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
 }
