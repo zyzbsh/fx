@@ -47,7 +47,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IntentItem.REQUEST_PERSONAL_INFO) {
+        if (requestCode == IntentItem.REQUEST_PERSONAL_INFO && data != null) {
             boolean update = data.getBooleanExtra(IntentItem.PERSONAL_INFO_UPDATE, false);
             if (update) {
                 String nickname = data.getStringExtra(IntentItem.NICKNAME);

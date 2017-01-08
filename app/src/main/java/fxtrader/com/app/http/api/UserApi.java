@@ -90,4 +90,8 @@ public interface UserApi {
     @FormUrlEncoded
     @POST("/api/v3/updateUserInfo")
     Call<CommonResponse> updateInfo(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
+
+    @PUT("/api/v3/userFileUpload")
+    Call<CommonResponse> updateAvatar(@QueryMap Map<String, String> params);
+
 }

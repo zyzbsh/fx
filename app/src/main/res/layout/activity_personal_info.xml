@@ -50,6 +50,7 @@
             android:visibility="gone">
 
             <TextView
+                android:id="@+id/person_info_update_avatar_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"

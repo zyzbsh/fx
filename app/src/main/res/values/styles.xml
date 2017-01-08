@@ -201,4 +201,13 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">14sp</item>
     </style>
+
+    <style name="TakePictureDialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <style name="DialogAnimation" parent="android:Animation">
+        <item name="@android:windowEnterAnimation">@anim/dialog_enter</item>
+        <item name="@android:windowExitAnimation">@anim/dialog_exit</item>
+    </style>
 </resources>

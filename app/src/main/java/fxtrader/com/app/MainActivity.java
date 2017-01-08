@@ -17,6 +17,7 @@ import fxtrader.com.app.homepage.HomepageFragment;
 import fxtrader.com.app.login.LoginNewActivity;
 import fxtrader.com.app.mine.MineFragment;
 import fxtrader.com.app.protection.ProtectionFragment;
+import fxtrader.com.app.tools.LogZ;
 
 /**
  * 主页
@@ -52,8 +53,10 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     @Override
     protected void onNewIntent(Intent intent) {
+        LogZ.i("onNewIntent");
         super.onNewIntent(intent);
         if (intent.hasExtra(IntentItem.LOG_OUT)) {
+            LogZ.i("log out");
             if (mHomepageFragment != null) {
                 mHomepageFragment.logOut();
             }
