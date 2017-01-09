@@ -11,6 +11,7 @@ import fxtrader.com.app.entity.OpenPacket;
 import fxtrader.com.app.entity.PacketListEntity;
 import fxtrader.com.app.entity.RedEnvelopeListEntity;
 import fxtrader.com.app.entity.TicketListEntity;
+import fxtrader.com.app.entity.UploadAvatarEntity;
 import fxtrader.com.app.entity.UserEntity;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -79,7 +80,7 @@ public interface UserApi {
 
     @FormUrlEncoded
     @POST("/api/v3/userFileUpload")
-    Call<CommonResponse> uploadAvatar(@FieldMap Map<String, String> params);
+    Call<UploadAvatarEntity> uploadAvatar(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
     @POST("/api/v3/updateUserInfo")

@@ -14,6 +14,7 @@ import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.db.helper.UserInfoHelper;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.manager.UserInfoManager;
+import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.PersonalInfoView;
 
@@ -53,6 +54,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
                 String nickname = data.getStringExtra(IntentItem.NICKNAME);
                 mPersonalInfoView.setNickname(nickname);
                 String avatarUrl = data.getStringExtra(IntentItem.AVATAR_URL);
+                LogZ.i("nickname = " + nickname + ", avatarUrl = " + avatarUrl);
                 mPersonalInfoView.loadAvatar(avatarUrl);
             }
         }
