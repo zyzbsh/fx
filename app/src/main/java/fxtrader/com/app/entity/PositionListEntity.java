@@ -1,5 +1,6 @@
 package fxtrader.com.app.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**

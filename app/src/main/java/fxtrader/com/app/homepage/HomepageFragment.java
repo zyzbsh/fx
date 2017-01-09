@@ -35,7 +35,6 @@ import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
-import fxtrader.com.app.db.helper.UserInfoHelper;
 import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.ContractListEntity;
@@ -59,6 +58,7 @@ import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.login.LoginNewActivity;
 import fxtrader.com.app.mine.RechargeActivity;
 import fxtrader.com.app.mine.WithdrawActivity;
+import fxtrader.com.app.service.PositionService;
 import fxtrader.com.app.service.PriceService;
 import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.LogZ;
@@ -135,6 +135,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             mLoginTv.setVisibility(View.GONE);
             mBalanceLayout.setVisibility(View.VISIBLE);
             startPositionTimer();
+            registerPositionListResevier();
+            startPositionTimer();
             startUserTimer();
         } else {
             mLoginTv.setVisibility(View.VISIBLE);
@@ -155,7 +157,11 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         if (mLoginReceiver != null) {
             getActivity().unregisterReceiver(mLoginReceiver);
         }
+        if (mPositionListReceiver != null) {
+            getActivity().unregisterReceiver(mPositionListReceiver);
+        }
         getActivity().stopService(new Intent(getActivity(), PriceService.class));
+        getActivity().stopService(new Intent(getActivity(), PositionService.class));
     }
 
     @Override
@@ -166,16 +172,20 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             return;
         }
         if (requestCode == IntentItem.REQUEST_LOGIN) {
+            LogZ.i("request_login_onActivityResult");
             startUserTimer();
             startPositionTimer();
             openBuildPositionActivity(mExpect);
         } else if (requestCode == IntentItem.REQUEST_BUILD_POSITION) {
+            LogZ.i("REQUEST_BUILD_POSITION_onActivityResult");
             startPositionTimer();
         } else if (requestCode == IntentItem.REQUEST_RECHARGE) {
+            LogZ.i("REQUEST_RECHARGE_onActivityResult");
             startUserTimer();
             startPositionTimer();
             openRechargeActivity();
         } else if (requestCode == IntentItem.REQUEST_WITHDRAW) {
+            LogZ.i("REQUEST_WITHDRAW_onActivityResult");
             startUserTimer();
             startPositionTimer();
             openWithdrawActivity();
@@ -184,6 +194,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
     public void logOut(){
+        getActivity().stopService(new Intent(getActivity(), PositionService.class));
         mIsLogOut = true;
         stopUserTimer();
         mLoginTv.setVisibility(View.VISIBLE);
@@ -192,6 +203,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void setLoginView() {
+        LogZ.i("setLoginView");
         if (isLogin()) {
             mLoginTv.setVisibility(View.GONE);
             mBalanceLayout.setVisibility(View.VISIBLE);
@@ -519,24 +531,26 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void onReceive(Context context, Intent intent) {
             MarketEntity vo = (MarketEntity) intent.getSerializableExtra(IntentItem.PRICE);
-            vo.init();
-            AppApplication.getInstance().setMarketEntity(vo);
-            if (!masterRequested) {
-                masterRequested = true;
-                requestMaster();
-            }
-            if (mCurDataLineFragment != null) {
-                String dataType = mCurDataLineFragment.getDataType();
-                String data = vo.getData(dataType);
-                PriceEntity price = new PriceEntity(data);
-                mLatestPrice = price.getLatestPrice();
-                mCurDataLineFragment.setPriceTvs(getActivity(), price);
+            if (vo != null) {
+                vo.init();
+                AppApplication.getInstance().setMarketEntity(vo);
+                if (!masterRequested) {
+                    masterRequested = true;
+                    requestMaster();
+                }
+                if (mCurDataLineFragment != null) {
+                    String dataType = mCurDataLineFragment.getDataType();
+                    String data = vo.getData(dataType);
+                    PriceEntity price = new PriceEntity(data);
+                    mLatestPrice = price.getLatestPrice();
+                    mCurDataLineFragment.setPriceTvs(getActivity(), price);
 
-            }
-            if (mTitleProfitCtr.isProfitViewShow()) {
-                List<PositionInfoEntity> list = getPopProfitList(vo, mPositionInfoList);
-                if (mProfitListPop != null) {
-                    mProfitListPop.addData(list, mPositionInfoList.size());
+                }
+                if (mTitleProfitCtr.isProfitViewShow()) {
+                    List<PositionInfoEntity> list = getPopProfitList(vo, mPositionInfoList);
+                    if (mProfitListPop != null) {
+                        mProfitListPop.addData(list, mPositionInfoList.size());
+                    }
                 }
             }
         }
@@ -546,18 +560,44 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private TimerTask positionTimerTask = null;
 
     private void startPositionTimer() {
-        if (null != positionTimer || null != positionTimerTask) {
-            stopPositionTimer();
-        }
-        positionTimer = new Timer();
-        positionTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                getPositionList();
-            }
-        };
-        positionTimer.schedule(positionTimerTask, 0, HttpConstant.REFRESH_POSITION_LIST);
+        getActivity().startService(new Intent(getActivity(), PositionService.class));
+
+//        if (null != positionTimer || null != positionTimerTask) {
+//            stopPositionTimer();
+//        }
+//        positionTimer = new Timer();
+//        positionTimerTask = new TimerTask() {
+//            @Override
+//            public void run() {
+//                getPositionList();
+//            }
+//        };
+//        positionTimer.schedule(positionTimerTask, 0, HttpConstant.REFRESH_POSITION_LIST);
     }
+
+    private BroadcastReceiver mPositionListReceiver;
+
+    private void registerPositionListResevier(){
+        mPositionListReceiver = new PositionListReceiver();
+        IntentFilter filter = new IntentFilter(IntentItem.ACTION_POSITION_LIST);
+        getActivity().registerReceiver(mPositionListReceiver, filter);
+    }
+
+    class PositionListReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mPositionInfoList = (List<PositionInfoEntity>) intent.getSerializableExtra(IntentItem.POSITION_LIST);
+            if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
+                mTitleProfitCtr.show();
+                if (mProfitListPop == null) {
+                    mProfitListPop = new ProfitListPop(getActivity());
+                }
+            } else {
+                mTitleProfitCtr.hide();
+            }
+        }
+    }
+
 
     private void stopPositionTimer() {
         if (null != positionTimer) {
@@ -579,18 +619,15 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         respon.enqueue(new Callback<PositionListEntity>() {
             @Override
             public void onResponse(Call<PositionListEntity> call, Response<PositionListEntity> response) {
-                LogZ.i("profitView");
                 PositionListEntity entity = response.body();
                 if (entity != null && entity.getObject() != null) {
                     mPositionInfoList = entity.getObject().getContent();
                     if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
-                        LogZ.i("显示profitView");
                         mTitleProfitCtr.show();
                         if (mProfitListPop == null) {
                             mProfitListPop = new ProfitListPop(getActivity());
                         }
                     } else {
-                        LogZ.i("隐藏profitView");
                         mTitleProfitCtr.hide();
                     }
                 }
@@ -640,6 +677,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         if (null != userTimer || null != userTimerTask) {
             stopUserTimer();
         }
+        mIsLogOut = false;
         userTimer = new Timer();
         userTimerTask = new TimerTask() {
             @Override
@@ -697,6 +735,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     class mLoginReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            LogZ.i("login receiver onReceive");
+            registerPositionListResevier();
+            getActivity().startService(new Intent(getActivity(), PositionService.class));
             requestMaster();
             startUserTimer();
             startPositionTimer();

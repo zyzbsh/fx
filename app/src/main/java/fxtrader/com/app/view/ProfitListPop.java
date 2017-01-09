@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.Map;
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.entity.ClosePositionResponse;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PositionListEntity;
@@ -83,6 +85,7 @@ public class ProfitListPop extends PopupWindow {
         moreTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismiss();
                 Intent intent = new Intent(mContext, PositionListActivity.class);
                 mContext.startActivity(intent);
             }
@@ -161,11 +164,11 @@ public class ProfitListPop extends PopupWindow {
             }
             holder.dealDirectionTv.setText(dealDirection);
 
-            final String id = info.getId();
             holder.closePositionTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    closePosition(id);
+                    dismiss();
+                    closePosition(info.getContractName(), info.getId());
                 }
             });
         }
@@ -195,18 +198,42 @@ public class ProfitListPop extends PopupWindow {
             return info;
         }
 
-        private void closePosition(String id) {
+        private void closePosition(String contractName, final String id) {
+            ClosePositionDialog dialog = new ClosePositionDialog(context, contractName);
+            dialog.setDialogListener(new ClosePositionDialog.DialogListener() {
+                @Override
+                public void ok() {
+                    requestClosePosition(id);
+                }
+            });
+            dialog.show();
+        }
+
+        private void requestClosePosition(String id){
             ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
             String token = ParamsUtil.getToken();
-            Call<CommonResponse> respon = dataApi.closePosition(token, getClosePositionParams(id));
-            respon.enqueue(new Callback<CommonResponse>() {
+            Call<ClosePositionResponse> respon = dataApi.closePosition(token, getClosePositionParams(id));
+            respon.enqueue(new Callback<ClosePositionResponse>() {
                 @Override
-                public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
-                    CommonResponse common = response.body();
+                public void onResponse(Call<ClosePositionResponse> call, Response<ClosePositionResponse> response) {
+                    ClosePositionResponse entity = response.body();
+                    if (entity != null) {
+                        if (entity.isSuccess()) {
+                            String tempId = entity.getObject().getId();
+                            for (PositionInfoEntity infoEntity : getDataList()) {
+                                if (tempId.equals(infoEntity.getId())) {
+                                    getDataList().remove(infoEntity);
+                                    notifyDataSetChanged();
+                                    break;
+                                }
+                            }
+                        }
+                        Toast.makeText(mContext, entity.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
-                public void onFailure(Call<CommonResponse> call, Throwable t) {
+                public void onFailure(Call<ClosePositionResponse> call, Throwable t) {
 
                 }
             });

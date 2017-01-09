@@ -20,10 +20,12 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.entity.ClosePositionResponse;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PositionInfoEntity;
@@ -35,8 +37,11 @@ import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.lrececlerview.interfaces.OnItemClickListener;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerView;
 import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
+import fxtrader.com.app.service.PositionService;
 import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.LogZ;
+import fxtrader.com.app.view.ClosePositionDialog;
+import fxtrader.com.app.view.ProfitListPop;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,19 +60,39 @@ public class PositionListActivity extends BaseActivity {
 
     private CustomAdapter mCustomAdapter;
 
+    private MarketEntity mMarketEntity;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentLayout(R.layout.activity_position_list);
+        mMarketEntity = AppApplication.getInstance().getMarketEntity();
         initViews();
         setTitleContent(R.string.position_list);
-        startPositionTimer();
+        setBackListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                back();
+            }
+        });
+        startService(new Intent(this, PositionService.class));
+    }
+
+    @Override
+    public void onBackPressed() {
+        back();
+    }
+
+    private void back(){
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         registerPriceReceiver();
+        registerPositionListResevier();
     }
 
     @Override
@@ -76,7 +101,9 @@ public class PositionListActivity extends BaseActivity {
         if (mPriceReceiver != null) {
             unregisterReceiver(mPriceReceiver);
         }
-        stopPositionTimer();
+        if (mPositionListReceiver != null) {
+            unregisterReceiver(mPositionListReceiver);
+        }
     }
 
     private void initViews() {
@@ -110,17 +137,19 @@ public class PositionListActivity extends BaseActivity {
     private TimerTask positionTimerTask = null;
 
     private void startPositionTimer() {
-        if (null != positionTimer || null != positionTimerTask) {
-            stopPositionTimer();
-        }
-        positionTimer = new Timer();
-        positionTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                getPositionList();
-            }
-        };
-        positionTimer.schedule(positionTimerTask, 0, HttpConstant.REFRESH_POSITION_LIST);
+
+//        if (null != positionTimer || null != positionTimerTask) {
+//            stopPositionTimer();
+//        }
+//        showProgressDialog();
+//        positionTimer = new Timer();
+//        positionTimerTask = new TimerTask() {
+//            @Override
+//            public void run() {
+//                getPositionList();
+//            }
+//        };
+//        positionTimer.schedule(positionTimerTask, 0, HttpConstant.REFRESH_POSITION_LIST);
     }
 
     private void stopPositionTimer() {
@@ -143,10 +172,16 @@ public class PositionListActivity extends BaseActivity {
         respon.enqueue(new Callback<PositionListEntity>() {
             @Override
             public void onResponse(Call<PositionListEntity> call, Response<PositionListEntity> response) {
+                dismissProgressDialog();
                 PositionListEntity entity = response.body();
                 mPositionInfoList = entity.getObject().getContent();
 
                 if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
+                    if (mMarketEntity != null) {
+                        double sum = ContractUtil.initProfitInfoList(mMarketEntity, mPositionInfoList);
+                        mTotalBreakEvenTv.setText(String.valueOf(sum));
+                        mCustomAdapter.setDataList(mPositionInfoList);
+                    }
                     mPositionListSizeTv.setText(getString(R.string.position_list_num, mPositionInfoList.size()));
                 } else {
                     mPositionListSizeTv.setText(getString(R.string.position_list_num, 0));
@@ -156,7 +191,7 @@ public class PositionListActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<PositionListEntity> call, Throwable t) {
-
+                dismissProgressDialog();
             }
         });
     }
@@ -185,10 +220,10 @@ public class PositionListActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             MarketEntity vo = (MarketEntity) intent.getSerializableExtra(IntentItem.PRICE);
-            vo.init();
-            double sum = ContractUtil.initProfitInfoList(vo, mPositionInfoList);
-            mTotalBreakEvenTv.setText(String.valueOf(sum));
-            mCustomAdapter.setDataList(mPositionInfoList);
+            if (vo != null) {
+                vo.init();
+                mMarketEntity = vo;
+            }
         }
     }
 
@@ -232,13 +267,13 @@ public class PositionListActivity extends BaseActivity {
             }
             viewHolder.buyTypeTv.setText(type + dealDirection);
 
-            final String id = info.getId();
             viewHolder.closePositionTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    closePosition(id);
+                    closePosition(info);
                 }
             });
+            info.getContractName();
         }
 
         private ProfitInfo getProfit(PositionInfoEntity entity) {
@@ -266,20 +301,54 @@ public class PositionListActivity extends BaseActivity {
             return info;
         }
 
-        private void closePosition(String id) {
+        private void closePosition(final PositionInfoEntity entity) {
+            ClosePositionDialog dialog = new ClosePositionDialog(context, entity.getContractName());
+            dialog.setDialogListener(new ClosePositionDialog.DialogListener() {
+                @Override
+                public void ok() {
+                    closePositionRequest(entity.getId());
+
+                }
+            });
+            dialog.show();
+        }
+
+        private void closePositionRequest(String id){
             showProgressDialog();
             ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
             String token = ParamsUtil.getToken();
-            Call<CommonResponse> respon = dataApi.closePosition(token, getClosePositionParams(id));
-            respon.enqueue(new Callback<CommonResponse>() {
+            Call<ClosePositionResponse> request = dataApi.closePosition(token, getClosePositionParams(id));
+            request.enqueue(new Callback<ClosePositionResponse>() {
                 @Override
-                public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
-                    CommonResponse common = response.body();
+                public void onResponse(Call<ClosePositionResponse> call, Response<ClosePositionResponse> response) {
+                    ClosePositionResponse entity = response.body();
+                    LogZ.i("response:  " + entity.toString());
+                    if (entity != null) {
+                        if (entity.isSuccess()) {
+                            String tempId = entity.getObject().getId();
+                            LogZ.i("tempId = " + tempId);
+                            PositionInfoEntity tempInfoEntity = null;
+                            for (PositionInfoEntity infoEntity : getDataList()) {
+                                if (tempId.equals(infoEntity.getId())) {
+                                    tempInfoEntity = infoEntity;
+                                    break;
+                                }
+                            }
+                            if (tempInfoEntity != null) {
+                                getDataList().remove(tempInfoEntity);
+                                notifyDataSetChanged();
+                            }
+                        } else {
+                            showToastShort(entity.getMessage());
+                        }
+                    }
+
+
                     dismissProgressDialog();
                 }
 
                 @Override
-                public void onFailure(Call<CommonResponse> call, Throwable t) {
+                public void onFailure(Call<ClosePositionResponse> call, Throwable t) {
                     dismissProgressDialog();
                 }
             });
@@ -318,5 +387,29 @@ public class PositionListActivity extends BaseActivity {
         String floatProfit;
     }
 
+    private BroadcastReceiver mPositionListReceiver;
+
+    private void registerPositionListResevier(){
+        mPositionListReceiver = new PositionListReceiver();
+        IntentFilter filter = new IntentFilter(IntentItem.ACTION_POSITION_LIST);
+        registerReceiver(mPositionListReceiver, filter);
+    }
+
+    class PositionListReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mPositionInfoList = (List<PositionInfoEntity>) intent.getSerializableExtra(IntentItem.POSITION_LIST);
+            if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
+                if (mMarketEntity != null) {
+                    double sum = ContractUtil.initProfitInfoList(mMarketEntity, mPositionInfoList);
+                    mTotalBreakEvenTv.setText(String.valueOf(sum));
+                    mCustomAdapter.setDataList(mPositionInfoList);
+                }
+                mPositionListSizeTv.setText(getString(R.string.position_list_num, mPositionInfoList.size()));
+            } else {
+                mPositionListSizeTv.setText(getString(R.string.position_list_num, 0));
+            }
+        }
+    }
 
 }

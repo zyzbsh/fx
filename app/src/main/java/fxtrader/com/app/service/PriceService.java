@@ -74,8 +74,10 @@ public class PriceService extends Service {
             @Override
             public void onResponse(Call<MarketEntity> call, Response<MarketEntity> response) {
                 MarketEntity vo = response.body();
-                vo.init();
-                sendContentBroadcast(vo);
+                if (vo != null) {
+                    vo.init();
+                    sendContentBroadcast(vo);
+                }
             }
 
             @Override
