@@ -412,13 +412,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private void recharge() {
         if (isLogin()) {
-            String account = LoginConfig.getInstance().getAccount();
-            if (UserInfoHelper.getInstance().hasTelNumber(account)) {
-                openRechargeActivity();
-            } else {
-
-            }
-
+            openRechargeActivity();
         } else {
             openActivityForResult(LoginNewActivity.class, IntentItem.REQUEST_RECHARGE);
         }
@@ -432,13 +426,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private void withdraw() {
         if (isLogin()) {
-            String account = LoginConfig.getInstance().getAccount();
-            if (UserInfoHelper.getInstance().hasTelNumber(account)) {
-                openWithdrawActivity();
-            } else {
-
-            }
-
+            openWithdrawActivity();
         } else {
             openActivityForResult(LoginNewActivity.class, IntentItem.REQUEST_WITHDRAW);
         }

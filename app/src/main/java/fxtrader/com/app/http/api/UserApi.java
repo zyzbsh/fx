@@ -77,8 +77,9 @@ public interface UserApi {
     @PUT("/api/v3/users")
     Call<CommonResponse> changePwd(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 
-    @PUT("/api/v3/userFileUpload")
-    Call<CommonResponse> uploadAvatar(@QueryMap Map<String, String> params);
+    @FormUrlEncoded
+    @POST("/api/v3/userFileUpload")
+    Call<CommonResponse> uploadAvatar(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
     @POST("/api/v3/updateUserInfo")
@@ -90,8 +91,5 @@ public interface UserApi {
     @FormUrlEncoded
     @POST("/api/v3/updateUserInfo")
     Call<CommonResponse> updateInfo(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
-
-    @PUT("/api/v3/userFileUpload")
-    Call<CommonResponse> updateAvatar(@QueryMap Map<String, String> params);
 
 }

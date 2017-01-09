@@ -771,7 +771,12 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
         byte[] encode = Base64.encode(headPhoto, Base64.DEFAULT);
         String encodeStr = new String(encode);
         params.put("headimgData", "jpg," + encodeStr);
-        params.put("oldHeadimgUrl", mUser.getObject().getHeadimgurl());
+        String oldUrl = mUser.getObject().getHeadimgurl();
+        if (TextUtils.isEmpty(oldUrl)) {
+            oldUrl = "";
+        }
+        LogZ.i("oldHeadimgUrl : " + oldUrl);
+        params.put("oldHeadimgUrl", oldUrl);
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

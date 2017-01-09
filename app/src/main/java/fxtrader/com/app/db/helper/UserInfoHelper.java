@@ -57,11 +57,6 @@ public class UserInfoHelper extends ColumnHelper<UserEntity> {
                 UserInfoColumn.ACCOUNT + " = ?", args);
     }
 
-    public boolean hasTelNumber(String account) {
-        UserEntity entity = getEntity(account);
-        return !TextUtils.isEmpty(entity.getObject().getTelNumber());
-    }
-
     public UserEntity getEntity(String account) {
         LogZ.i("account = " + account);
         UserEntity entity = null;
