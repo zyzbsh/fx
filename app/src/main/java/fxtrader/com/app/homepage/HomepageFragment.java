@@ -98,7 +98,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private ViewPager mViewPager;
 
     private final static int[] LINE_ID = {R.id.btn_timeline, R.id.btn_kline5,
-            R.id.btn_kline15, R.id.btn_kline30, R.id.btn_kline60};
+             R.id.btn_kline30, R.id.btn_kline60, R.id.btn_day,};
 
     private final static int[] LINE_BG_ID = {R.id.bg_btn_timeline, R.id.bg_btn_kline5,
             R.id.bg_btn_kline15, R.id.bg_btn_kline30, R.id.bg_btn_kline60};
@@ -412,7 +412,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.btn_timeline:
             case R.id.btn_kline5:
-            case R.id.btn_kline15:
+            case R.id.btn_day:
             case R.id.btn_kline30:
             case R.id.btn_kline60:
                 dataLineBtnOnClicked(v);
@@ -459,6 +459,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
+    private final static int[] LINE_TYPE = {HttpConstant.KType.MIN_1, HttpConstant.KType.MIN_5, HttpConstant.KType.MIN_30, HttpConstant.KType.HOUR_1, HttpConstant.KType.DAY};
+
     private void dataLineBtnOnClicked(View v) {
         for (int i = 0; i < LINE_ID.length; ++i) {
             if (LINE_ID[i] == v.getId()) {
@@ -466,7 +468,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                     btnLineType[i].setSelected(true);
                     btnLineBg[i].setVisibility(View.VISIBLE);
                     if (mCurDataLineFragment != null) {
-                        mCurDataLineFragment.setLineType(i + 1);
+                        mCurDataLineFragment.setLineType(LINE_TYPE[i]);
                     }
                 }
             } else {

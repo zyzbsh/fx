@@ -48,6 +48,14 @@ public class NewMAChartView extends SurfaceView implements Callback {
 
 	private final static String DATASERVICE = "DATASERVICE";
 
+	private static final int SPLIT_MIN_5 = 7;
+
+	private static final int SPLIT_MIN_30 = 7;
+
+	private static final int SPLIT_HOUR = 7;
+
+	private static final int SPLIT_DAY = 7;
+
 	public final static float RATIO = PixelTools.getRatio();
 	public final static long REFRESH_DRAW_TIME = 80;
 
@@ -263,6 +271,8 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		}
 	}
 
+	private int mSumWidth = 36;
+
 	private void drawCandle(Canvas canvas, MACandleChartVO mCandleChartVO) {
 		if (null == mCandleChartVO) {
 			return;
@@ -271,7 +281,7 @@ public class NewMAChartView extends SurfaceView implements Callback {
 				|| 0 == mCandleChartVO.getXtitle().size()) {
 			return;
 		}
-		float stickWidth = ((float) canvas.getWidth() / 36) - 1f;
+		float stickWidth = ((float) canvas.getWidth() / mSumWidth) - 1f;
 		float stickX = 1f - (canvas.getWidth() / mCandleChartVO.getXtitle()
 				.size());
 
@@ -406,20 +416,25 @@ public class NewMAChartView extends SurfaceView implements Callback {
 
 		MAChartVO mChartVO = new MAChartVO();
 		List<String> timeList = new ArrayList<String>();
-		List<Float> values = new ArrayList<Float>();
+		List<Float> tempValus = new ArrayList<Float>();
 		for (int i = 0; i < 45; ++i) {
 			String[] object = objects[i].split(",");
 			if (object.length > 3) {
 				return;
 			}
 			timeList.add(object[0]);
-			values.add(Float.valueOf(object[1]));
+			tempValus.add(Float.valueOf(object[1]));
 		}
 		Float curPrice  = 0f;
-		if (!values.isEmpty()) {
-			curPrice = values.get(0);
+		if (!tempValus.isEmpty()) {
+			curPrice = tempValus.get(0);
 		}
-		values.add(curPrice);
+		tempValus.add(curPrice);
+		List<Float> values = new ArrayList<>();
+		int tempValuesSize = tempValus.size();
+		for (int i = tempValuesSize - 1; i >= 0; i--) {
+			values.add(tempValus.get(i));
+		}
 //		values.add(curentPrice);
 		List<String> xtitle = new ArrayList<String>();
 		for (int i = 0; i < 8; i++) {
@@ -473,7 +488,7 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		}
 		List<OHLCEntity> ohlcList = new ArrayList<OHLCEntity>();
 		String[] objects = data.getObject().split("\\|");
-		if (36 > objects.length) {
+		if (mSumWidth > objects.length) {
 			for (int i = 0; i < objects.length; ++i) {
 				String[] arrayData = objects[i].split(",");
 				if (arrayData.length < 5) {
@@ -487,7 +502,7 @@ public class NewMAChartView extends SurfaceView implements Callback {
 				ohlcList.add(new OHLCEntity(open, high, low, close, date));
 			}
 		} else {
-			for (int i = 0; i < 36; ++i) {
+			for (int i = 0; i < mSumWidth; ++i) {
 				String[] arrayData = objects[i].split(",");
 				if (arrayData.length < 5) {
 					return;
@@ -496,7 +511,12 @@ public class NewMAChartView extends SurfaceView implements Callback {
 				double high = Double.parseDouble(arrayData[5]);
 				double low = Double.parseDouble(arrayData[6]);
 				double close = Double.parseDouble(arrayData[4]);
-				String date = arrayData[1].substring(8, 12);
+				String date;
+				if (lineType == HttpConstant.KType.DAY) {
+					date = arrayData[1].substring(4, 8);
+				} else{
+					date = arrayData[1].substring(8, 12);
+				}
 
 				ohlcList.add(new OHLCEntity(open, high, low, close, date));
 			}
@@ -506,9 +526,17 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		List<String> xtitle = new ArrayList<String>();
 		if (0 < ohlcList.size()) {
 			for (int i = 0; i < 7; ++i) {
+
+				if (i * mSplit >ohlcList.size() - 1){
+					break;
+				}
 				StringBuffer buffer = new StringBuffer();
-				buffer.append(ohlcList.get(i * (ohlcList.size() / 7)).getDate());
-				buffer.insert(2, " : ");
+				buffer.append(ohlcList.get(ohlcList.size() - 1 - (7 - i) * mSplit + mNUm).getDate());
+				if (lineType == HttpConstant.KType.DAY) {
+					buffer.insert(2, "-");
+				} else {
+					buffer.insert(2, " : ");
+				}
 				xtitle.add(buffer.toString());
 			}
 		}
@@ -641,7 +669,7 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		final Map<String, String> params = ParamsUtil.getCommonParams();
 		params.put("method", "gdiex.market.timeLine");
 		params.put("contract", mContractType);
-		params.put("number", "180");
+		params.put("number", "100");
 		params.put("quotedate", String.valueOf(System.currentTimeMillis()));
 		params.put("sign", ParamsUtil.sign(params));
 		return params;
@@ -734,8 +762,31 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		this.mCandleChart = mCandleChart;
 	}
 
+	private int mSplit = 5;
+	private int mNUm = 2;
 	public void setLineType(int lineType) {
 		this.lineType = lineType;
+		switch (this.lineType) {
+			case HttpConstant.KType.MIN_5:
+				mSplit = SPLIT_MIN_5;
+				mNUm = 2;
+				break;
+			case HttpConstant.KType.MIN_30:
+				mSplit = SPLIT_MIN_30;
+				mNUm = 2;
+				break;
+			case HttpConstant.KType.HOUR_1:
+				mSplit = SPLIT_HOUR;
+				mNUm = 2;
+				break;
+			case HttpConstant.KType.DAY:
+				mSplit = SPLIT_DAY;
+				mNUm = 3;
+				break;
+			default:
+				break;
+		}
+		mSumWidth = mSplit * 7 + 1;
 	}
 
 	public void setCode(String code) {

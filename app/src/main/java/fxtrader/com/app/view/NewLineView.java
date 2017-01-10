@@ -11,12 +11,15 @@ import android.widget.LinearLayout;
 
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
+import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.tools.UIUtil;
 
 public class NewLineView extends LinearLayout implements OnClickListener {
 
-	private final static int[] LINE_ID = { R.id.btn_timeline, R.id.btn_kline5,
-			R.id.btn_kline15, R.id.btn_kline30, R.id.btn_kline60 };
+	private final static int[] LINE_ID = { R.id.btn_timeline,
+			R.id.btn_kline5, R.id.btn_kline30, R.id.btn_kline60, R.id.btn_day};
+
+	private final static int[] LINE_TYPE = {HttpConstant.KType.MIN_1, HttpConstant.KType.MIN_5, HttpConstant.KType.MIN_30, HttpConstant.KType.HOUR_1, HttpConstant.KType.DAY};
 
 	private Button[] btnLineType = new Button[LINE_ID.length];
 
@@ -63,14 +66,14 @@ public class NewLineView extends LinearLayout implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (R.id.btn_timeline == v.getId() || R.id.btn_kline5 == v.getId()
-				|| R.id.btn_kline15 == v.getId()
+				|| R.id.btn_day == v.getId()
 				|| R.id.btn_kline30 == v.getId()
 				|| R.id.btn_kline60 == v.getId()) {
 			for (int i = 0; i < LINE_ID.length; ++i) {
 				if (LINE_ID[i] == v.getId()) {
 					if (!btnLineType[i].isSelected()) {
 						btnLineType[i].setSelected(true);
-						mChartView.setLineType(i + 1);
+						mChartView.setLineType(LINE_TYPE[i]);
 						btnLineType[i].setBackgroundColor(getResources().getColor(R.color.red_text));
 					}
 				} else {

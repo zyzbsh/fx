@@ -160,7 +160,7 @@
     <string name="mine">我的</string>
     <string name="time_line">分时线</string>
     <string name="five_min">5分钟</string>
-    <string name="ten_min">15分钟</string>
+    <string name="day_k">日K线</string>
     <string name="half_hour">30分钟</string>
     <string name="one_hour">1小时</string>
     <string name="handling">处理中。。。</string>

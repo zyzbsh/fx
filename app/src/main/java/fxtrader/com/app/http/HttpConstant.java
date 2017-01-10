@@ -28,6 +28,23 @@ public final class HttpConstant {
         public static final String T = "t";
     }
 
+    public static class KType{
+//        1:1分钟，2:5分钟，3:15分钟，4:30分钟，5:1小时，6:2小时，7:4小时， 8:1天，9:1星
+//        期，10:1个月，11:1季度，12:一年
+        public static final int MIN_1 = 1;
+        public static final int MIN_5 = 2;
+        public static final int MIN_15 = 3;
+        public static final int MIN_30 = 4;
+        public static final int HOUR_1 = 5;
+        public static final int HOUR_2 = 6;
+        public static final int HOUR_4 = 7;
+        public static final int DAY = 8;
+        public static final int WEEK = 9;
+        public static final int MONTH = 10;
+        public static final int QUARTER = 11;
+        public static final int YEAR = 12;
+    }
+
     public static class SexType{
         public static final int MALE = 1;
         public static final int FEMALE = 2;
