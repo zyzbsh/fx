@@ -92,7 +92,7 @@
     <string name="order_detail_build_time">创建时间：%1$s</string>
     <string name="stop_profit_num">止盈：%1$s</string>
     <string name="stop_loss_num">止损：%1$s</string>
-    <string name="order_detail_remind_time">为创造低风险实践式教育，暂不支持持仓过夜，\n本订单若在%1$s未平仓，系统将自动进行结算平仓。</string>
+    <string name="order_detail_remind_time">为创造低风险实践式教育，暂不支持持仓过夜，\n本订单若在(%1$s)未平仓，系统将自动进行结算平仓。</string>
     <string name="change">修改</string>
     <string name="login_out">退出账号</string>
     <string name="now_close_position">立即平仓</string>

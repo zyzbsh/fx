@@ -107,6 +107,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         mPositionInfo = (PositionInfoEntity) getIntent().getSerializableExtra(IntentItem.ORDER_DETAIL);
         mIsUp = ContractUtil.isUpDirection(mPositionInfo);
         mContractInfo = ContractUtil.getContractInfoMap().get(mPositionInfo.getContractCode());
+        LogZ.i(mContractInfo.toString());
         initViews();
         setViews();
         String code = mPositionInfo.getContractCode();
@@ -164,7 +165,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         mDateTv.setText(getString(R.string.order_detail_build_time, date));
 
         String lastTime = "";
-        long dateLong = Long.parseLong(date);
+        long dateLong = mPositionInfo.getBuyingDate();
         long time = dateLong % DateTools.DAY;
         if (time < 4 * DateTools.HOUR){
             lastTime = DateTools.changeToDay(dateLong) + " 04:00:00";
@@ -177,6 +178,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void setStopProfitTv(double profit) {
+        LogZ.i("set profit = " + profit);
         String str;
         if (profit < 10E-6) {
             str = "不设";
@@ -189,8 +191,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void setStopLossTv(double loss) {
+        LogZ.i("set loss = " + loss);
         String str;
-        if (loss < 10E-6 && loss > -10E-6) {
+        if (loss == -1) {
             str = "不设";
         } else {
             int percent = (int) (loss * 100);
@@ -321,7 +324,7 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
             mPriceTv.setTextColor(Color.parseColor("#09cd29"));
         }
         mPriceTv.setText(String.valueOf(latestPrice));
-        double sum = diff * mPositionInfo.getHandingChargeAmount() * mContractInfo.getPlRate() * mContractInfo.getPlUnit();
+        double sum = diff * mPositionInfo.getDealCount() * mContractInfo.getPlRate() * mContractInfo.getPlUnit();
         double result = ContractUtil.getDouble(sum, 2);
         double percent = result / (mPositionInfo.getDealCount() * mContractInfo.getMargin());
         NumberFormat nt = NumberFormat.getPercentInstance();

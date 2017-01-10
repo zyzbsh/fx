@@ -58,8 +58,8 @@ public class PositionInfoEntity implements Serializable{
     private boolean sale;
     private int saleTimestamp;
     private long sellingDate;
-    private int sellingIncome;
-    private int sellingRate;
+    private double sellingIncome;
+    private double sellingRate;
     private String sellingType;
     private boolean usedTicket;
     private int usedTicketCount;
@@ -241,19 +241,19 @@ public class PositionInfoEntity implements Serializable{
         this.sellingDate = sellingDate;
     }
 
-    public int getSellingIncome() {
+    public double getSellingIncome() {
         return sellingIncome;
     }
 
-    public void setSellingIncome(int sellingIncome) {
+    public void setSellingIncome(double sellingIncome) {
         this.sellingIncome = sellingIncome;
     }
 
-    public int getSellingRate() {
+    public double getSellingRate() {
         return sellingRate;
     }
 
-    public void setSellingRate(int sellingRate) {
+    public void setSellingRate(double sellingRate) {
         this.sellingRate = sellingRate;
     }
 

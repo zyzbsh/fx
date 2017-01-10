@@ -50,6 +50,13 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/position_list_total_break_even_tv"
                 android:textSize="15sp" />
+            <TextView
+                android:id="@+id/position_list_break_even_percent_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/position_list_break_even_num_tv"
+                android:layout_toRightOf="@id/position_list_break_even_num_tv"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/position_list_size_tv"

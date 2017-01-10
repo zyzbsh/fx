@@ -3,7 +3,11 @@ package fxtrader.com.app.tools;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
+import android.widget.TextView;
 
 /**
  * Created by zhangyuzhu on 2016/11/30.
@@ -44,6 +48,12 @@ public final class UIUtil {
     public static void openActivity(Context context, Class<?> clazz) {
         Intent intent = new Intent(context, clazz);
         context.startActivity(intent);
+    }
+
+    public static void setForegroundColor(TextView tv, String str, int color, int start, int end){
+        SpannableStringBuilder style = new SpannableStringBuilder(str);
+        style.setSpan(new ForegroundColorSpan(color),start,end, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        tv.setText(style);
     }
 
 }

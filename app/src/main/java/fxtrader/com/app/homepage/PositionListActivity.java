@@ -40,6 +40,7 @@ import fxtrader.com.app.lrececlerview.recyclerview.LRecyclerViewAdapter;
 import fxtrader.com.app.service.PositionService;
 import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.LogZ;
+import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.ClosePositionDialog;
 import fxtrader.com.app.view.ProfitListPop;
 import retrofit2.Call;
@@ -55,6 +56,8 @@ public class PositionListActivity extends BaseActivity {
     private LRecyclerView mRecyclerView;
 
     private TextView mTotalBreakEvenTv;
+
+    private TextView mPercentTv;
 
     private TextView mPositionListSizeTv;
 
@@ -109,6 +112,7 @@ public class PositionListActivity extends BaseActivity {
     private void initViews() {
 
         mTotalBreakEvenTv = (TextView) findViewById(R.id.position_list_break_even_num_tv);
+        mPercentTv = (TextView) findViewById(R.id.position_list_break_even_percent_tv);
         mPositionListSizeTv = (TextView) findViewById(R.id.position_list_size_tv);
 
         mRecyclerView = (LRecyclerView) findViewById(R.id.position_list_rec);
@@ -133,79 +137,7 @@ public class PositionListActivity extends BaseActivity {
         });
     }
 
-    private Timer positionTimer = null;
-    private TimerTask positionTimerTask = null;
-
-    private void startPositionTimer() {
-
-//        if (null != positionTimer || null != positionTimerTask) {
-//            stopPositionTimer();
-//        }
-//        showProgressDialog();
-//        positionTimer = new Timer();
-//        positionTimerTask = new TimerTask() {
-//            @Override
-//            public void run() {
-//                getPositionList();
-//            }
-//        };
-//        positionTimer.schedule(positionTimerTask, 0, HttpConstant.REFRESH_POSITION_LIST);
-    }
-
-    private void stopPositionTimer() {
-        if (null != positionTimer) {
-            positionTimer.cancel();
-            positionTimer = null;
-        }
-        if (null != positionTimerTask) {
-            positionTimerTask.cancel();
-            positionTimerTask = null;
-        }
-    }
-
     private List<PositionInfoEntity> mPositionInfoList;
-
-    private void getPositionList() {
-        ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
-        String token = ParamsUtil.getToken();
-        Call<PositionListEntity> respon = dataApi.positionList(token, getPositionListParams());
-        respon.enqueue(new Callback<PositionListEntity>() {
-            @Override
-            public void onResponse(Call<PositionListEntity> call, Response<PositionListEntity> response) {
-                dismissProgressDialog();
-                PositionListEntity entity = response.body();
-                mPositionInfoList = entity.getObject().getContent();
-
-                if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
-                    if (mMarketEntity != null) {
-                        double sum = ContractUtil.initProfitInfoList(mMarketEntity, mPositionInfoList);
-                        mTotalBreakEvenTv.setText(String.valueOf(sum));
-                        mCustomAdapter.setDataList(mPositionInfoList);
-                    }
-                    mPositionListSizeTv.setText(getString(R.string.position_list_num, mPositionInfoList.size()));
-                } else {
-                    mPositionListSizeTv.setText(getString(R.string.position_list_num, 0));
-                }
-//                mCustomAdapter.setDataList(mPositionInfoList);
-            }
-
-            @Override
-            public void onFailure(Call<PositionListEntity> call, Throwable t) {
-                dismissProgressDialog();
-            }
-        });
-    }
-
-    private Map<String, String> getPositionListParams() {
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.storage.list");
-        params.put("sale", "false");
-        params.put("page", "0");
-        params.put("size", String.valueOf(Integer.MAX_VALUE));
-        params.put("sort", "buyingDate,DESC");
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
-    }
 
     private BroadcastReceiver mPriceReceiver;
 
@@ -307,13 +239,13 @@ public class PositionListActivity extends BaseActivity {
                 @Override
                 public void ok() {
                     closePositionRequest(entity.getId());
-
                 }
             });
             dialog.show();
         }
 
         private void closePositionRequest(String id){
+            LogZ.i("closePositionRequest");
             showProgressDialog();
             ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
             String token = ParamsUtil.getToken();
@@ -336,7 +268,12 @@ public class PositionListActivity extends BaseActivity {
                             }
                             if (tempInfoEntity != null) {
                                 getDataList().remove(tempInfoEntity);
-                                notifyDataSetChanged();
+                                LogZ.i("size = " + getDataList().size());
+                                if (mMarketEntity != null) {
+                                    setProfitAndLoss(getDataList());
+                                }
+                                String str = getString(R.string.position_list_num, getDataList().size());
+                                UIUtil.setForegroundColor(mPositionListSizeTv, str, Color.parseColor("#e83743"), 1, 1);
                             }
                         } else {
                             showToastShort(entity.getMessage());
@@ -349,6 +286,11 @@ public class PositionListActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<ClosePositionResponse> call, Throwable t) {
+                    if (t != null && t.getMessage() != null) {
+                        LogZ.e(t.getMessage());
+                    } else {
+                        LogZ.e("Throwable null");
+                    }
                     dismissProgressDialog();
                 }
             });
@@ -399,17 +341,40 @@ public class PositionListActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             mPositionInfoList = (List<PositionInfoEntity>) intent.getSerializableExtra(IntentItem.POSITION_LIST);
-            if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
+            int size;
+            if (mPositionInfoList != null) {
                 if (mMarketEntity != null) {
-                    double sum = ContractUtil.initProfitInfoList(mMarketEntity, mPositionInfoList);
-                    mTotalBreakEvenTv.setText(String.valueOf(sum));
+                    setProfitAndLoss(mPositionInfoList);
                     mCustomAdapter.setDataList(mPositionInfoList);
                 }
-                mPositionListSizeTv.setText(getString(R.string.position_list_num, mPositionInfoList.size()));
+                size =  mPositionInfoList.size();
             } else {
-                mPositionListSizeTv.setText(getString(R.string.position_list_num, 0));
+                size = 0;
             }
+            String str = getString(R.string.position_list_num, size);
+            UIUtil.setForegroundColor(mPositionListSizeTv, str, Color.parseColor("#e83743"), 1, 1);
         }
+    }
+
+    private void setProfitAndLoss(List<PositionInfoEntity> list){
+        double sum = ContractUtil.initProfitInfoList(mMarketEntity, list);
+        int dealCount = 0;
+
+        int color;
+        if (sum >= 0) {
+            color = getResources().getColor(R.color.red_text);
+        } else {
+            color = getResources().getColor(R.color.green);
+        }
+        mTotalBreakEvenTv.setTextColor(color);
+        mPercentTv.setTextColor(color);
+        mTotalBreakEvenTv.setText(String.valueOf(sum));
+
+        for (PositionInfoEntity entity : list) {
+            dealCount = entity.getDealCount() + dealCount;
+        }
+        double percent = sum / dealCount;
+        mPercentTv.setText("(" + ContractUtil.getDouble(percent, 2) + "%)" );
     }
 
 }

@@ -407,7 +407,7 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		MAChartVO mChartVO = new MAChartVO();
 		List<String> timeList = new ArrayList<String>();
 		List<Float> values = new ArrayList<Float>();
-		for (int i = objects.length - 44; i < objects.length; ++i) {
+		for (int i = 0; i < 45; ++i) {
 			String[] object = objects[i].split(",");
 			if (object.length > 3) {
 				return;
@@ -422,9 +422,9 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		values.add(curPrice);
 //		values.add(curentPrice);
 		List<String> xtitle = new ArrayList<String>();
-		for (int i = 6; i >= 0; --i) {
+		for (int i = 0; i < 8; i++) {
 			StringBuffer buffer = new StringBuffer();
-			buffer.append(timeList.get(i * 7).substring(8, 12));
+			buffer.append(timeList.get((7 - i) * 5).substring(8, 12));
 			buffer.insert(2, " : ");
 			xtitle.add(buffer.toString());
 		}

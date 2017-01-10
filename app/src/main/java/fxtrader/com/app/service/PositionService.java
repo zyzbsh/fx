@@ -122,7 +122,6 @@ public class PositionService extends Service {
      * @param
      */
     protected void sendContentBroadcast(List<PositionInfoEntity> list) {
-        LogZ.i("position service sendContentBroadcast");
         Intent intent=new Intent();
         intent.setAction(IntentItem.ACTION_POSITION_LIST);
         intent.putExtra(IntentItem.POSITION_LIST, (Serializable) list);

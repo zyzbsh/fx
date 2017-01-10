@@ -134,9 +134,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         if (isLogin()) {
             mLoginTv.setVisibility(View.GONE);
             mBalanceLayout.setVisibility(View.VISIBLE);
-            startPositionTimer();
+            startPositionListService();
             registerPositionListResevier();
-            startPositionTimer();
+            startPositionListService();
             startUserTimer();
         } else {
             mLoginTv.setVisibility(View.VISIBLE);
@@ -174,20 +174,20 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         if (requestCode == IntentItem.REQUEST_LOGIN) {
             LogZ.i("request_login_onActivityResult");
             startUserTimer();
-            startPositionTimer();
+            startPositionListService();
             openBuildPositionActivity(mExpect);
         } else if (requestCode == IntentItem.REQUEST_BUILD_POSITION) {
             LogZ.i("REQUEST_BUILD_POSITION_onActivityResult");
-            startPositionTimer();
+            startPositionListService();
         } else if (requestCode == IntentItem.REQUEST_RECHARGE) {
             LogZ.i("REQUEST_RECHARGE_onActivityResult");
             startUserTimer();
-            startPositionTimer();
+            startPositionListService();
             openRechargeActivity();
         } else if (requestCode == IntentItem.REQUEST_WITHDRAW) {
             LogZ.i("REQUEST_WITHDRAW_onActivityResult");
             startUserTimer();
-            startPositionTimer();
+            startPositionListService();
             openWithdrawActivity();
         }
         setLoginView();
@@ -526,13 +526,14 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private boolean masterRequested = false;
-
+    private MarketEntity mMarketentity;
     class PriceReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             MarketEntity vo = (MarketEntity) intent.getSerializableExtra(IntentItem.PRICE);
             if (vo != null) {
                 vo.init();
+                mMarketentity = vo;
                 AppApplication.getInstance().setMarketEntity(vo);
                 if (!masterRequested) {
                     masterRequested = true;
@@ -546,12 +547,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                     mCurDataLineFragment.setPriceTvs(getActivity(), price);
 
                 }
-                if (mTitleProfitCtr.isProfitViewShow()) {
-                    List<PositionInfoEntity> list = getPopProfitList(vo, mPositionInfoList);
-                    if (mProfitListPop != null) {
-                        mProfitListPop.addData(list, mPositionInfoList.size());
-                    }
-                }
+
             }
         }
     }
@@ -559,9 +555,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private Timer positionTimer = null;
     private TimerTask positionTimerTask = null;
 
-    private void startPositionTimer() {
+    private void startPositionListService() {
         getActivity().startService(new Intent(getActivity(), PositionService.class));
-
 //        if (null != positionTimer || null != positionTimerTask) {
 //            stopPositionTimer();
 //        }
@@ -591,6 +586,12 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 mTitleProfitCtr.show();
                 if (mProfitListPop == null) {
                     mProfitListPop = new ProfitListPop(getActivity());
+                }
+                if (mTitleProfitCtr.isProfitViewShow() && mMarketentity != null) {
+                    List<PositionInfoEntity> list = getPopProfitList(mMarketentity, mPositionInfoList);
+                    if (mProfitListPop != null) {
+                        mProfitListPop.addData(list, mPositionInfoList.size());
+                    }
                 }
             } else {
                 mTitleProfitCtr.hide();
@@ -740,7 +741,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             getActivity().startService(new Intent(getActivity(), PositionService.class));
             requestMaster();
             startUserTimer();
-            startPositionTimer();
+            startPositionListService();
             setLoginView();
         }
     }

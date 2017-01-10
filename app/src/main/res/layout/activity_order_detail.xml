@@ -210,7 +210,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/order_detail_remind_time"
                     android:textColor="@color/gray_6"
-                    android:textSize="12sp" />
+                    android:textSize="10sp" />
 
             </LinearLayout>
         </ScrollView>
