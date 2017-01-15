@@ -32,6 +32,24 @@ public class RetrofitUtils {
         return singleton.create(clazz);
     }
 
+    public static <T> T createApiNoGson(Class<T> clazz){
+        if(testSingleton == null){
+            synchronized (RetrofitUtils.class){
+                if(testSingleton == null){
+                    testSingleton = new Retrofit.Builder()
+//                            .baseUrl("http://125.88.152.51:15516/")
+                            .baseUrl(HttpConstant.BASE_URL)
+//                            .addConverterFactory(GsonConverterFactory.create())
+                            .client(OkHttpUtils.getSingleton(AppApplication.getInstance().getBaseContext()))
+                            .build();
+                }
+            }
+        }
+
+
+        return testSingleton.create(clazz);
+    }
+
     public static <T> T createTestApi(Class<T> clazz){
         if(testSingleton == null){
             synchronized (RetrofitUtils.class){

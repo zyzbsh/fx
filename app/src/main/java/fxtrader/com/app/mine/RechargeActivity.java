@@ -204,13 +204,17 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         }
 //        openActivity(RechargeWebActivity.class);
         showProgressDialog();
-        UserApi userApi = RetrofitUtils.createTestApi(UserApi.class);
+        UserApi userApi = RetrofitUtils.createApiNoGson(UserApi.class);
         String token = ParamsUtil.getToken();
         final Call<ResponseBody> respo = userApi.bankRecharge(token, getRechargerParams(acount));
         respo.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 dismissProgressDialog();
+                if (response == null || response.body() == null) {
+                    showToastShort("请重试");
+                    return;
+                }
                 try {
                     String str = new String(response.body().bytes());
                     Intent intent = new Intent(RechargeActivity.this, WebHtmlActivity.class);

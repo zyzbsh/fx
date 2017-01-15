@@ -150,6 +150,13 @@
         <service android:name=".service.PriceService" />
 
         <service android:name=".service.PositionService" />
+        <service
+            android:name=".service.PushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice">
+        </service>
+        <service android:name=".service.PushIntentService"/>
 
         <meta-data
             android:name="fxtrader.com.app.GlideModelConfig"

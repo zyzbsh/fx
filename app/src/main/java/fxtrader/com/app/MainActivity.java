@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.igexin.sdk.PushManager;
+
 import java.util.ArrayList;
 
 import fxtrader.com.app.base.BaseActivity;
@@ -44,6 +46,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         AppApplication.getInstance().setActivity(this);
         setContentView(R.layout.activity_main);
         initBottomLayout();
+        PushManager.getInstance().initialize(this.getApplicationContext(), fxtrader.com.app.service.PushService.class);
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), fxtrader.com.app.service.PushIntentService.class);
     }
 
     @Override
