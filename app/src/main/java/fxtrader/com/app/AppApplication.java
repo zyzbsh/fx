@@ -11,6 +11,7 @@ import fxtrader.com.app.entity.UserInfoVo;
 import fxtrader.com.app.http.NetConfig;
 import fxtrader.com.app.http.NetConfigBuilder;
 import fxtrader.com.app.http.NetUtils;
+import fxtrader.com.app.http.NetworkStatus;
 
 /**
  * Created by pc on 2016/11/17.
@@ -26,6 +27,8 @@ public class AppApplication extends Application{
     private MarketEntity mMarketEntity;
 
     private UserEntity mUser;
+
+    private NetworkStatus mNetworkStatus;
 
     @Override
     public void onCreate() {
@@ -88,5 +91,12 @@ public class AppApplication extends Application{
 
     public void setUser(UserEntity mUser) {
         this.mUser = mUser;
+    }
+
+    public NetworkStatus getNetworkStatus() {
+        if (mNetworkStatus == null) {
+            mNetworkStatus = new NetworkStatus(getApplicationContext());
+        }
+        return mNetworkStatus;
     }
 }
