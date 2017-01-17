@@ -204,7 +204,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         }
 //        openActivity(RechargeWebActivity.class);
         showProgressDialog();
-        UserApi userApi = RetrofitUtils.createApiNoGson(UserApi.class);
+        UserApi userApi = RetrofitUtils.createTestApi(UserApi.class);
         String token = ParamsUtil.getToken();
         final Call<ResponseBody> respo = userApi.bankRecharge(token, getRechargerParams(acount));
         respo.enqueue(new Callback<ResponseBody>() {

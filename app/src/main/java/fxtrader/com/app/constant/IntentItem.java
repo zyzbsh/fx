@@ -16,6 +16,7 @@ public final class IntentItem {
     public static final String ACTION_PRICE = "fxtrader.com.app.price";
     public static final String ACTION_POSITION_LIST = "fxtrader.com.app.positions";
     public static final String ACTION_LOGIN = "fxtrader.com.app.login";
+    public static final String ACTION_NETWORK_CHANGE = "fxtrader.com.app.network.change";
     public static final String PRICE = "price";
     public static final String EXCEPTION = "up";
     public static final String DATA_TYPE = "data_type";
@@ -36,4 +37,5 @@ public final class IntentItem {
     public static final String PERSONAL_INFO_UPDATE = "personal_info_update";
     public static final String NICKNAME = "nickname";
     public static final String AVATAR_URL = "avatar_url";
+    public static final String NETWORK_CONNECTED = "network_connected";
 }

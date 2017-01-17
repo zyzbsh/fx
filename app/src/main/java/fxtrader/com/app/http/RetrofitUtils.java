@@ -56,7 +56,7 @@ public class RetrofitUtils {
                 if(testSingleton == null){
                     testSingleton = new Retrofit.Builder()
 //                            .baseUrl("http://125.88.152.51:15516/")
-                            .baseUrl(HttpConstant.TEST_URL)
+                            .baseUrl(HttpConstant.BASE_URL)
 //                            .addConverterFactory(GsonConverterFactory.create())
                             .client(OkHttpUtils.getSingleton(AppApplication.getInstance().getBaseContext()))
                             .build();

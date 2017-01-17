@@ -3,10 +3,12 @@ package fxtrader.com.app.http;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import fxtrader.com.app.AppApplication;
+import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.tools.LogZ;
 
 /**
@@ -30,22 +32,19 @@ public class NetworkConnectChangedReceiver extends BroadcastReceiver {
                 int type = NetworkUtil.getConnectionType(info);
                 if (type != networkStatus.getNetworkType()) {
                     networkStatus.setNetworkType(type);
-                    if (type == NetworkUtil.CONNECTIONTYPE_WIFI) { // 当前网络为wifi，开启课程缓存服务
-                        LogZ.d("当前网络为wifi，开启课程缓存服务");
-//                        if (UserHelper.isLogined()) {
-//                            this.startRcoverService(context);
-//                        }
-                    }
+                    notice(context, true);
                 }
             } else {// 还未连接
                 if (info != null && info.isAvailable()) {// 网络连接已建立
                     networkStatus.setConnected(true);
                     networkStatus.setNetworkType(NetworkUtil.getConnectionType(info));
                     LogZ.d("建立网络连接 " + networkStatus.toString());
+                    notice(context, true);
 //                    this.startRcoverService(context);
                 } else {
                     LogZ.d("没有网络");
                     networkStatus.clear();
+                    notice(context, false);
                 }
             }
         } else {
@@ -55,6 +54,13 @@ public class NetworkConnectChangedReceiver extends BroadcastReceiver {
             }
             networkStatus.clear();
         }
+    }
+
+    private void notice(Context context, boolean connected) {
+        Intent intent=new Intent();
+        intent.setAction(IntentItem.ACTION_NETWORK_CHANGE);
+        intent.putExtra(IntentItem.NETWORK_CONNECTED, connected);
+        context.sendBroadcast(intent);
     }
 
 

@@ -131,6 +131,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
+        getContactList();
         if (isLogin()) {
             mLoginTv.setVisibility(View.GONE);
             mBalanceLayout.setVisibility(View.VISIBLE);
@@ -143,6 +144,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             mBalanceLayout.setVisibility(View.GONE);
             mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, "--"));
         }
+        registerNetworkChangeReceiver();
         registerLoginReceiver();
         requestParticipant();
         requestSystemBulletin();
@@ -159,6 +161,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
         if (mPositionListReceiver != null) {
             getActivity().unregisterReceiver(mPositionListReceiver);
+        }
+        if (mNetworkChangeListener != null) {
+            getActivity().unregisterReceiver(mNetworkChangeListener);
         }
         getActivity().stopService(new Intent(getActivity(), PriceService.class));
         getActivity().stopService(new Intent(getActivity(), PositionService.class));
@@ -272,7 +277,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         List<Fragment> fragments = new ArrayList<>();
         FragmentAdapter adapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), fragments);
         mViewPager.setAdapter(adapter);
-        getContactList();
     }
 
     private void initLineBtn(View view) {
@@ -926,4 +930,23 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         public void more();
     }
 
+    private BroadcastReceiver mNetworkChangeListener;
+
+    private void registerNetworkChangeReceiver() {
+        mNetworkChangeListener = new NetworkChangeReceiver();
+        IntentFilter filter = new IntentFilter(IntentItem.ACTION_NETWORK_CHANGE);
+        getActivity().registerReceiver(mLoginReceiver, filter);
+    }
+
+
+    class NetworkChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogZ.i("NetworkChangeReceiver onReceive");
+            boolean connected = intent.getBooleanExtra(IntentItem.NETWORK_CONNECTED, false);
+            if (connected) {
+                getContactList();
+            }
+        }
+    }
 }

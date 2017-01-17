@@ -60,6 +60,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden) {
+            getUserInfo();
+        }
+    }
+
     private void initViews(View view) {
         setupLayoutHeight(view);
 
