@@ -207,6 +207,7 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
         final Map<String, String> params = ParamsUtil.getCommonParams();
         params.put("method", "gdiex.oauth.token");
         params.put("grant_type", "password");
+//        params.put("membercode", "RV");
         String str = account + ":" + pwd;
         byte[] base64 = Base64.encode(str.getBytes(), Base64.NO_WRAP);
         byte[] aes = EncryptionTool.aes(base64, ParamsUtil.CLIENT_SECRET.getBytes());

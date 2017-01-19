@@ -409,15 +409,22 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		if (null == dataVo.getObject() || dataVo.getObject().isEmpty()) {
 			return;
 		}
+
 		String[] objects = dataVo.getObject().split("\\|");
-		if (45 > objects.length) {
-			return;
+
+		int len = objects.length;
+		int count = 0;
+		if (len > 45) {
+			count = 45;
+		} else {
+			count = len;
 		}
 
 		MAChartVO mChartVO = new MAChartVO();
 		List<String> timeList = new ArrayList<String>();
 		List<Float> tempValus = new ArrayList<Float>();
-		for (int i = 0; i < 45; ++i) {
+
+		for (int i = 0; i < count; ++i) {
 			String[] object = objects[i].split(",");
 			if (object.length > 3) {
 				return;
@@ -429,16 +436,19 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		if (!tempValus.isEmpty()) {
 			curPrice = tempValus.get(0);
 		}
-		tempValus.add(curPrice);
 		List<Float> values = new ArrayList<>();
 		int tempValuesSize = tempValus.size();
 		for (int i = tempValuesSize - 1; i >= 0; i--) {
 			values.add(tempValus.get(i));
 		}
+		values.add(curPrice);
 //		values.add(curentPrice);
 		List<String> xtitle = new ArrayList<String>();
 		for (int i = 0; i < 8; i++) {
 			StringBuffer buffer = new StringBuffer();
+			if (timeList.size() <= (7 - i) * 5) {
+				continue;
+			}
 			buffer.append(timeList.get((7 - i) * 5).substring(8, 12));
 			buffer.insert(2, " : ");
 			xtitle.add(buffer.toString());

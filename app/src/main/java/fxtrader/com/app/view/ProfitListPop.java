@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.constant.IntentItem;
@@ -228,7 +229,7 @@ public class ProfitListPop extends PopupWindow {
                                 }
                             }
                         }
-                        Toast.makeText(mContext, entity.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AppApplication.getInstance().getBaseContext(), entity.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
 

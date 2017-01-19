@@ -18,7 +18,7 @@ public class PixelTools {
 				.getDefaultDisplay().getMetrics(displayMetrics);
 		int screenWidth = displayMetrics.widthPixels;
 		int screenHeight = displayMetrics.heightPixels;
-		float ratioWidth = (float) screenWidth / 480;
+		float ratioWidth = (float) screenWidth / 600;
 		float ratioHeight = (float) screenHeight / 800;
 		return Math.min(ratioWidth, ratioHeight);
 	}
