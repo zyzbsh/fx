@@ -589,12 +589,13 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         public void onReceive(Context context, Intent intent) {
             mPositionInfoList = (List<PositionInfoEntity>) intent.getSerializableExtra(IntentItem.POSITION_LIST);
             if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
-                mTitleProfitCtr.show();
+
                 if (mProfitListPop == null) {
                     mProfitListPop = new ProfitListPop(getActivity());
                 }
-                if (mTitleProfitCtr.isProfitViewShow() && mMarketentity != null) {
+                if (mMarketentity != null) {
                     List<PositionInfoEntity> list = getPopProfitList(mMarketentity, mPositionInfoList);
+                    mTitleProfitCtr.show();
                     if (mProfitListPop != null) {
                         mProfitListPop.addData(list, mPositionInfoList.size());
                     }
