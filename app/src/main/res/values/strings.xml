@@ -99,6 +99,7 @@
     <string name="doubt_close_position">您确定要平仓么？</string>
     <string name="position_list">持仓信息</string>
     <string name="total_break_even">总盈亏</string>
+    <string name="total_profit">总盈亏：￥ </string>
     <string name="profit_num">+%1$s</string>
     <string name="loss_num">-%1$s</string>
     <string name="position_list_num">共%1$d持仓单</string>
@@ -142,6 +143,7 @@
     <string name="readed">已读</string>
     <string name="unread">未读</string>
     <string name="time_num">时间：%1$s</string>
+    <string name="sum_deal_count">总手数：%1$s</string>
     <string name="sum_num">总单数：%1$s</string>
     <string name="trade_rules">交易规则</string>
     <string name="production_intro_rules">产品规则介绍</string>

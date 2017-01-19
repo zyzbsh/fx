@@ -1,6 +1,7 @@
 package fxtrader.com.app.mine;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,9 +42,11 @@ public class TradeHistoryActivity extends BaseActivity {
 
     private TextView mTotalBreakEvenTv;
 
-    private TextView mPositionListSizeTv;
-
     private TextView mTotalTv;
+
+    private TextView mTotalDealCountTv;
+
+    private DataAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,16 +59,16 @@ public class TradeHistoryActivity extends BaseActivity {
 
     private void initViews() {
 
+        mTotalDealCountTv = (TextView) findViewById(R.id.trade_history_sum_deal_count_tv);
         mTotalTv = (TextView) findViewById(R.id.trade_history_sum_tv);
         mTotalBreakEvenTv = (TextView) findViewById(R.id.trade_history_break_even_num_tv);
-        mPositionListSizeTv = (TextView) findViewById(R.id.trade_history_size_tv);
 
         mRecyclerView = (LRecyclerView) findViewById(R.id.trade_history_rec);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setPullRefreshEnabled(false);
 
-        DataAdapter adapter = new DataAdapter(this);
-        LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(this, adapter);
+        mAdapter = new DataAdapter(this);
+        LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(this, mAdapter);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
     }
 
@@ -90,7 +93,18 @@ public class TradeHistoryActivity extends BaseActivity {
             PositionInfoEntity info = mDataList.get(position);
 
             ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.breakEvenTv.setText(String.valueOf(info.getProfitAndLoss()));
+            double profit = info.getProfitAndLoss();
+            if (profit > 0) {
+                viewHolder.breakEvenTv.setText("+" + profit);
+                viewHolder.breakEvenTv.setTextColor(Color.parseColor("#e83743"));
+            } else {
+                if (profit == 0) {
+                    viewHolder.breakEvenTv.setText(profit + "");
+                } else {
+                    viewHolder.breakEvenTv.setText("-" + profit);
+                }
+                viewHolder.breakEvenTv.setTextColor(Color.parseColor("#09cd29"));
+            }
             String type = String.valueOf(info.getDealCount()) + " 手";
             String dealDirection;
             if ("UP".equals(info.getDealDirection())) {
@@ -101,7 +115,7 @@ public class TradeHistoryActivity extends BaseActivity {
             viewHolder.priceTv.setText(type + dealDirection);
             ContractInfoEntity contractInfoEntity = ContractUtil.getContractInfoMap().get(info.getContractCode());
             if (contractInfoEntity != null) {
-                viewHolder.nameTv.setText(contractInfoEntity.getName());
+                viewHolder.nameTv.setText("(" + contractInfoEntity.getName() + ")");
             }
             viewHolder.timeTv.setText(DateTools.changeToDate2(info.getSellingDate()));
         }
@@ -140,13 +154,28 @@ public class TradeHistoryActivity extends BaseActivity {
 
                     if (mPositionInfoList != null && !mPositionInfoList.isEmpty()) {
                         double sum = 0;
+                        int sumDealCount = 0;
                         for (PositionInfoEntity position : mPositionInfoList) {
                             sum = sum + position.getProfitAndLoss();
+                            sumDealCount = sumDealCount + position.getDealCount();
                         }
-                        mTotalBreakEvenTv.setText(String.valueOf(sum));
+                        mAdapter.setDataList(mPositionInfoList);
+                        if (sum > 0) {
+                            mTotalBreakEvenTv.setText("+" + sum);
+                            mTotalBreakEvenTv.setTextColor(Color.parseColor("#e83743"));
+                        } else {
+                            if (sum == 0) {
+                                mTotalBreakEvenTv.setText(sum + "");
+                            } else {
+                                mTotalBreakEvenTv.setText("-" + sum);
+                            }
+                            mTotalBreakEvenTv.setTextColor(Color.parseColor("#09cd29"));
+                        }
                         mTotalTv.setText(getString(R.string.position_list_num,mPositionInfoList.size()));
+                        mTotalDealCountTv.setText(getString(R.string.sum_deal_count, sumDealCount));
                     } else {
                         mTotalTv.setText(getString(R.string.position_list_num, 0));
+                        mTotalDealCountTv.setText(getString(R.string.sum_deal_count, 0));
                     }
                 }
             }
@@ -180,11 +209,6 @@ public class TradeHistoryActivity extends BaseActivity {
                 PositionListEntity entity = response.body();
                 if (entity != null && entity.getObject() != null) {
                     List<PositionInfoEntity> list = entity.getObject().getContent();
-                    if (list == null) {
-                        mPositionListSizeTv.setText(getString(R.string.position_list_num,0));
-                    } else {
-                        mPositionListSizeTv.setText(getString(R.string.position_list_num, list.size()));
-                    }
                 }
             }
 

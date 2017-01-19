@@ -168,7 +168,9 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
 
                 @Override
                 public void onFailure(Call<LoginResponseEntity> call, Throwable t) {
-                    Log.e("zyu", t.getMessage());
+                    if (t != null && t.getMessage() != null) {
+                        Log.e("zyu", t.getMessage());
+                    }
                 }
             });
         } catch (Exception e) {
