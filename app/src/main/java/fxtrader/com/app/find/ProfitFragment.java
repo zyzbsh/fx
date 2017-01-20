@@ -65,6 +65,7 @@ public class ProfitFragment extends BaseFragment implements View.OnClickListener
 
         mRecyclerView = (LRecyclerView) view.findViewById(R.id.find_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setPullRefreshEnabled(false);
         mAdapter = new DataAdapter(getActivity());
         LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(getContext(), mAdapter);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);

@@ -12,6 +12,7 @@ public final class IntentItem {
     public static final int REQUEST_POSITIONS_FOLLOWED = 105;
     public static final int REQUEST_PERSONAL_INFO = 106;
     public static final int REQUEST_POSITION_LIST = 107;
+    public static final int REQUEST_ORDER_DETAIL = 108;
     public static final String LOGIN = "login";
     public static final String ACTION_PRICE = "fxtrader.com.app.price";
     public static final String ACTION_POSITION_LIST = "fxtrader.com.app.positions";
@@ -38,4 +39,6 @@ public final class IntentItem {
     public static final String NICKNAME = "nickname";
     public static final String AVATAR_URL = "avatar_url";
     public static final String NETWORK_CONNECTED = "network_connected";
+
+    public static final String POSITION_ID = "position_id";
 }

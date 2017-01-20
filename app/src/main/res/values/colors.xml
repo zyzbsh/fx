@@ -27,4 +27,7 @@
     <color name="color_00">#8A000000</color>
     <color name="transparent">#00000000</color>
     <color name="bg_build_position">#50000000</color>
+    <color name="press_us_color">#ecf0f1</color>
+    <drawable name="transparent">#00000000</drawable>
+    <color name="iab_green_bg">#00cc62</color>
 </resources>

@@ -18,6 +18,7 @@ import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.entity.ClosePositionResponse;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.MarketEntity;
@@ -30,6 +31,7 @@ import fxtrader.com.app.http.api.ContractApi;
 import fxtrader.com.app.tools.ContractUtil;
 import fxtrader.com.app.tools.DateTools;
 import fxtrader.com.app.tools.LogZ;
+import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.BuildPositionDialog;
 import fxtrader.com.app.view.ClosePositionDialog;
 import retrofit2.Call;
@@ -270,9 +272,62 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
 
 
     private void confirmClosePosition() {
-        //TODO
-        ClosePositionDialog dialog = new ClosePositionDialog(this);
+        ClosePositionDialog dialog = new ClosePositionDialog(this, mPositionInfo.getContractName());
+        dialog.setDialogListener(new ClosePositionDialog.DialogListener() {
+            @Override
+            public void ok() {
+                closePositionRequest(mPositionInfo.getId());
+            }
+        });
         dialog.show();
+    }
+
+    private void closePositionRequest(String id){
+        LogZ.i("closePositionRequest");
+        showProgressDialog();
+        ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
+        String token = ParamsUtil.getToken();
+        Call<ClosePositionResponse> request = dataApi.closePosition(token, getClosePositionParams(id));
+        request.enqueue(new Callback<ClosePositionResponse>() {
+            @Override
+            public void onResponse(Call<ClosePositionResponse> call, Response<ClosePositionResponse> response) {
+                ClosePositionResponse entity = response.body();
+                LogZ.i("response:  " + entity.toString());
+                if (entity != null) {
+                    if (entity.isSuccess()) {
+                        String tempId = entity.getObject().getId();
+                        LogZ.i("tempId = " + tempId);
+                        Intent intent = getIntent();
+                        intent.putExtra(IntentItem.POSITION_ID, tempId);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    } else {
+                        showToastShort(entity.getMessage());
+                    }
+                }
+
+
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onFailure(Call<ClosePositionResponse> call, Throwable t) {
+                if (t != null && t.getMessage() != null) {
+                    LogZ.e(t.getMessage());
+                } else {
+                    LogZ.e("Throwable null");
+                }
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    private Map<String, String> getClosePositionParams(String id) {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.storage.close");
+        params.put("storageId", id);
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
     }
 
     private BroadcastReceiver mPriceReceiver;

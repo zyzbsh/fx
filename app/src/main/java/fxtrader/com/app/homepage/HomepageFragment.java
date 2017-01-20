@@ -153,17 +153,21 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mPriceReceiver != null) {
-            getActivity().unregisterReceiver(mPriceReceiver);
-        }
-        if (mLoginReceiver != null) {
-            getActivity().unregisterReceiver(mLoginReceiver);
-        }
-        if (mPositionListReceiver != null) {
-            getActivity().unregisterReceiver(mPositionListReceiver);
-        }
-        if (mNetworkChangeListener != null) {
-            getActivity().unregisterReceiver(mNetworkChangeListener);
+        try {
+            if (mPriceReceiver != null) {
+                getActivity().unregisterReceiver(mPriceReceiver);
+            }
+            if (mLoginReceiver != null) {
+                getActivity().unregisterReceiver(mLoginReceiver);
+            }
+            if (mPositionListReceiver != null) {
+                getActivity().unregisterReceiver(mPositionListReceiver);
+            }
+            if (mNetworkChangeListener != null) {
+                getActivity().unregisterReceiver(mNetworkChangeListener);
+            }
+        } catch (Exception e) {
+            LogZ.e(e.getMessage());
         }
         getActivity().stopService(new Intent(getActivity(), PriceService.class));
         getActivity().stopService(new Intent(getActivity(), PositionService.class));

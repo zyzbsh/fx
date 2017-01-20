@@ -3,6 +3,8 @@ package fxtrader.com.app;
 import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.HandlerThread;
 
 import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.PriceEntity;
@@ -12,6 +14,7 @@ import fxtrader.com.app.http.NetConfig;
 import fxtrader.com.app.http.NetConfigBuilder;
 import fxtrader.com.app.http.NetUtils;
 import fxtrader.com.app.http.NetworkStatus;
+import fxtrader.com.app.tools.MyUncaughtExceptionHandler;
 
 /**
  * Created by pc on 2016/11/17.
@@ -30,11 +33,16 @@ public class AppApplication extends Application{
 
     private NetworkStatus mNetworkStatus;
 
+    Handler handler;
+
+    HandlerThread localHandlerThread;
+
     @Override
     public void onCreate() {
         super.onCreate();
         sApp = this;
         initNetConfig();
+        setupExceptionCaught();
     }
 
     private void initNetConfig() {
@@ -98,5 +106,12 @@ public class AppApplication extends Application{
             mNetworkStatus = new NetworkStatus(getApplicationContext());
         }
         return mNetworkStatus;
+    }
+
+    private void setupExceptionCaught() {
+        localHandlerThread = new HandlerThread("fxtrader");
+        localHandlerThread.start();
+        handler = new Handler(localHandlerThread.getLooper());
+        Thread.setDefaultUncaughtExceptionHandler(new MyUncaughtExceptionHandler());
     }
 }

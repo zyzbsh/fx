@@ -45,6 +45,7 @@ public class WinStreamFragment extends BaseFragment implements View.OnClickListe
         view.findViewById(R.id.find_more_tv).setOnClickListener(this);
         mRecyclerView = (LRecyclerView) view.findViewById(R.id.find_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setPullRefreshEnabled(false);
         DataAdapter adapter = new DataAdapter(getActivity());
         LRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter = new LRecyclerViewAdapter(getContext(), adapter);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);

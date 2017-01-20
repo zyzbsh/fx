@@ -154,12 +154,14 @@
         <item name="android:textSize">16sp</item>
         <item name="android:layout_centerInParent">true</item>
     </style>
+
     <style name="OrderDetailTv">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/gray_6</item>
         <item name="android:textSize">14sp</item>
     </style>
+
     <style name="MineItemTv">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -178,12 +180,14 @@
         <item name="android:background">@color/white</item>
         <item name="android:gravity">center</item>
     </style>
+
     <style name="PersonalCenterItemIcon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentRight">true</item>
     </style>
+
     <style name="FindWinStreamFlagTv">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -206,8 +210,61 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
     <style name="DialogAnimation" parent="android:Animation">
         <item name="@android:windowEnterAnimation">@anim/dialog_enter</item>
         <item name="@android:windowExitAnimation">@anim/dialog_exit</item>
     </style>
+
+    <style name="dialog_layout">
+        <item name="android:layout_width">310dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/dialog_specific_background</item>
+    </style>
+
+    <style name="dialog_title">
+        <item name="android:textSize">19dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_marginLeft">20dip</item>
+    </style>
+
+    <style name="dialog_line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#dbdbdb</item>
+    </style>
+
+    <style name="listViewBaseStyle" parent="@android:style/Widget.ListView">
+        <item name="android:listSelector">@drawable/common_list_item_bg_state</item>
+        <item name="android:cacheColorHint">@drawable/transparent</item>
+        <item name="android:divider">@drawable/list_line</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
+    <style name="iclouddialog" parent="@style/listViewBaseStyle">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="dialog_btn_negative_style">
+        <item name="android:textSize">19dp</item>
+        <item name="android:text">@string/cancel</item>
+        <item name="android:textColor">@color/iab_green_bg</item>
+        <item name="android:background">@drawable/selector_btn_bg_white</item>
+    </style>
+
+    <style name="dialog_btn_positive_style">
+        <item name="android:textSize">19dp</item>
+        <item name="android:text">@string/sure</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/selector_btn_bg_green</item>
+    </style>
+
 </resources>

@@ -1,6 +1,9 @@
 package fxtrader.com.app;
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -10,6 +13,8 @@ import android.widget.RadioGroup;
 import com.igexin.sdk.PushManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.base.BaseFragment;
@@ -18,6 +23,10 @@ import fxtrader.com.app.find.FindFragment;
 import fxtrader.com.app.homepage.HomepageFragment;
 import fxtrader.com.app.login.LoginNewActivity;
 import fxtrader.com.app.mine.MineFragment;
+import fxtrader.com.app.permission.IPermissionCheck;
+import fxtrader.com.app.permission.IPermissionRequest;
+import fxtrader.com.app.permission.PermissionChecker;
+import fxtrader.com.app.permission.PermissionRequester;
 import fxtrader.com.app.protection.ProtectionFragment;
 import fxtrader.com.app.tools.LogZ;
 
@@ -25,6 +34,10 @@ import fxtrader.com.app.tools.LogZ;
  * 主页
  */
 public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
+
+    private static final String[] PERMISSIONS_REQUEST = new String[]{
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     private View[] mBottomTabBgViews = new View[4];
 
@@ -40,6 +53,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
 
     private ArrayList<Integer> mCheckedIdRecords = new ArrayList<>();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +62,10 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         initBottomLayout();
         PushManager.getInstance().initialize(this.getApplicationContext(), fxtrader.com.app.service.PushService.class);
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), fxtrader.com.app.service.PushIntentService.class);
+        checkPermission();
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -66,6 +83,37 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
             }
             mRadioGroup.check(R.id.main_tab_homepage_btn);
         }
+    }
+
+    private void checkPermission() {
+        PermissionChecker.with(this).check(PERMISSIONS_REQUEST)
+                .subscribe(new IPermissionCheck() {
+
+                    @Override
+                    public void result(List<String> deniedPermissions) {
+                        if (!deniedPermissions.isEmpty()) {
+                            requestPermission(deniedPermissions);
+                        }
+                    }
+                });
+    }
+
+    private void requestPermission(List<String> deniedPermissions) {
+        String[] denieds = new String[deniedPermissions.size()];
+        deniedPermissions.toArray(denieds);
+        PermissionRequester.with(this).request(denieds)
+                .subscribe(new IPermissionRequest() {
+
+                    @Override
+                    public void onDenied(String[] permissions) {
+                        ArrayList<String> list = new ArrayList<String>(Arrays
+                                .asList(permissions));
+                    }
+
+                    @Override
+                    public void onAllGranted() {
+                    }
+                });
     }
 
     private void initBottomLayout() {

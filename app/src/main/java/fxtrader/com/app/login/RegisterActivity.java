@@ -2,6 +2,7 @@ package fxtrader.com.app.login;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -12,6 +13,7 @@ import java.util.Map;
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.entity.CommonResponse;
+import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.UserApi;
@@ -157,6 +159,55 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         params.put("agentId", agentId);
         params.put("registerIp", "");
         params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    private void update(){
+        String nickname = mNicknameEdt.getText().toString().trim();
+        if (TextUtils.isEmpty(nickname)) {
+            showToastShort("请输入昵称");
+            return;
+        }
+        showProgressDialog();
+        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
+        String token = ParamsUtil.getToken();
+        Call<CommonResponse> request = userApi.updateInfo(token, getParams());
+        request.enqueue(new Callback<CommonResponse>() {
+            @Override
+            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+                dismissProgressDialog();
+                CommonResponse entity = response.body();
+                if (entity != null) {
+                    showToastShort(entity.getMessage());
+                    if (entity.isSuccess()) {
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CommonResponse> call, Throwable t) {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    private Map<String, String> getParams(){
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.users.updateUserInfo");
+//        if (TextUtils.isEmpty(mUploadAvatarUrl)) {
+//            mUploadAvatarUrl = mUser.getObject().getHeadimgurl();
+//        }
+//        params.put("headimgurl", mUploadAvatarUrl);
+//        String nickname = mNicknameEdt.getText().toString().trim();
+//        params.put("nickname", mNicknameEdt.getText().toString().trim());
+//        int sex;
+//        if ("男".equals(mSexChecked)) {
+//            sex = HttpConstant.SexType.MALE;
+//        } else {
+//            sex = HttpConstant.SexType.FEMALE;
+//        }
+//        params.put("sex", sex + "");
+//        params.put("sign", ParamsUtil.sign(params));
         return params;
     }
 }

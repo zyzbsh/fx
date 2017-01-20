@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,39 @@ public class PositionListActivity extends BaseActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == IntentItem.REQUEST_ORDER_DETAIL){
+            PositionInfoEntity tempInfoEntity = null;
+            if (data == null) {
+                return;
+            }
+            String tempId = data.getStringExtra(IntentItem.POSITION_ID);
+            if (TextUtils.isEmpty(tempId)) {
+                return;
+            }
+            for (PositionInfoEntity infoEntity : mCustomAdapter.getDataList()) {
+
+                if (tempId.equals(infoEntity.getId())) {
+                    tempInfoEntity = infoEntity;
+                    break;
+                }
+            }
+            if (tempInfoEntity != null) {
+                mCustomAdapter.getDataList().remove(tempInfoEntity);
+                LogZ.i("size = " + mCustomAdapter.getDataList().size());
+                if (mMarketEntity != null) {
+                    setProfitAndLoss(mCustomAdapter.getDataList());
+                }
+                String str = getString(R.string.position_list_num, mCustomAdapter.getDataList().size());
+                UIUtil.setForegroundColor(mPositionListSizeTv, str, Color.parseColor("#e83743"), 1, 1);
+            }
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         back();
     }
@@ -127,7 +161,7 @@ public class PositionListActivity extends BaseActivity {
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(PositionListActivity.this, OrderDetailActivity.class);
                 intent.putExtra(IntentItem.ORDER_DETAIL, mCustomAdapter.getDataList().get(position));
-                startActivity(intent);
+                startActivityForResult(intent, IntentItem.REQUEST_ORDER_DETAIL);
             }
 
             @Override
@@ -373,7 +407,11 @@ public class PositionListActivity extends BaseActivity {
         for (PositionInfoEntity entity : list) {
             dealCount = entity.getDealCount() + dealCount;
         }
-        double percent = sum / dealCount;
+
+        double percent = 0;
+        if (dealCount != 0) {
+            percent = sum / dealCount;
+        }
         mPercentTv.setText("(" + ContractUtil.getDouble(percent, 2) + "%)" );
     }
 
