@@ -140,6 +140,10 @@
             android:name=".mine.WebHtmlActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".homepage.WebVideoActivity"
+            android:screenOrientation="landscape" />
+
         <activity android:name=".mine.MyFollowActivity"
             android:screenOrientation="portrait"/>
 

@@ -12,11 +12,16 @@ import java.util.Map;
 
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
+import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.CommonResponse;
+import fxtrader.com.app.entity.LoginResponseEntity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.UserApi;
+import fxtrader.com.app.tools.Base64;
+import fxtrader.com.app.tools.EncryptionTool;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.view.ValidationCode;
 import retrofit2.Call;
@@ -129,6 +134,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         final String mGraphicalCode = mGraphicalCodeEdt.getText().toString().trim();
         final String mPhoneCode = mPhoneCodeEdt.getText().toString().trim();
 
+        if (!pwdAgain.equals(pwd)) {
+            showToastShort("请再次输入密码");
+            return;
+        }
+
         UserApi userApi = RetrofitUtils.createApi(UserApi.class);
         final Call<CommonResponse> respo = userApi.register(getRegisterParams(account, pwd, agentId));
         respo.enqueue(new Callback<CommonResponse>() {
@@ -136,7 +146,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
                 CommonResponse entity = response.body();
                 if (entity != null) {
-                    showToastShort(entity.getMessage());
+                    if (entity.isSuccess()) {
+                        login(account, pwd);
+                    } else {
+                        showToastShort(entity.getMessage());
+                    }
                 }
             }
 
@@ -177,16 +191,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
                 dismissProgressDialog();
                 CommonResponse entity = response.body();
-                if (entity != null) {
-                    showToastShort(entity.getMessage());
-                    if (entity.isSuccess()) {
-                    }
-                }
+                showToastShort("登录成功");
+                setResult(RESULT_OK);
+                finish();
             }
 
             @Override
             public void onFailure(Call<CommonResponse> call, Throwable t) {
                 dismissProgressDialog();
+                showToastShort("修改昵称失败");
             }
         });
     }
@@ -208,6 +221,51 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 //        }
 //        params.put("sex", sex + "");
 //        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    private void login(final String account, String pwd){
+        try {
+            UserApi userApi = RetrofitUtils.createApi(UserApi.class);
+            Call<LoginResponseEntity> repos = userApi.login(getLoginParams(account, pwd));
+            repos.enqueue(new Callback<LoginResponseEntity>() {
+                @Override
+                public void onResponse(Call<LoginResponseEntity> call, Response<LoginResponseEntity> response) {
+                    LoginResponseEntity entity = response.body();
+                    String token = entity.getAccess_token();
+                    if (TextUtils.isEmpty(token)) {
+                        dismissProgressDialog();
+                        showToastShort("登录失败");
+                        return;
+                    } else {
+                        LoginConfig.getInstance().saveUser(account, entity.getAccess_token());
+                        update();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponseEntity> call, Throwable t) {
+                    if (t != null && t.getMessage() != null) {
+                        Log.e("zyu", t.getMessage());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            LogZ.e(e.getMessage());
+        }
+    }
+
+    private Map<String, String> getLoginParams(String account, String pwd) throws Exception {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.oauth.token");
+        params.put("grant_type", "password");
+//        params.put("membercode", "RV");
+        String str = account + ":" + pwd;
+        byte[] base64 = Base64.encode(str.getBytes(), Base64.NO_WRAP);
+        byte[] aes = EncryptionTool.aes(base64, ParamsUtil.CLIENT_SECRET.getBytes());
+        params.put("subject", new String(Base64.encode(aes, Base64.NO_WRAP)));
+        params.put("sign", ParamsUtil.sign(params));
         return params;
     }
 }

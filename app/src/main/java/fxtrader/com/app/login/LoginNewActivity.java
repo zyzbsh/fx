@@ -77,11 +77,23 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_new);
+        setContentLayout(R.layout.activity_login_new);
         mFromMine = getIntent().getBooleanExtra(IntentItem.MINE, false);
         initViews();
         setView();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (RESULT_OK != resultCode) {
+            return;
+        }
+        if (requestCode == IntentItem.REQUEST_REGISTER){
+            setResult(RESULT_OK);
+            finish();
+        }
+    }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -96,9 +108,6 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
         findViewById(R.id.login_btn).setOnClickListener(this);
         findViewById(R.id.login_pwd_forgot_tv).setOnClickListener(this);
         mRegisterTipTv.setOnClickListener(this);
-
-        mAccountEdt.setText("13668902696");
-        mPwdEdt.setText("123456");
     }
 
     private void initBannerView(){
@@ -202,7 +211,8 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void register() {
-        openActivity(RegisterActivity.class);
+        Intent intent = new Intent(this, LoginNewActivity.class);
+        startActivityForResult(intent, IntentItem.REQUEST_REGISTER);
     }
 
     private Map<String, String> getParams(String account, String pwd) throws Exception {

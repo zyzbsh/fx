@@ -545,10 +545,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 vo.init();
                 mMarketentity = vo;
                 AppApplication.getInstance().setMarketEntity(vo);
-                if (!masterRequested) {
-                    masterRequested = true;
-                    requestMaster();
-                }
+                requestMaster();
                 if (mCurDataLineFragment != null) {
                     String dataType = mCurDataLineFragment.getDataType();
                     String data = vo.getData(dataType);

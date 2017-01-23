@@ -42,6 +42,7 @@
                 android:drawableLeft="@mipmap/icon_phone"
                 android:drawablePadding="5dp"
                 android:paddingLeft="15dp"
+                android:inputType="number"
                 android:textSize="15sp" />
 
             <View

@@ -159,6 +159,7 @@ public class TradeHistoryActivity extends BaseActivity {
                             sum = sum + position.getProfitAndLoss();
                             sumDealCount = sumDealCount + position.getDealCount();
                         }
+                        sum = ContractUtil.getDouble(sum, 2);
                         mAdapter.setDataList(mPositionInfoList);
                         if (sum > 0) {
                             mTotalBreakEvenTv.setText("+" + sum);
@@ -171,10 +172,10 @@ public class TradeHistoryActivity extends BaseActivity {
                             }
                             mTotalBreakEvenTv.setTextColor(Color.parseColor("#09cd29"));
                         }
-                        mTotalTv.setText(getString(R.string.position_list_num,mPositionInfoList.size()));
+                        mTotalTv.setText(getString(R.string.sum_num,mPositionInfoList.size()));
                         mTotalDealCountTv.setText(getString(R.string.sum_deal_count, sumDealCount));
                     } else {
-                        mTotalTv.setText(getString(R.string.position_list_num, 0));
+                        mTotalTv.setText(getString(R.string.sum_num, 0));
                         mTotalDealCountTv.setText(getString(R.string.sum_deal_count, 0));
                     }
                 }

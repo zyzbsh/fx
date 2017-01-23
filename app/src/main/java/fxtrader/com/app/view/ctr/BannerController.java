@@ -2,6 +2,7 @@ package fxtrader.com.app.view.ctr;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -26,10 +27,13 @@ import java.util.Map;
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.R;
 import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.AdEntity;
+import fxtrader.com.app.homepage.WebVideoActivity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.CommunityApi;
+import fxtrader.com.app.mine.WebHtmlActivity;
 import fxtrader.com.app.tools.UIUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -166,7 +170,12 @@ public class BannerController {
 
                     @Override
                     public void onClick(View v) {
-
+                        String videoUrl = entity.getContentUrl();
+                        if (!TextUtils.isEmpty(videoUrl)) {
+                            Intent intent = new Intent(mActivity, WebVideoActivity.class);
+                            intent.putExtra(IntentItem.VIDEO_URL, videoUrl);
+                            mActivity.startActivity(intent);
+                        }
                     }
                 });
             }

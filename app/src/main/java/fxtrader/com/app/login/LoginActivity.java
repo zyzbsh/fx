@@ -87,9 +87,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         findViewById(R.id.login_btn).setOnClickListener(this);
         findViewById(R.id.login_pwd_forgot_tv).setOnClickListener(this);
         mRegisterTipTv.setOnClickListener(this);
-
-        mAccountEdt.setText("13668902696");
-        mPwdEdt.setText("123456");
     }
 
     private void setView() {
