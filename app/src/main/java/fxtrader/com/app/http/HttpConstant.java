@@ -13,7 +13,7 @@ public final class HttpConstant {
 
     public final static int REFRESH_POSITION_LIST = 1000;
 
-    public final static int REFRESH_USER_INFO = 10000;
+    public final static int REFRESH_USER_INFO = 1000;
 
     public static final int DEFAULT_ORGAN_ID = 0;
 

@@ -108,6 +108,16 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
         findViewById(R.id.login_btn).setOnClickListener(this);
         findViewById(R.id.login_pwd_forgot_tv).setOnClickListener(this);
         mRegisterTipTv.setOnClickListener(this);
+
+        String account = LoginConfig.getInstance().getAccount();
+        if (!TextUtils.isEmpty(account)) {
+            mAccountEdt.setText(account);
+        }
+
+        String pwd = LoginConfig.getInstance().getPwd();
+        if (!TextUtils.isEmpty(pwd)) {
+            mPwdEdt.setText(pwd);
+        }
     }
 
     private void initBannerView(){
@@ -169,7 +179,7 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
                         showToastShort("账户或密码错误");
                         return;
                     }
-                    LoginConfig.getInstance().saveUser(account, entity.getAccess_token());
+                    LoginConfig.getInstance().saveUser(account, pwd, entity.getAccess_token());
                     getTickets();
                     getUserInfo();
                     mHandler.sendEmptyMessage(0);

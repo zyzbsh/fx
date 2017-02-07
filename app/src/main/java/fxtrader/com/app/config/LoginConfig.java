@@ -14,6 +14,7 @@ import fxtrader.com.app.http.HttpConstant;
 public final class LoginConfig {
 
     public static final String ACCOUNT = "account";
+    public static final String PWD = "pwd";
     public static final String TOKEN = "token";
     public static final String TIME = "time";
     public static final String ID = "id";
@@ -34,9 +35,10 @@ public final class LoginConfig {
         return sConfig;
     }
 
-    public void saveUser(String account, String token) {
+    public void saveUser(String account, String pwd, String token) {
         SharedPreferences.Editor editor = mSp.edit();
         editor.putString(ACCOUNT, account);
+        editor.putString(PWD, pwd);
         editor.putString(TOKEN, token);
         editor.putString(TIME, String.valueOf(System.currentTimeMillis()));
         editor.commit();
@@ -69,6 +71,10 @@ public final class LoginConfig {
 
     public String getAccount(){
         return mSp.getString(ACCOUNT, "");
+    }
+
+    public String getPwd(){
+        return mSp.getString(PWD, "");
     }
 
     public String getToken() {
