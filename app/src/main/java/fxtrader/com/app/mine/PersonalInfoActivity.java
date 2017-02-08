@@ -437,7 +437,7 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void loginOut(){
-        LoginConfig.getInstance().clear();
+        LoginConfig.getInstance().logOut();
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(IntentItem.LOG_OUT, true);
         startActivity(intent);

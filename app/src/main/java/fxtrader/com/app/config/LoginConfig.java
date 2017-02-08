@@ -98,9 +98,10 @@ public final class LoginConfig {
     }
 
 
-    public void clear() {
+    public void logOut() {
         SharedPreferences.Editor editor = mSp.edit();
-        editor.clear();
+        editor.putString(TOKEN, "");
+        editor.putString(TIME, "");
         editor.commit();
     }
 }

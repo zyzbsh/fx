@@ -224,7 +224,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         return params;
     }
 
-    private void login(final String account, String pwd){
+    private void login(final String account, final String pwd){
         try {
             UserApi userApi = RetrofitUtils.createApi(UserApi.class);
             Call<LoginResponseEntity> repos = userApi.login(getLoginParams(account, pwd));
@@ -238,7 +238,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         showToastShort("登录失败");
                         return;
                     } else {
-                        LoginConfig.getInstance().saveUser(account, entity.getAccess_token());
+                        LoginConfig.getInstance().saveUser(account, pwd, entity.getAccess_token());
                         update();
                     }
 

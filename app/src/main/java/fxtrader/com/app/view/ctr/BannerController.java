@@ -34,6 +34,7 @@ import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.CommunityApi;
 import fxtrader.com.app.mine.WebHtmlActivity;
+import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -171,6 +172,7 @@ public class BannerController {
                     @Override
                     public void onClick(View v) {
                         String videoUrl = entity.getContentUrl();
+                        LogZ.i("videoUrl = " + videoUrl);
                         if (!TextUtils.isEmpty(videoUrl)) {
                             Intent intent = new Intent(mActivity, WebVideoActivity.class);
                             intent.putExtra(IntentItem.VIDEO_URL, videoUrl);

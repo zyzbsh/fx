@@ -87,6 +87,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         findViewById(R.id.login_btn).setOnClickListener(this);
         findViewById(R.id.login_pwd_forgot_tv).setOnClickListener(this);
         mRegisterTipTv.setOnClickListener(this);
+
+        String account = LoginConfig.getInstance().getAccount();
+        if (!TextUtils.isEmpty(account)) {
+            mAccountEdt.setText(account);
+        }
+
+        String pwd = LoginConfig.getInstance().getPwd();
+        if (!TextUtils.isEmpty(pwd)) {
+            mPwdEdt.setText(pwd);
+        }
     }
 
     private void setView() {
@@ -142,7 +152,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         return;
                     }
                     mHandler.sendEmptyMessage(0);
-                    LoginConfig.getInstance().saveUser(account, entity.getAccess_token());
+                    LoginConfig.getInstance().saveUser(account, pwd, entity.getAccess_token());
                     getTickets();
                     getUserInfo();
                 }
