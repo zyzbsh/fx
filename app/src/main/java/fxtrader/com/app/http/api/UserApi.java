@@ -3,6 +3,7 @@ package fxtrader.com.app.http.api;
 import java.util.Map;
 
 import fxtrader.com.app.entity.AnnouncementListEntity;
+import fxtrader.com.app.entity.BankBindEntity;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.CurrencyListEntity;
@@ -93,4 +94,9 @@ public interface UserApi {
     @POST("/api/v3/updateUserInfo")
     Call<CommonResponse> updateInfo(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
 
+    @GET("/api/getBindBankcard")
+    Call<BankBindEntity> getBindBankCardInfo(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/unbindBankcard")
+    Call<BankBindEntity> unbindBankCard(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 }
