@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.util.HashMap;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 /**
@@ -154,6 +155,9 @@ public class LogZ {
 	public static void e(String str) {
 		if (logLevel <= Log.ERROR) {
 			String name = getFunctionInfo();
+			if (TextUtils.isEmpty(str)) {
+				str = "缺少错误信息。";
+			}
 			if (name != null) {
 				Log.e(name, str);
 			} else {

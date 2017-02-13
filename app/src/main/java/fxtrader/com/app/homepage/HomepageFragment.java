@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -353,10 +354,12 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                     fragment.setArguments(bundle);
                     fragments.add(fragment);
                 }
-                FragmentAdapter adapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), fragments);
-                mViewPager.setAdapter(adapter);
-                mViewPager.setOffscreenPageLimit(mContractList.size() - 1);
-//                startDataTimer();
+                if (getActivity() != null) {
+                    FragmentAdapter adapter = new FragmentAdapter(getActivity().getSupportFragmentManager(), fragments);
+                    mViewPager.setAdapter(adapter);
+                    mViewPager.setOffscreenPageLimit(mContractList.size() - 1);
+                }
+//              5  startDataTimer();
                 registerPriceReceiver();
                 getActivity().startService(new Intent(getActivity(), PriceService.class));
             }
@@ -792,7 +795,11 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             public void onResponse(Call<SystemBulletinEntity> call, Response<SystemBulletinEntity> response) {
                 SystemBulletinEntity entity = response.body();
                 if (entity != null && entity.isSuccess()) {
-                    SystemBulletinDialog dialog = new SystemBulletinDialog(getContext(), entity);
+                    Context context = getContext();
+                    if (context == null) {
+                        context = AppApplication.getInstance().getApplicationContext();
+                    }
+                    SystemBulletinDialog dialog = new SystemBulletinDialog(context, entity);
                     dialog.show();
                 }
             }
@@ -844,7 +851,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                         }
                     }
                     ViewGroup.LayoutParams mParams = mRececlerView.getLayoutParams();
-                    mParams.height = UIUtil.dip2px(getActivity(), 48) * size;
+                    mParams.height = UIUtil.dip2px(AppApplication.getInstance().getApplicationContext(), 48) * size;
                     mRececlerView.setLayoutParams(mParams);
                 }
             }

@@ -42,9 +42,9 @@ public class ProfitAndLossActivity extends BaseActivity {
 
     private double mStopLoss;
 
-    private State mStopProfitState;
+    private State mStopProfitState = new State();
 
-    private State mStopLossState;
+    private State mStopLossState = new State();
 
     private int mProfitPosition;
 
@@ -57,6 +57,9 @@ public class ProfitAndLossActivity extends BaseActivity {
         mPositionInfoEntity = (PositionInfoEntity) getIntent().getSerializableExtra(IntentItem.POSITION_INFO);
         mStopProfit = mPositionInfoEntity.getProfit();
         mStopLoss = mPositionInfoEntity.getLoss();
+        if (mStopLoss == -1) {
+            mStopLoss = 0;
+        }
         mProfitPosition = (int) Math.abs(mStopProfit * 10);
         mLossPosition = (int) Math.abs(mStopLoss * 10);
         setCancelTv();
@@ -75,7 +78,14 @@ public class ProfitAndLossActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 int profitPercent = (int) Math.abs(mPositionInfoEntity.getProfit() * 10);
-                int lossPercent = (int) Math.abs(mPositionInfoEntity.getLoss() * 10);
+                double loss = mPositionInfoEntity.getLoss();
+                if (loss == -1) {
+                    loss = 0;
+                }
+                int lossPercent = (int) Math.abs(loss * 10);
+                if (mStopProfitState == null || mStopLossState == null) {
+                    return;
+                }
                 if (mStopProfitState.stopPercent == profitPercent && mStopLossState.stopPercent == lossPercent) {
                     return;
                 }
@@ -116,7 +126,7 @@ public class ProfitAndLossActivity extends BaseActivity {
         int stopLossPercent = mStopLossState.stopPercent;
         String stop = "";
         if (stopLossPercent == 0) {
-            stop = "0";
+            stop = "-1";
         } else {
             stop = "-0." + stopLossPercent;
         }
@@ -127,7 +137,9 @@ public class ProfitAndLossActivity extends BaseActivity {
 
     private void setStopProfitView() {
         mStopProfitRec = (RecyclerView) findViewById(R.id.dialog_build_stop_profit_rec);
-        final CustomAdapter adapter = new CustomAdapter(this, getData(), mProfitPosition);
+        List<State> states = getData();
+        mStopProfitState = states.get(mProfitPosition);
+        final CustomAdapter adapter = new CustomAdapter(this, states, mProfitPosition);
         GridLayoutManager manager = new GridLayoutManager(this, 5);
         mStopProfitRec.setLayoutManager(manager);
         mStopProfitRec.setAdapter(adapter);
@@ -142,7 +154,9 @@ public class ProfitAndLossActivity extends BaseActivity {
 
     private void setStopLossView() {
         mStopLossRec = (RecyclerView) findViewById(R.id.dialog_build_stop_loss_rec);
-        final CustomAdapter adapter = new CustomAdapter(this, getData(), mLossPosition);
+        List<State> states = getData();
+        mStopLossState = states.get(mLossPosition);
+        final CustomAdapter adapter = new CustomAdapter(this, states, mLossPosition);
         GridLayoutManager manager = new GridLayoutManager(this, 5);
         mStopLossRec.setLayoutManager(manager);
         mStopLossRec.setAdapter(adapter);

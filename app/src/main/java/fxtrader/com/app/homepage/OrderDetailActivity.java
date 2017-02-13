@@ -109,7 +109,9 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         mPositionInfo = (PositionInfoEntity) getIntent().getSerializableExtra(IntentItem.ORDER_DETAIL);
         mIsUp = ContractUtil.isUpDirection(mPositionInfo);
         mContractInfo = ContractUtil.getContractInfoMap().get(mPositionInfo.getContractCode());
-        LogZ.i(mContractInfo.toString());
+        if (mContractInfo != null) {
+            LogZ.i(mContractInfo.toString());
+        }
         initViews();
         setViews();
         String code = mPositionInfo.getContractCode();
