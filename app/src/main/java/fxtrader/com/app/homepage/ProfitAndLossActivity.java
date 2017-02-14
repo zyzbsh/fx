@@ -103,7 +103,10 @@ public class ProfitAndLossActivity extends BaseActivity {
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
                 CommonResponse common = response.body();
                 if (common.isSuccess()) {
-                    setResult(RESULT_OK);
+                    Intent data = getIntent();
+                    data.putExtra("profitPercent", mStopProfitState.stopPercent);
+                    data.putExtra("lossPercent", mStopLossState.stopPercent);
+                    setResult(RESULT_OK, data);
                     finish();
                 }
                 showToastLong(common.getMessage());

@@ -227,7 +227,25 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         if (resultCode != RESULT_OK) {
             return;
         }
-        if (requestCode == IntentItem.REQUEST_SET_PROFIT_AND_LOSS) {
+        if (requestCode == IntentItem.REQUEST_SET_PROFIT_AND_LOSS && data != null) {
+            int profit = data.getIntExtra("profitPercent", 100);
+            int loss = data.getIntExtra("lossPercent", 100);
+            if (profit != 100) {
+                if (profit == 0) {
+                    setStopProfitTv(profit);
+                } else {
+                    double p = Double.parseDouble("0." + profit);
+                    setStopProfitTv(p);
+                }
+            }
+            if (loss != 100) {
+                if (loss == 0) {
+                    setStopLossTv(loss);
+                } else {
+                    double l = Double.parseDouble("0." + loss);
+                    setStopLossTv(l);
+                }
+            }
             LogZ.i("改变止盈止损");
         }
     }
