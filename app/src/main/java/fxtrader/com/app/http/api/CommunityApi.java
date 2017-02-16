@@ -7,6 +7,7 @@ import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.FollowOrderCountEntity;
 import fxtrader.com.app.entity.MasterListEntity;
 import fxtrader.com.app.entity.ProfitListEntity;
+import fxtrader.com.app.entity.SaveClientResponse;
 import fxtrader.com.app.entity.SubscribeEntity;
 import fxtrader.com.app.entity.SubscribedPositionListEntity;
 import fxtrader.com.app.entity.SubscribeListEntity;
@@ -74,5 +75,7 @@ public interface CommunityApi {
     @GET("/api/getSystemBulletin")
     Call<SystemBulletinEntity> systembulletin(@QueryMap Map<String, String> params);
 
-
+    @FormUrlEncoded
+    @POST("/api/v3/saveClientId")
+    Call<SaveClientResponse> saveClientId(@FieldMap Map<String, String> params);
 }

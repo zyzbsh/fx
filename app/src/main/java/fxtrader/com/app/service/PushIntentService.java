@@ -73,6 +73,7 @@ public class PushIntentService extends GTIntentService {
     @Override
     public void onReceiveClientId(Context context, String clientid) {
         LogZ.i("onReceiveClientId -> " + "clientid = " + clientid);
+        saveClientId();
     }
 
     @Override
@@ -156,5 +157,9 @@ public class PushIntentService extends GTIntentService {
 
         LogZ.d("onReceiveCommandResult -> " + "appid = " + appid + "\ntaskid = " + taskid + "\nactionid = " + actionid + "\nresult = " + result
                 + "\ncid = " + cid + "\ntimestamp = " + timestamp);
+    }
+
+    private void saveClientId(){
+
     }
 }

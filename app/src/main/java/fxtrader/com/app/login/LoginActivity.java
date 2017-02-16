@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.igexin.sdk.PushManager;
+
 import java.util.Map;
 
 import fxtrader.com.app.R;
@@ -153,6 +155,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     }
                     mHandler.sendEmptyMessage(0);
                     LoginConfig.getInstance().saveUser(account, pwd, entity.getAccess_token());
+                    PushManager.getInstance().initialize(getApplicationContext(), fxtrader.com.app.service.PushService.class);
+                    PushManager.getInstance().registerPushIntentService(getApplicationContext(), fxtrader.com.app.service.PushIntentService.class);
                     getTickets();
                     getUserInfo();
                 }

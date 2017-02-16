@@ -37,6 +37,8 @@ public class AppApplication extends Application{
 
     HandlerThread localHandlerThread;
 
+    private String mGeTuiClientId;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -114,4 +116,13 @@ public class AppApplication extends Application{
         handler = new Handler(localHandlerThread.getLooper());
         Thread.setDefaultUncaughtExceptionHandler(new MyUncaughtExceptionHandler());
     }
+
+    public String setGeTuiClientId(){
+        return mGeTuiClientId;
+    }
+
+    public void setmGeTuiClientId(String clientId){
+        mGeTuiClientId = clientId;
+    }
+
 }

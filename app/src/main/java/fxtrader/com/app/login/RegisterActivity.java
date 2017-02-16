@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.igexin.sdk.PushManager;
+
 import java.util.Map;
 
 import fxtrader.com.app.R;
@@ -239,6 +241,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         return;
                     } else {
                         LoginConfig.getInstance().saveUser(account, pwd, entity.getAccess_token());
+                        PushManager.getInstance().initialize(getApplicationContext(), fxtrader.com.app.service.PushService.class);
+                        PushManager.getInstance().registerPushIntentService(getApplicationContext(), fxtrader.com.app.service.PushIntentService.class);
                         update();
                     }
 

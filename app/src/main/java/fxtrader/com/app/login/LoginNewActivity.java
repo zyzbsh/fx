@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.igexin.sdk.PushManager;
+
 import java.util.Map;
 
 import fxtrader.com.app.R;
@@ -32,6 +34,7 @@ import fxtrader.com.app.http.api.UserApi;
 import fxtrader.com.app.http.manager.UserInfoManager;
 import fxtrader.com.app.tools.Base64;
 import fxtrader.com.app.tools.EncryptionTool;
+import fxtrader.com.app.tools.GeTuiUtil;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.ctr.BannerController;
@@ -180,6 +183,7 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
                         return;
                     }
                     LoginConfig.getInstance().saveUser(account, pwd, entity.getAccess_token());
+                    GeTuiUtil.init();
                     getTickets();
                     getUserInfo();
                     mHandler.sendEmptyMessage(0);
