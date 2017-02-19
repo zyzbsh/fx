@@ -12,6 +12,8 @@ import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
 
+import fxtrader.com.app.AppApplication;
+import fxtrader.com.app.http.manager.GeTuiClientIdManager;
 import fxtrader.com.app.tools.LogZ;
 
 /**
@@ -73,6 +75,7 @@ public class PushIntentService extends GTIntentService {
     @Override
     public void onReceiveClientId(Context context, String clientid) {
         LogZ.i("onReceiveClientId -> " + "clientid = " + clientid);
+        AppApplication.getInstance().setGeTuiClientId(clientid);
     }
 
     @Override

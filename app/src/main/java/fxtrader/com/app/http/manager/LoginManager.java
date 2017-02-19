@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.util.Map;
 
+import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.entity.LoginResponseEntity;
 import fxtrader.com.app.http.ParamsUtil;
@@ -53,6 +54,7 @@ public class LoginManager {
                     listener.error("登录失败，账户或密码错误");
                 } else {
                     LoginConfig.getInstance().saveUser(account, pwd, entity.getAccess_token());
+                    GeTuiClientIdManager.getInstance().save(AppApplication.getInstance().getGeTuiClientId());
                     listener.success();
                 }
 

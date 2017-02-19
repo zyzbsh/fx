@@ -255,4 +255,5 @@
     <string name="permission_setting_guide">点击"设置"-选择"权限"-打开对应权限</string>
     <string name="app_exit">退出</string>
     <string name="app_setting">设置</string>
+    <string name="qr_code_wx">微信二维码</string>
 </resources>

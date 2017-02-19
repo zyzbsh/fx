@@ -21,6 +21,7 @@ import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.find.FindFragment;
 import fxtrader.com.app.homepage.HomepageFragment;
+import fxtrader.com.app.http.manager.GeTuiClientIdManager;
 import fxtrader.com.app.login.LoginNewActivity;
 import fxtrader.com.app.mine.MineFragment;
 import fxtrader.com.app.permission.IPermissionCheck;
@@ -28,6 +29,7 @@ import fxtrader.com.app.permission.IPermissionRequest;
 import fxtrader.com.app.permission.PermissionChecker;
 import fxtrader.com.app.permission.PermissionRequester;
 import fxtrader.com.app.protection.ProtectionFragment;
+import fxtrader.com.app.tools.GeTuiUtil;
 import fxtrader.com.app.tools.LogZ;
 
 /**
@@ -63,6 +65,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         PushManager.getInstance().initialize(this.getApplicationContext(), fxtrader.com.app.service.PushService.class);
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), fxtrader.com.app.service.PushIntentService.class);
         checkPermission();
+        GeTuiUtil.init();
     }
 
 
