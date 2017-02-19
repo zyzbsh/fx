@@ -29,6 +29,7 @@ import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.UserApi;
+import fxtrader.com.app.http.manager.LoginManager;
 import fxtrader.com.app.http.manager.UserInfoManager;
 import fxtrader.com.app.tools.Base64;
 import fxtrader.com.app.tools.EncryptionTool;
@@ -165,35 +166,24 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
             return;
         }
         try {
-            UserApi userApi = RetrofitUtils.createApi(UserApi.class);
-            Call<LoginResponseEntity> repos = userApi.login(getParams(account, pwd));
             mRequest++;
-            repos.enqueue(new Callback<LoginResponseEntity>() {
+            LoginManager.instance(this).login(account, pwd, new LoginManager.LoginListener() {
                 @Override
-                public void onResponse(Call<LoginResponseEntity> call, Response<LoginResponseEntity> response) {
-                    LoginResponseEntity entity = response.body();
-                    String token = entity.getAccess_token();
-                    if (TextUtils.isEmpty(token)) {
-                        dismissProgressDialog();
-                        mRequest--;
-                        showToastShort("账户或密码错误");
-                        return;
-                    }
-                    LoginConfig.getInstance().saveUser(account, pwd, entity.getAccess_token());
+                public void success() {
                     getTickets();
                     getUserInfo();
                     mHandler.sendEmptyMessage(0);
                 }
 
                 @Override
-                public void onFailure(Call<LoginResponseEntity> call, Throwable t) {
-                    if (t != null && t.getMessage() != null) {
-                        Log.e("zyu", t.getMessage());
-                    }
+                public void error(String error) {
+                    dismissProgressDialog();
+                    mRequest--;
+                    showToastShort(error);
                 }
             });
         } catch (Exception e) {
-
+            LogZ.e(e);
         }
 
     }
@@ -223,19 +213,6 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
     private void register() {
         Intent intent = new Intent(this, LoginNewActivity.class);
         startActivityForResult(intent, IntentItem.REQUEST_REGISTER);
-    }
-
-    private Map<String, String> getParams(String account, String pwd) throws Exception {
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.oauth.token");
-        params.put("grant_type", "password");
-//        params.put("membercode", "RV");
-        String str = account + ":" + pwd;
-        byte[] base64 = Base64.encode(str.getBytes(), Base64.NO_WRAP);
-        byte[] aes = EncryptionTool.aes(base64, ParamsUtil.CLIENT_SECRET.getBytes());
-        params.put("subject", new String(Base64.encode(aes, Base64.NO_WRAP)));
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
     }
 
     private void getTickets() {

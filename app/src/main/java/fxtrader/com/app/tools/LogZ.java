@@ -172,7 +172,7 @@ public class LogZ {
 	 * @param ex
 	 */
 	public static void e(Exception ex) {
-		if (logLevel <= Log.ERROR) {
+		if (logLevel <= Log.ERROR && ex != null) {
 			Log.e(TAG, "error", ex);
 		}
 	}

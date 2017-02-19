@@ -20,6 +20,7 @@ import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.UserApi;
+import fxtrader.com.app.http.manager.LoginManager;
 import fxtrader.com.app.tools.Base64;
 import fxtrader.com.app.tools.EncryptionTool;
 import fxtrader.com.app.tools.LogZ;
@@ -226,46 +227,20 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private void login(final String account, final String pwd){
         try {
-            UserApi userApi = RetrofitUtils.createApi(UserApi.class);
-            Call<LoginResponseEntity> repos = userApi.login(getLoginParams(account, pwd));
-            repos.enqueue(new Callback<LoginResponseEntity>() {
+            LoginManager.instance(this).login(account, pwd, new LoginManager.LoginListener() {
                 @Override
-                public void onResponse(Call<LoginResponseEntity> call, Response<LoginResponseEntity> response) {
-                    LoginResponseEntity entity = response.body();
-                    String token = entity.getAccess_token();
-                    if (TextUtils.isEmpty(token)) {
-                        dismissProgressDialog();
-                        showToastShort("登录失败");
-                        return;
-                    } else {
-                        LoginConfig.getInstance().saveUser(account, pwd, entity.getAccess_token());
-                        update();
-                    }
-
+                public void success() {
+                    update();
                 }
 
                 @Override
-                public void onFailure(Call<LoginResponseEntity> call, Throwable t) {
-                    if (t != null && t.getMessage() != null) {
-                        Log.e("zyu", t.getMessage());
-                    }
+                public void error(String error) {
+                    dismissProgressDialog();
+                    showToastShort(error);
                 }
             });
         } catch (Exception e) {
             LogZ.e(e.getMessage());
         }
-    }
-
-    private Map<String, String> getLoginParams(String account, String pwd) throws Exception {
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.oauth.token");
-        params.put("grant_type", "password");
-//        params.put("membercode", "RV");
-        String str = account + ":" + pwd;
-        byte[] base64 = Base64.encode(str.getBytes(), Base64.NO_WRAP);
-        byte[] aes = EncryptionTool.aes(base64, ParamsUtil.CLIENT_SECRET.getBytes());
-        params.put("subject", new String(Base64.encode(aes, Base64.NO_WRAP)));
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
     }
 }
