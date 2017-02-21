@@ -3,13 +3,16 @@ package fxtrader.com.app.http.api;
 import java.util.Map;
 
 import fxtrader.com.app.entity.AnnouncementListEntity;
+import fxtrader.com.app.entity.AppUpdateResponse;
 import fxtrader.com.app.entity.BankBindEntity;
+import fxtrader.com.app.entity.CheckOrgnIdResponse;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.CouponListEntity;
 import fxtrader.com.app.entity.CurrencyListEntity;
 import fxtrader.com.app.entity.LoginResponseEntity;
 import fxtrader.com.app.entity.OpenPacket;
 import fxtrader.com.app.entity.PacketListEntity;
+import fxtrader.com.app.entity.RechargeUrlResponse;
 import fxtrader.com.app.entity.RedEnvelopeListEntity;
 import fxtrader.com.app.entity.TicketListEntity;
 import fxtrader.com.app.entity.UploadAvatarEntity;
@@ -99,4 +102,14 @@ public interface UserApi {
 
     @GET("/api/unbindBankcard")
     Call<BankBindEntity> unbindBankCard(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/spdbScanPaySwitch")
+    Call<CheckOrgnIdResponse> spdbScanPaySwitch(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/rechargeSpdbScanPay")
+    Call<RechargeUrlResponse> rechargeSpdbScanPay(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/getNewAppVersion")
+    Call<AppUpdateResponse> updateApp(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
 }
