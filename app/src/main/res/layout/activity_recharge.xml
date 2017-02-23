@@ -163,7 +163,7 @@
                 android:background="@drawable/shape_edt_recharge"
                 android:gravity="center"
                 android:inputType="number"
-                android:text="@string/hint_recharge"
+                android:hint="@string/hint_recharge"
                 android:textColor="@color/gray_6"
                 android:textSize="14sp" />
 
@@ -244,7 +244,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/shape_red_corner_5"
+                    android:background="@drawable/shape_green_corner_5"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -252,47 +252,11 @@
                         android:id="@+id/recharge_wx_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@mipmap/icon_wx"
-                        android:drawablePadding="5dp"
-                        android:text="中信银行支付"
+                        android:text="微 信 支 付"
                         android:textColor="@color/white"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="（微信支付）"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:src="@mipmap/icon_recharge_recommend" />
             </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/recharge_yh_layout"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/shape_recharge_yl"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/recharge_yh_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/icon_yl"
-                    android:drawablePadding="5dp"
-                    android:text="@string/recharge_yh"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 

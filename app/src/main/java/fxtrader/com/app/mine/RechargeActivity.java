@@ -81,7 +81,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
 
     private void initPayLayout() {
         findViewById(R.id.recharge_wx_layout).setOnClickListener(this);
-        findViewById(R.id.recharge_yh_layout).setOnClickListener(this);
+//        findViewById(R.id.recharge_yh_layout).setOnClickListener(this);
     }
 
     private void initMoneyLayout() {
@@ -142,11 +142,11 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recharge_wx_layout:
-                //TODO 微信支付
+                openActivity(QRCodeWeiXinActivity.class);
                 break;
-            case R.id.recharge_yh_layout:
-                bankRecharge();
-                break;
+//            case R.id.recharge_yh_layout:
+//                bankRecharge();
+//                break;
             default:
                 break;
         }
@@ -242,4 +242,27 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         return params;
     }
 
+    private void wxRecharge(){
+        String amountStr = mRechargeEdt.getText().toString();
+        int amount = 0;
+        try {
+            amount = Integer.parseInt(amountStr);
+        } catch (Exception e) {
+            showToastShort("请输入充值金额");
+        }
+
+        if (amount < 20) {
+            showToastShort("每笔最少20元");
+            return;
+        }
+
+        if (amount > 5000) {
+            showToastShort("每笔限额5000元");
+            return;
+        }
+
+        Intent intent = new Intent(this, QRCodeWeiXinActivity.class);
+        intent.putExtra(IntentItem.AMOUNT, amount);
+        startActivity(intent);
+    }
 }

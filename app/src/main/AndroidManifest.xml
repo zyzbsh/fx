@@ -137,6 +137,10 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".mine.QRCodeWeiXinActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".mine.WebHtmlActivity"
             android:screenOrientation="portrait" />
 
