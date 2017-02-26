@@ -163,6 +163,13 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name=".update.view.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
+        <service android:name=".update.server.DownloadingService"/>
+
         <service android:name=".service.PriceService" />
 
         <service android:name=".service.PositionService" />

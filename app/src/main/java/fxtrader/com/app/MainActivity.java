@@ -2,7 +2,9 @@ package fxtrader.com.app;
 
 import android.*;
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -15,12 +17,17 @@ import com.igexin.sdk.PushManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.entity.AppUpdateResponse;
 import fxtrader.com.app.find.FindFragment;
 import fxtrader.com.app.homepage.HomepageFragment;
+import fxtrader.com.app.http.ParamsUtil;
+import fxtrader.com.app.http.RetrofitUtils;
+import fxtrader.com.app.http.api.UserApi;
 import fxtrader.com.app.http.manager.GeTuiClientIdManager;
 import fxtrader.com.app.login.LoginNewActivity;
 import fxtrader.com.app.mine.MineFragment;
@@ -31,6 +38,11 @@ import fxtrader.com.app.permission.PermissionRequester;
 import fxtrader.com.app.protection.ProtectionFragment;
 import fxtrader.com.app.tools.GeTuiUtil;
 import fxtrader.com.app.tools.LogZ;
+import fxtrader.com.app.update.UpdateHelper;
+import fxtrader.com.app.update.bean.Update;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 主页
@@ -62,12 +74,11 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         AppApplication.getInstance().setActivity(this);
         setContentView(R.layout.activity_main);
         initBottomLayout();
-        PushManager.getInstance().initialize(this.getApplicationContext(), fxtrader.com.app.service.PushService.class);
-        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), fxtrader.com.app.service.PushIntentService.class);
         checkPermission();
         GeTuiUtil.init();
-    }
 
+        checkApp();
+    }
 
 
     @Override
@@ -213,6 +224,56 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         if (mProtectionFragment != null) fragmentTransaction.hide(mProtectionFragment);
         if (mFindFragment != null) fragmentTransaction.hide(mFindFragment);
         if (mMineFragment != null) fragmentTransaction.hide(mMineFragment);
+    }
+
+    private void checkApp() {
+        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
+        Call<AppUpdateResponse> request = userApi.checkApp(getCheckAppParams());
+        request.enqueue(new Callback<AppUpdateResponse>() {
+            @Override
+            public void onResponse(Call<AppUpdateResponse> call, Response<AppUpdateResponse> response) {
+                AppUpdateResponse appUpdateResponse = response.body();
+                if (appUpdateResponse.getObject() != null) {
+                    Update update = getUpdate(appUpdateResponse);
+                    UpdateHelper.getInstance()
+                            .check(update, MainActivity.this);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AppUpdateResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String, String> getCheckAppParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("mobileDevices", "android");
+        params.put("appVersions", getVersionCode(this) + "");
+        return params;
+    }
+
+    public static int getVersionCode(Context context) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    private Update getUpdate(AppUpdateResponse appUpdateResponse){
+        Update update = new Update();
+        update.setUpdateUrl(appUpdateResponse.getObject().getDownloadUrl());
+        update.setVersionCode(Integer.parseInt(appUpdateResponse.getObject().getAppVersions()));
+        update.setApkSize(10);
+        update.setVersionName("1.0.0");
+        update.setUpdateContent(appUpdateResponse.getObject().getUpdateContent());
+        update.setForce(appUpdateResponse.getObject().isForceUpdate());
+        return update;
     }
 
 }

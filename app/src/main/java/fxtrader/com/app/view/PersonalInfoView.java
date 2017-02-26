@@ -125,6 +125,9 @@ public class PersonalInfoView extends RelativeLayout implements View.OnClickList
     }
 
     public void set(UserEntity user) {
+        if (user.getObject() == null) {
+            return;
+        }
         Glide.with(getContext()).load(user.getObject().getHeadimgurl()).into(mAvatarIm);
         mNameTv.setText(user.getObject().getNickname());
         mBalanceTv.setText("帐号余额：" + String.valueOf(user.getObject().getFunds()));

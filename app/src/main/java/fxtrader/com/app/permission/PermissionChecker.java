@@ -48,7 +48,7 @@ public class PermissionChecker {
 
 	public void subscribe(IPermissionCheck listener) {
 		
-		if (listener == null) {
+		if (listener == null || Build.VERSION.SDK_INT < 23) {
 			return;
 		}
 		

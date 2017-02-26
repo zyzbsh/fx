@@ -96,8 +96,10 @@ public class PositionService extends Service {
             @Override
             public void onResponse(Call<PositionListEntity> call, Response<PositionListEntity> response) {
                 PositionListEntity entity = response.body();
-                List<PositionInfoEntity> list = entity.getObject().getContent();
-                sendContentBroadcast(list);
+                if (entity != null && entity.getObject() != null) {
+                    List<PositionInfoEntity> list = entity.getObject().getContent();
+                    sendContentBroadcast(list);
+                }
             }
 
             @Override

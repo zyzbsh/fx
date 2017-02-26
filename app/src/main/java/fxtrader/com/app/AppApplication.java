@@ -15,6 +15,7 @@ import fxtrader.com.app.http.NetConfigBuilder;
 import fxtrader.com.app.http.NetUtils;
 import fxtrader.com.app.http.NetworkStatus;
 import fxtrader.com.app.tools.MyUncaughtExceptionHandler;
+import fxtrader.com.app.update.UpdateConfig;
 
 /**
  * Created by pc on 2016/11/17.
@@ -45,6 +46,7 @@ public class AppApplication extends Application{
         sApp = this;
         initNetConfig();
         setupExceptionCaught();
+        UpdateConfig.initGet(this);
     }
 
     private void initNetConfig() {

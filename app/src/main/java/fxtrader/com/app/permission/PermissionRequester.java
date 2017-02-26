@@ -1,6 +1,7 @@
 package fxtrader.com.app.permission;
 
 import android.content.Context;
+import android.os.Build;
 
 /**
  * 权限请求
@@ -28,7 +29,7 @@ public final class PermissionRequester {
 	
 	public void subscribe(final IPermissionRequest listener) {
 
-		if (mContext == null || listener == null) {
+		if (mContext == null || listener == null || Build.VERSION.SDK_INT < 23) {
 			return;
 		}
 

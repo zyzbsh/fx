@@ -110,6 +110,6 @@ public interface UserApi {
     Call<RechargeUrlResponse> rechargeSpdbScanPay(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 
     @GET("/api/getNewAppVersion")
-    Call<AppUpdateResponse> updateApp(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+    Call<AppUpdateResponse> checkApp(@QueryMap Map<String, String> params);
 
 }

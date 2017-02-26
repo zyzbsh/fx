@@ -195,7 +195,9 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
             public void onSuccess(UserEntity user) {
                 UserInfoHelper.getInstance().save(user);
                 UserEntity.ObjectBean bean = user.getObject();
-                LoginConfig.getInstance().saveInfo("" + bean.getId(), bean.getTelNumber(), bean.getOrganId());
+                if (bean != null) {
+                    LoginConfig.getInstance().saveInfo("" + bean.getId(), bean.getTelNumber(), bean.getOrganId());
+                }
                 mHandler.sendEmptyMessage(0);
             }
 
