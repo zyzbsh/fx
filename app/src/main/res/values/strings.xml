@@ -117,6 +117,7 @@
     <string name="balance_num">帐号余额：%1$s</string>
     <string name="sex">性别</string>
     <string name="change_pwd">密码修改</string>
+    <string name="unbind_bank_card">解绑银行卡</string>
     <string name="bind_phone">绑定手机</string>
     <string name="remind_bind_phone_1">您还未绑定手机</string>
     <string name="remind_bind_phone_2">马上绑定立领</string>

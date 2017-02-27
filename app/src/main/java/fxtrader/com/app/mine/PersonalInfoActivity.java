@@ -53,6 +53,7 @@ import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.db.helper.UserInfoHelper;
+import fxtrader.com.app.entity.BankBindEntity;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.UploadAvatarEntity;
 import fxtrader.com.app.entity.UserEntity;
@@ -96,6 +97,8 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
 
     private RelativeLayout mChangeAvatarLayout;
 
+    private RelativeLayout mUnbindBankCardLayout;
+
     private LinearLayout mInfoLayout;
 
     private LinearLayout mNicknameLayout;
@@ -115,6 +118,7 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
         setContentLayout(R.layout.activity_personal_info);
         initViews();
         setUser();
+        getBindBankCardInfo();
     }
 
     @Override
@@ -301,6 +305,9 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.personal_info_change_pwd_layout).setOnClickListener(this);
         findViewById(R.id.personal_info_login_out_layout).setOnClickListener(this);
 
+        mUnbindBankCardLayout = (RelativeLayout) findViewById(R.id.personal_info_unbind_bank_card_layout);
+        mUnbindBankCardLayout.setOnClickListener(this);
+
         setBackListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -351,6 +358,9 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.personal_info_login_out_layout:
                 loginOut();
+                break;
+            case R.id.personal_info_unbind_bank_card_layout:
+                unbindBankCard();
                 break;
             default:
                 break;
@@ -774,6 +784,58 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
         }
         LogZ.i("oldHeadimgUrl : " + oldUrl);
         params.put("oldHeadimgUrl", oldUrl);
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    /**
+     * 获取绑定的银行卡信息
+     */
+    private void getBindBankCardInfo(){
+        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
+        String token = ParamsUtil.getToken();
+        Call<BankBindEntity> request = userApi.getBindBankCardInfo(token, getBankCardInfoParams());
+        request.enqueue(new Callback<BankBindEntity>() {
+            @Override
+            public void onResponse(Call<BankBindEntity> call, Response<BankBindEntity> response) {
+                BankBindEntity entity = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<BankBindEntity> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private Map<String, String> getBankCardInfoParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.currency.getBindBankcard");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
+
+    private void unbindBankCard(){
+        showProgressDialog();
+        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
+        String token = ParamsUtil.getToken();
+        Call<BankBindEntity> request = userApi.unbindBankCard(token, getUnbindBankCardParams());
+        request.enqueue(new Callback<BankBindEntity>() {
+            @Override
+            public void onResponse(Call<BankBindEntity> call, Response<BankBindEntity> response) {
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onFailure(Call<BankBindEntity> call, Throwable t) {
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    private Map<String, String> getUnbindBankCardParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.currency.unbindBankcard");
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

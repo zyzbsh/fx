@@ -251,6 +251,28 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/personal_info_unbind_bank_card_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8.5dp"
+        android:layout_marginRight="8.5dp"
+        android:layout_marginTop="5dp"
+        android:background="#eaeaeb"
+        android:visibility="gone"
+        android:paddingLeft="13dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/unbind_bank_card"
+            android:textColor="@color/gray_6"
+            android:textSize="15sp" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/personal_info_login_out_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"

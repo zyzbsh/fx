@@ -302,55 +302,6 @@ public class WithdrawActivity extends BaseActivity implements View.OnClickListen
         return json;
     }
 
-    /**
-     * 获取绑定的银行卡信息
-     */
-    private void getBindBankCardInfo(){
-        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
-        String token = ParamsUtil.getToken();
-        Call<BankBindEntity> request = userApi.getBindBankCardInfo(token, getBankCardInfoParams());
-        request.enqueue(new Callback<BankBindEntity>() {
-            @Override
-            public void onResponse(Call<BankBindEntity> call, Response<BankBindEntity> response) {
 
-            }
-
-            @Override
-            public void onFailure(Call<BankBindEntity> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private Map<String, String> getBankCardInfoParams() {
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.currency.getBindBankcard");
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
-    }
-
-    private void unbindBankCard(){
-        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
-        String token = ParamsUtil.getToken();
-        Call<BankBindEntity> request = userApi.unbindBankCard(token, getUnbindBankCardParams());
-        request.enqueue(new Callback<BankBindEntity>() {
-            @Override
-            public void onResponse(Call<BankBindEntity> call, Response<BankBindEntity> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<BankBindEntity> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private Map<String, String> getUnbindBankCardParams() {
-        final Map<String, String> params = ParamsUtil.getCommonParams();
-        params.put("method", "gdiex.currency.unbindBankcard");
-        params.put("sign", ParamsUtil.sign(params));
-        return params;
-    }
 
 }
