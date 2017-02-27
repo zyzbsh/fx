@@ -799,11 +799,16 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onResponse(Call<BankBindEntity> call, Response<BankBindEntity> response) {
                 BankBindEntity entity = response.body();
+                if (entity.getObject() != null) {
+                    mUnbindBankCardLayout.setVisibility(View.VISIBLE);
+                } else {
+                    mUnbindBankCardLayout.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onFailure(Call<BankBindEntity> call, Throwable t) {
-
+                mUnbindBankCardLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -824,6 +829,8 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onResponse(Call<BankBindEntity> call, Response<BankBindEntity> response) {
                 dismissProgressDialog();
+                BankBindEntity entity = response.body();
+                showToastShort(entity.getMessage());
             }
 
             @Override
