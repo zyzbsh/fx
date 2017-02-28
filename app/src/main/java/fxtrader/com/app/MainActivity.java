@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -96,6 +97,10 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 mHomepageFragment.logOut();
             }
             mRadioGroup.check(R.id.main_tab_homepage_btn);
+            String msg = intent.getStringExtra(IntentItem.MSG);
+            if (!TextUtils.isEmpty(msg)) {
+                showToastShort(msg);
+            }
         }
     }
 

@@ -34,6 +34,7 @@ public final class IntentItem {
     public static final String ORDER_ID = "order_id";
     public static final String ORDER_FOLLOWED = "order_followed";
     public static final String LOG_OUT = "log_out";
+    public static final String MSG = "msg";
     public static final String POSITION_LIST = "position_list";
     public static final String ANNOUNCEMENT_DETAIL = "announcement_detail";
     public static final String PERSONAL_INFO_UPDATE = "personal_info_update";

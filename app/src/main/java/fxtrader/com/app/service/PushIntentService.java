@@ -1,9 +1,11 @@
 package fxtrader.com.app.service;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Message;
 import android.util.Log;
 
+import com.google.gson.JsonObject;
 import com.igexin.sdk.GTIntentService;
 import com.igexin.sdk.PushConsts;
 import com.igexin.sdk.PushManager;
@@ -12,7 +14,13 @@ import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import fxtrader.com.app.AppApplication;
+import fxtrader.com.app.MainActivity;
+import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.http.manager.GeTuiClientIdManager;
 import fxtrader.com.app.tools.LogZ;
 
@@ -59,6 +67,7 @@ public class PushIntentService extends GTIntentService {
             Log.e(TAG, "receiver payload = null");
         } else {
             String data = new String(payload);
+            processData(data);
             Log.d(TAG, "receiver payload = " + data);
 
             // 测试消息为了观察数据变化
@@ -70,6 +79,24 @@ public class PushIntentService extends GTIntentService {
         }
 
         Log.d(TAG, "----------------------------------------------------------------------------------------------");
+    }
+
+    private void processData(String data) {
+        //{"content":"您的账号正在另一台设备上登录！","type":"forcedOffline"}
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            String type = jsonObject.optString("type");
+            String content = jsonObject.optString("content");
+            if (type.equals("forcedOffline")) {
+                LoginConfig.getInstance().logOut();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra(IntentItem.LOG_OUT, true);
+                intent.putExtra(IntentItem.MSG, content);
+                startActivity(intent);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
