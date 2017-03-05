@@ -33,11 +33,11 @@ public class ContractEntity implements Serializable{
             }
 
             String[] a = data.split(unit);
-            String spec = a[0];
-            this.name = a[1];
+            String spec = "";
+            this.name = data;
             LogZ.i("data = " + data + ", spec = " + spec + ", name = " + name);
-            entity.setBaseNum(spec);
-            entity.setBaseUnit(unit);
+            entity.setBaseNum("");
+            entity.setBaseUnit("");
         }
         list.add(entity);
     }

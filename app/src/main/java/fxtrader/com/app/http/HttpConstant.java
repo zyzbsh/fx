@@ -17,11 +17,11 @@ public final class HttpConstant {
 
     public static final int DEFAULT_ORGAN_ID = 0;
 
-    public static class PriceCode{
-        public static final String YDHF = "YDHF";
-        public static final String YDCL = "YDCL";
-        public static final String YDOIL = "YDOIL";
-    }
+//    public static class PriceCode{
+//        public static final String YDHF = "YDHF";
+//        public static final String YDCL = "YDCL";
+//        public static final String YDOIL = "YDOIL";
+//    }
 
     public static class ContractUnit{
         public static final String KG = "kg";

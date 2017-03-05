@@ -84,7 +84,7 @@
                 android:id="@+id/main_tab_protection_btn"
                 style="@style/TabBtn"
                 android:drawableTop="@mipmap/tab_icon_protection"
-                android:text="@string/protection" />
+                android:text="@string/td_start" />
 
             <RadioButton
                 android:id="@+id/main_tab_find_btn"

@@ -32,6 +32,22 @@ public class RetrofitUtils {
         return singleton.create(clazz);
     }
 
+    public static <T> T createJsonApi(Class<T> clazz){
+        if(singleton == null){
+            synchronized (RetrofitUtils.class){
+                if(singleton == null){
+                    singleton = new Retrofit.Builder()
+                            .baseUrl(HttpConstant.BASE_URL)
+                            .client(OkHttpUtils.getSingleton(AppApplication.getInstance().getBaseContext()))
+                            .build();
+                }
+            }
+        }
+
+
+        return singleton.create(clazz);
+    }
+
     public static <T> T createApiNoGson(Class<T> clazz){
         if(testSingleton == null){
             synchronized (RetrofitUtils.class){

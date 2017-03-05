@@ -76,6 +76,7 @@
             android:layout_height="32dp"
             android:button="@drawable/jjdxm_update_button_check_selector"
             android:text="@string/jjdxm_update_ignore"
+            android:visibility="gone"
             android:textColor="#000"/>
 
         <!-- OK&Cancel Button -->

@@ -19,9 +19,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:paddingRight="20dp"
-            android:paddingLeft="10dp"
             android:background="@null"
+            android:paddingLeft="10dp"
+            android:paddingRight="20dp"
             android:src="@mipmap/icon_arrow_down"
             android:textColor="@color/white" />
 
@@ -83,7 +83,7 @@
                 android:visibility="visible" />
 
             <LinearLayout
-                android:id="@+id/homepage_balance_layout"
+                android:id="@+id/homepage_coins_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -91,20 +91,20 @@
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/homepage_balance_tv"
+                    android:id="@+id/homepage_coins_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/icon_money"
                     android:drawablePadding="5dp"
-                    android:text="@string/account_balance"
+                    android:text="@string/my_coins"
                     android:textColor="@color/white"
                     android:textSize="13sp" />
 
                 <TextView
-                    android:id="@+id/homepage_balance_amount_tv"
+                    android:id="@+id/homepage_coins_num_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/homepage_balance_tv"
+                    android:layout_toRightOf="@id/homepage_coins_tv"
                     android:textColor="@color/red_text"
                     android:textSize="13sp" />
 
@@ -112,50 +112,55 @@
 
         </RelativeLayout>
 
-
         <TextView
-            android:id="@+id/homepage_cash_coupon_tv"
+            android:id="@+id/homepage_rank_num_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:drawableLeft="@mipmap/icon_crash"
+            android:drawableBottom="@mipmap/icon_rank_reward"
             android:drawablePadding="3dp"
-            android:text="@string/cash_coupon_num"
+            android:textColor="@color/red_text"
+            android:textSize="13sp" />
+
+
+        <TextView
+            android:id="@+id/homepage_rank_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/homepage_rank_num_tv"
+            android:drawablePadding="3dp"
+            android:text="@string/rank"
             android:textColor="@color/white"
             android:textSize="13sp" />
 
-        <TextView
-            android:id="@+id/homepage_recharge_tv"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/homepage_cash_coupon_tv"
-            android:background="@mipmap/bg_withdraw"
-            android:gravity="center_horizontal"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:paddingTop="2dp"
-            android:text="@string/recharge"
-            android:textColor="@color/black_33"
-            android:textSize="10sp" />
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/homepage_withdraw_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/homepage_recharge_tv"
-            android:background="@mipmap/bg_withdraw"
-            android:gravity="center_horizontal"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:paddingTop="2dp"
-            android:text="@string/withdraw"
-            android:textColor="@color/black_33"
-            android:textSize="10sp" />
+            <TextView
+                android:id="@+id/homepage_profit_rate_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/profit_rate"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/homepage_profit_rate_num_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="@color/red_text"
+                android:textSize="13sp" />
+
+
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -348,11 +353,6 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@mipmap/icon_raise" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
                             android:src="@mipmap/icon_raise_text" />
 
@@ -391,12 +391,6 @@
                         android:paddingBottom="20dp"
                         android:paddingTop="20dp">
 
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/icon_fall" />
-
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -421,66 +415,47 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="vertical"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
+                android:layout_marginTop="20dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/homepage_sign_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:src="@mipmap/icon_sign" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:drawableLeft="@mipmap/icon_hot"
-                        android:drawablePadding="5dp"
-                        android:text="@string/master_hot"
-                        android:textColor="@color/black_33"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/homepage_master_more_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:background="@mipmap/icon_more"
-                        android:gravity="center"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:text="@string/more"
-                        android:textColor="@color/white"
-                        android:textSize="10sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/homepage_master_list_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#80ffffff" />
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@id/homepage_sign_btn"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/homepage_master_list_empty_tv"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="#80ffffff"
-                        android:gravity="center"
-                        android:text="@string/no_data"
-                        android:textColor="@color/black_28"
-                        android:visibility="gone" />
-                </RelativeLayout>
-            </LinearLayout>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/game_rule"
+                        android:textColor="#f32a2a"
+                        android:textSize="18sp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/game_rule_intro"
+                        android:textColor="#f32a2a"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
         </LinearLayout>
 
     </ScrollView>

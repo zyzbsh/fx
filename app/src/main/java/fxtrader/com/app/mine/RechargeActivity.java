@@ -194,7 +194,7 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         try {
             double d = Double.parseDouble(acount);
             if (d < 20 || d > 5000) {
-                showToastShort("请输入20元以上，5000元以下的金额");
+                showToastShort("请输入20金币以上，5000金币以下的金额");
                 return;
             }
             mRechargeAcount = d;
@@ -252,12 +252,12 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
         }
 
         if (amount < 20) {
-            showToastShort("每笔最少20元");
+            showToastShort("每笔最少20金币");
             return;
         }
 
         if (amount > 5000) {
-            showToastShort("每笔限额5000元");
+            showToastShort("每笔限额5000金币");
             return;
         }
 

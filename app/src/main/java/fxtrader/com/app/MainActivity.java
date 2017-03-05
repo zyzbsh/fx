@@ -2,16 +2,20 @@ package fxtrader.com.app;
 
 import android.*;
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RemoteViews;
 
 import com.igexin.sdk.PushManager;
 
@@ -41,6 +45,7 @@ import fxtrader.com.app.tools.GeTuiUtil;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.update.UpdateHelper;
 import fxtrader.com.app.update.bean.Update;
+import fxtrader.com.app.update.listener.ForceListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -240,6 +245,15 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 AppUpdateResponse appUpdateResponse = response.body();
                 if (appUpdateResponse.getObject() != null) {
                     Update update = getUpdate(appUpdateResponse);
+                    UpdateHelper.getInstance().setForceListener(new ForceListener() {
+                        @Override
+                        public void onUserCancel(boolean force) {
+                            if (force) {
+                                showToastShort("不更新不能使用");
+                                finish();
+                            }
+                        }
+                    });
                     UpdateHelper.getInstance()
                             .check(update, MainActivity.this);
                 }
@@ -277,8 +291,8 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
         update.setApkSize(10);
         update.setVersionName("1.0.0");
         update.setUpdateContent(appUpdateResponse.getObject().getUpdateContent());
-        update.setForce(appUpdateResponse.getObject().isForceUpdate());
+//        update.setForce(appUpdateResponse.getObject().isForceUpdate());
+        update.setForce(false);
         return update;
     }
-
 }

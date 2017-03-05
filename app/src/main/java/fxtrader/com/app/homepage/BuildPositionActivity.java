@@ -587,7 +587,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         params.put("dealCount", String.valueOf(dealCount));
         params.put("ticketCount", String.valueOf(ticketCount));
         params.put("code", mCurContractInfo.getCode());
-        params.put("ticketId", String.valueOf(ticketId));
+        params.put("ticketId", String.valueOf(5));//ticketId默认5
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

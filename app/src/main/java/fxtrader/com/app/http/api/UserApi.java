@@ -112,4 +112,7 @@ public interface UserApi {
     @GET("/api/getNewAppVersion")
     Call<AppUpdateResponse> checkApp(@QueryMap Map<String, String> params);
 
+    @GET("/api/attendance")
+    Call<CommonResponse> sign(@Header("Authorization") String authorization,@QueryMap Map<String, String> params);
+
 }

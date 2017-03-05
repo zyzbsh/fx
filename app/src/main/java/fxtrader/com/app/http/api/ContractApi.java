@@ -10,7 +10,9 @@ import fxtrader.com.app.entity.MarketEntity;
 import fxtrader.com.app.entity.OrderDetailEntity;
 import fxtrader.com.app.entity.ParticipantsEntity;
 import fxtrader.com.app.entity.PositionListEntity;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -26,7 +28,7 @@ import retrofit2.http.QueryMap;
 public interface ContractApi {
 
     @GET("/api/rates")
-    Call<MarketEntity> rates(@QueryMap Map<String, String> params);
+    Call<ResponseBody> rates(@QueryMap Map<String, String> params);
 
     @GET("/api/contracts")
     Call<ContractListEntity> list(@QueryMap Map<String, String> params);

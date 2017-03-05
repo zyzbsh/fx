@@ -14,6 +14,8 @@ public final class IntentItem {
     public static final int REQUEST_POSITION_LIST = 107;
     public static final int REQUEST_ORDER_DETAIL = 108;
     public static final int REQUEST_REGISTER = 109;
+    public static final int REQUEST_SIGN = 110;
+    public static final int REQUEST_LOGIN_FROM_BUILD_POSITION = 111;
     public static final String LOGIN = "login";
     public static final String ACTION_PRICE = "fxtrader.com.app.price";
     public static final String ACTION_POSITION_LIST = "fxtrader.com.app.positions";
@@ -45,4 +47,5 @@ public final class IntentItem {
     public static final String POSITION_ID = "position_id";
     public static final String VIDEO_URL = "url_video";
     public static final String AMOUNT = "amount";
+
 }

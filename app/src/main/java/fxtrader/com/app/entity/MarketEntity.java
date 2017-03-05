@@ -3,11 +3,16 @@ package fxtrader.com.app.entity;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import fxtrader.com.app.http.HttpConstant;
+import fxtrader.com.app.tools.LogZ;
 
 /**
  * 实时行情
@@ -16,6 +21,8 @@ import fxtrader.com.app.http.HttpConstant;
 public class MarketEntity extends CommonResponse implements Serializable{
 
     private Data object;
+
+    private String priceJson;
 
     private String latestPrice = "";
 
@@ -31,13 +38,30 @@ public class MarketEntity extends CommonResponse implements Serializable{
 
     private Map<String, String> data;
 
+    public String getPriceJson() {
+        return priceJson;
+    }
+
+    public void setPriceJson(String priceJson) {
+        this.priceJson = priceJson;
+    }
+
     public void init() {
         if (data == null) {
             data = new HashMap<>();
         }
-        if (object != null) {
-            data.put(HttpConstant.PriceCode.YDCL, object.YDCL);
-            data.put(HttpConstant.PriceCode.YDHF, object.YDHF);
+        if (!TextUtils.isEmpty(priceJson)) {
+            try {
+                LogZ.i(priceJson);
+                JSONObject jsonObject = new JSONObject(priceJson);
+                Iterator keys = jsonObject.keys();
+                while(keys.hasNext()){
+                    String key = (String) keys.next();
+                    data.put(key, jsonObject.optString(key));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

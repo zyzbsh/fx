@@ -77,11 +77,12 @@ public class DownloadDialogActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && UpdateSP.isForced()) {
-            finish();
             if (UpdateHelper.getInstance().getForceListener() != null) {
                 UpdateHelper.getInstance().getForceListener().onUserCancel(UpdateSP.isForced());
             }
             return true;
+        } else {
+            finish();
         }
         return super.onKeyDown(keyCode, event);
     }

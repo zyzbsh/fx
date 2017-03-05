@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             android:layout_marginRight="56dp">
 
             <ImageView
@@ -97,6 +98,7 @@
             android:id="@+id/personal_info_withdraw_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:layout_weight="1">
 
             <TextView

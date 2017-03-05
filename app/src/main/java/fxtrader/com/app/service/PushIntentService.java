@@ -1,9 +1,13 @@
 package fxtrader.com.app.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Message;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.google.gson.JsonObject;
 import com.igexin.sdk.GTIntentService;
@@ -19,10 +23,12 @@ import org.json.JSONObject;
 
 import fxtrader.com.app.AppApplication;
 import fxtrader.com.app.MainActivity;
+import fxtrader.com.app.R;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.http.manager.GeTuiClientIdManager;
 import fxtrader.com.app.tools.LogZ;
+import fxtrader.com.app.update.util.UpdateConstants;
 
 /**
  * 继承 GTIntentService 接收来自个推的消息, 所有消息在线程中回调, 如果注册了该服务, 则务必要在 AndroidManifest中声明, 否则无法接受消息<br>
@@ -93,10 +99,24 @@ public class PushIntentService extends GTIntentService {
                 intent.putExtra(IntentItem.LOG_OUT, true);
                 intent.putExtra(IntentItem.MSG, content);
                 startActivity(intent);
+            } else {
+                notice(content);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void notice(String content){
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+                getApplicationContext()).setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(getApplicationInfo().labelRes))
+                .setContentText(content);
+        mBuilder.setTicker("您有一条新消息");//第一次提示消息的时候显示在通知栏上
+        mBuilder.setAutoCancel(true);//自己维护通知的消失
+        // 发送通知
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, mBuilder.build());
     }
 
     @Override

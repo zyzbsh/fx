@@ -231,7 +231,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="10dp"
-                android:text="每笔最少20元，每笔限额5000元，每天限额两万元\n微信支付绑卡的银行卡限额说明\n银联在线支付各支持银行的限额说明"
+                android:text="每笔最少20元，每笔限额5000元，每天限额两万金币\n微信支付绑卡的银行卡限额说明\n银联在线支付各支持银行的限额说明"
                 android:textSize="14sp" />
 
             <RelativeLayout

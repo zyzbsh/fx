@@ -125,15 +125,16 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
 
         } else {
             //有更新下载
-            if (mUpdate.getApkSize() > 0) {
-                text = getText(R.string.jjdxm_update_targetsize) + FileUtils.HumanReadableFilesize(mUpdate.getApkSize());
-            } else {
-                text = "";
-            }
-            updateContent = getText(R.string.jjdxm_update_newversion)
-                    + mUpdate.getVersionName() + "\n"
-                    + text + "\n\n"
-                    + getText(R.string.jjdxm_update_updatecontent) + "\n" + mUpdate.getUpdateContent() +
+//            if (mUpdate.getApkSize() > 0) {
+//                text = getText(R.string.jjdxm_update_targetsize) + FileUtils.HumanReadableFilesize(mUpdate.getApkSize());
+//            } else {
+//                text = "";
+//            }
+            updateContent =
+//                    getText(R.string.jjdxm_update_newversion)
+//                    + mUpdate.getVersionName() + "\n"
+//                    + text + "\n\n"+
+                        getText(R.string.jjdxm_update_updatecontent) + "\n" + mUpdate.getUpdateContent() +
                     "\n";
             jjdxm_update_id_ok.setText(R.string.jjdxm_update_updatenow);
             jjdxm_update_content.setText(updateContent);
@@ -141,9 +142,9 @@ public class UpdateDialogActivity extends Activity implements View.OnClickListen
         if (jjdxm_update_id_check != null) {
             if (UpdateHelper.getInstance().getUpdateType() == UpdateType.checkupdate) {
                 //手动更新
-                jjdxm_update_id_check.setVisibility(View.GONE);
+//                jjdxm_update_id_check.setVisibility(View.GONE);
             } else {
-                jjdxm_update_id_check.setVisibility(UpdateSP.isForced() ? View.GONE : View.VISIBLE);
+//                jjdxm_update_id_check.setVisibility(UpdateSP.isForced() ? View.GONE : View.VISIBLE);
             }
         }
 

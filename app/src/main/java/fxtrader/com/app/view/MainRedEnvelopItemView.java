@@ -42,7 +42,7 @@ public class MainRedEnvelopItemView extends MainItemView {
 
             nameTv.setText("EDITD");
             timeTv.setText("20:00");
-            contentTv.setText("收到100元红包");
+            contentTv.setText("收到100金币红包");
 
             addItemView(view);
             if (i != 3 - 1) {

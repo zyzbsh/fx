@@ -88,7 +88,7 @@ public class RedEnvelopListActivity extends BaseActivity {
             viewHolder.nameTv.setText("EDITD");
             viewHolder.timeTv.setText("20:00");
             viewHolder.contentTv.setText("给高手发出1个红包");
-            viewHolder.profitTv.setText("盈利   101元");
+            viewHolder.profitTv.setText("盈利   101金币");
             viewHolder.stateTv.setText("跟单");
         }
 

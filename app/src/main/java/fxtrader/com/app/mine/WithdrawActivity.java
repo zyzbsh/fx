@@ -230,7 +230,7 @@ public class WithdrawActivity extends BaseActivity implements View.OnClickListen
         try {
             double d = Double.parseDouble(amount);
             if (d < 10) {
-                showToastShort("请输入10元以上金额");
+                showToastShort("请输入10金币以上金额");
                 return;
             }
         } catch (Exception e) {

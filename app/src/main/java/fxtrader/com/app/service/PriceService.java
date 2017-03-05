@@ -6,17 +6,23 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.MarketEntity;
-import fxtrader.com.app.entity.PriceEntity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.ContractApi;
+import fxtrader.com.app.tools.LogZ;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,20 +74,39 @@ public class PriceService extends Service {
     }
 
     private void getMarketPrice() {
-        ContractApi dataApi = RetrofitUtils.createApi(ContractApi.class);
-        Call<MarketEntity> response = dataApi.rates(getMarketParams());
-        response.enqueue(new Callback<MarketEntity>() {
+        ContractApi dataApi = RetrofitUtils.createJsonApi(ContractApi.class);
+        Call<ResponseBody> response = dataApi.rates(getMarketParams());
+        response.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<MarketEntity> call, Response<MarketEntity> response) {
-                MarketEntity vo = response.body();
-                if (vo != null) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String json = null;
+                MarketEntity vo = new MarketEntity();
+                try {
+                    json = response.body().string();
+                    JSONObject jsonObject = new JSONObject(json);
+                    vo.setSuccess(jsonObject.optBoolean("success"));
+                    vo.setMessage(jsonObject.optString("message"));
+                    vo.setCode(jsonObject.optInt("code"));
+
+                    JSONObject object = jsonObject.getJSONObject("object");
+                    vo.setPriceJson(object.toString());
                     vo.init();
                     sendContentBroadcast(vo);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                LogZ.i("price = " + json);
+//                MarketEntity vo = new MarketEntity();
+//                if (vo != null) {
+//                    vo.init();
+//                    sendContentBroadcast(vo);
+//                }
             }
 
             @Override
-            public void onFailure(Call<MarketEntity> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
             }
         });
     }

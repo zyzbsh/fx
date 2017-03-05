@@ -12,15 +12,15 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -36,6 +36,7 @@ import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
+import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.ContractEntity;
 import fxtrader.com.app.entity.ContractInfoEntity;
 import fxtrader.com.app.entity.ContractListEntity;
@@ -46,12 +47,14 @@ import fxtrader.com.app.entity.ParticipantsEntity;
 import fxtrader.com.app.entity.PositionInfoEntity;
 import fxtrader.com.app.entity.PositionListEntity;
 import fxtrader.com.app.entity.PriceEntity;
+import fxtrader.com.app.entity.RankResponse;
 import fxtrader.com.app.entity.SystemBulletinEntity;
 import fxtrader.com.app.entity.UserEntity;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.CommunityApi;
+import fxtrader.com.app.http.api.UserApi;
 import fxtrader.com.app.http.manager.MasterListManager;
 import fxtrader.com.app.http.manager.ResponseListener;
 import fxtrader.com.app.http.manager.UserInfoManager;
@@ -84,22 +87,22 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private TextView mLoginTv;
 
-    private LinearLayout mBalanceLayout;
+    private LinearLayout mCoinsLayout;
 
-    private RelativeLayout mAccountInfoLayout;
-
-    private TextView mBalanceAmountTv;
-
-    private TextView mCashCouponTv;
+    private TextView mCoinsNumTv;
 
     private TextView mExpectRaiseDesTv;
 
     private TextView mExpectFallDesTv;
 
+    private TextView mProfitRateTv;
+
+    private TextView mRankTv;
+
     private ViewPager mViewPager;
 
     private final static int[] LINE_ID = {R.id.btn_timeline, R.id.btn_kline5,
-             R.id.btn_kline30, R.id.btn_kline60, R.id.btn_day,};
+            R.id.btn_kline30, R.id.btn_kline60, R.id.btn_day,};
 
     private final static int[] LINE_BG_ID = {R.id.bg_btn_timeline, R.id.bg_btn_kline5,
             R.id.bg_btn_kline15, R.id.bg_btn_kline30, R.id.bg_btn_kline60};
@@ -118,10 +121,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private String mLatestPrice = "";
 
-    private RecyclerView mRececlerView;
-
-    private DataAdapter mMasterAdapter;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
@@ -135,15 +134,16 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         getContactList();
         if (isLogin()) {
             mLoginTv.setVisibility(View.GONE);
-            mBalanceLayout.setVisibility(View.VISIBLE);
+            mCoinsLayout.setVisibility(View.VISIBLE);
             startPositionListService();
             registerPositionListResevier();
             startPositionListService();
             startUserTimer();
+            requestProfitRank();
         } else {
             mLoginTv.setVisibility(View.VISIBLE);
-            mBalanceLayout.setVisibility(View.GONE);
-            mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, "--"));
+            mCoinsLayout.setVisibility(View.GONE);
+            mRankTv.setText("--");
         }
         registerNetworkChangeReceiver();
         registerLoginReceiver();
@@ -164,14 +164,15 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             if (mPositionListReceiver != null) {
                 getActivity().unregisterReceiver(mPositionListReceiver);
             }
-            if (mNetworkChangeListener != null) {
-                getActivity().unregisterReceiver(mNetworkChangeListener);
+            if (mNetworkChangeReceiver != null) {
+                getActivity().unregisterReceiver(mNetworkChangeReceiver);
             }
         } catch (Exception e) {
             LogZ.e(e.getMessage());
+        } finally {
+            getActivity().stopService(new Intent(getActivity(), PriceService.class));
+            getActivity().stopService(new Intent(getActivity(), PositionService.class));
         }
-        getActivity().stopService(new Intent(getActivity(), PriceService.class));
-        getActivity().stopService(new Intent(getActivity(), PositionService.class));
     }
 
     @Override
@@ -183,44 +184,52 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
         if (requestCode == IntentItem.REQUEST_LOGIN) {
             LogZ.i("request_login_onActivityResult");
-            startUserTimer();
-            startPositionListService();
+            logined();
+        } else if (requestCode == IntentItem.REQUEST_LOGIN_FROM_BUILD_POSITION) {
+            logined();
             openBuildPositionActivity(mExpect);
         } else if (requestCode == IntentItem.REQUEST_BUILD_POSITION) {
             LogZ.i("REQUEST_BUILD_POSITION_onActivityResult");
             startPositionListService();
         } else if (requestCode == IntentItem.REQUEST_RECHARGE) {
             LogZ.i("REQUEST_RECHARGE_onActivityResult");
-            startUserTimer();
-            startPositionListService();
+            logined();
             openRechargeActivity();
         } else if (requestCode == IntentItem.REQUEST_WITHDRAW) {
             LogZ.i("REQUEST_WITHDRAW_onActivityResult");
-            startUserTimer();
-            startPositionListService();
+            logined();
             openWithdrawActivity();
+        } else if (requestCode == IntentItem.REQUEST_SIGN) {
+            logined();
+            sign();
         }
         setLoginView();
     }
 
-    public void logOut(){
+    private void logined() {
+        startUserTimer();
+        startPositionListService();
+        requestProfitRank();
+    }
+
+    public void logOut() {
         getActivity().stopService(new Intent(getActivity(), PositionService.class));
         mIsLogOut = true;
         stopUserTimer();
         mLoginTv.setVisibility(View.VISIBLE);
-        mBalanceLayout.setVisibility(View.GONE);
-        mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, "--"));
+        mCoinsLayout.setVisibility(View.GONE);
+        mRankTv.setText("--");
     }
 
     private void setLoginView() {
         LogZ.i("setLoginView");
         if (isLogin()) {
             mLoginTv.setVisibility(View.GONE);
-            mBalanceLayout.setVisibility(View.VISIBLE);
+            mCoinsLayout.setVisibility(View.VISIBLE);
         } else {
             mLoginTv.setVisibility(View.VISIBLE);
-            mBalanceLayout.setVisibility(View.GONE);
-            mCashCouponTv.setText(getActivity().getString(R.string.cash_coupon_num, "--"));
+            mCoinsLayout.setVisibility(View.GONE);
+            mRankTv.setText("--");
         }
     }
 
@@ -231,7 +240,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         initExpectLayout(view);
         initViewPager(view);
         initLineBtn(view);
-        initMasterList(view);
     }
 
     private void initTitleProfitLayout(View view) {
@@ -251,12 +259,11 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
     private void initAccountInfoLayout(View view) {
         mLoginTv = (TextView) view.findViewById(R.id.homepage_login_tv);
         mLoginTv.setOnClickListener(this);
-        mBalanceLayout = (LinearLayout) view.findViewById(R.id.homepage_balance_layout);
-        mAccountInfoLayout = (RelativeLayout) view.findViewById(R.id.homepage_account_info_layout);
-        mBalanceAmountTv = (TextView) view.findViewById(R.id.homepage_balance_amount_tv);
-        mCashCouponTv = (TextView) view.findViewById(R.id.homepage_cash_coupon_tv);
-        view.findViewById(R.id.homepage_recharge_tv).setOnClickListener(this);
-        view.findViewById(R.id.homepage_withdraw_tv).setOnClickListener(this);
+        mCoinsLayout = (LinearLayout) view.findViewById(R.id.homepage_coins_layout);
+        mCoinsNumTv = (TextView) view.findViewById(R.id.homepage_coins_num_tv);
+        mRankTv = (TextView) view.findViewById(R.id.homepage_rank_num_tv);
+        mProfitRateTv = (TextView) view.findViewById(R.id.homepage_profit_rate_num_tv);
+        view.findViewById(R.id.homepage_sign_btn).setOnClickListener(this);
     }
 
     private void initSystemBulletinLayout(View view) {
@@ -297,21 +304,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         btnLineBg[0].setVisibility(View.VISIBLE);
     }
 
-    private TextView mMasterListEmptyTv;
-    private void initMasterList(View view){
-        view.findViewById(R.id.homepage_master_more_tv).setOnClickListener(this);
-        mMasterListEmptyTv = (TextView) view.findViewById(R.id.homepage_master_list_empty_tv);
-        mRececlerView = (RecyclerView) view.findViewById(R.id.homepage_master_list_recycler_view);
-        mRececlerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRececlerView.setNestedScrollingEnabled(false);
-        mMasterAdapter = new DataAdapter(getActivity());
-        mRececlerView.setAdapter(mMasterAdapter);
-    }
-
-
-//    private LinkedHashMap<String, ContractEntity> mContractMap = new LinkedHashMap<>();
-//    private Map<String, ContractInfoEntity> mContractInfoMap = new HashMap<>();
-
     /**
      * 获取合约列表
      */
@@ -330,20 +322,11 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 ContractUtil.clear();
 
                 for (ContractInfoEntity info : mContractList) {
+                    if (info.getQueryParam().equals("YDHF") || info.getQueryParam().equals("YDCL")) {
+                        continue;
+                    }
                     ContractUtil.addContract(info);
-//                    String dataType = info.getQueryParam();
-//                    if (mContractMap.containsKey(dataType)) {
-//                        ContractEntity contract = mContractMap.get(dataType);
-//                        contract.add(info);
-//                    } else {
-//                        ContractEntity contract = new ContractEntity(dataType);
-//                        contract.add(info);
-//                        mContractMap.put(dataType, contract);
-//                    }
-//                    mContractInfoMap.put(info.getCode(), info);
                 }
-
-
                 List<Fragment> fragments = new ArrayList<>();
                 for (String type : ContractUtil.getContractMap().keySet()) {
                     ContractEntity contract = ContractUtil.getContractMap().get(type);
@@ -359,7 +342,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                     mViewPager.setAdapter(adapter);
                     mViewPager.setOffscreenPageLimit(mContractList.size() - 1);
                 }
-//              5  startDataTimer();
                 registerPriceReceiver();
                 getActivity().startService(new Intent(getActivity(), PriceService.class));
             }
@@ -384,11 +366,11 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         }
         String dataType = mCurDataLineFragment.getDataType();
         Intent intent;
-        if (dataType.equals(HttpConstant.PriceCode.YDHF)) {
-            intent = new Intent(getActivity(), HFBuildPositionActivity.class);
-        } else {
-            intent = new Intent(getActivity(), BuildPositionActivity.class);
-        }
+//        if (dataType.equals(HttpConstant.PriceCode.YDHF)) {
+//            intent = new Intent(getActivity(), HFBuildPositionActivity.class);
+//        } else {
+        intent = new Intent(getActivity(), BuildPositionActivity.class);
+//        }
         ContractEntity entity = ContractUtil.getContractMap().get(dataType);
         intent.putExtra(IntentItem.PRICE, mLatestPrice);
         intent.putExtra(IntentItem.CONTARCT_INFO, entity);
@@ -404,22 +386,11 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             case R.id.homepage_login_tv:
                 openActivityForResult(LoginNewActivity.class, IntentItem.REQUEST_LOGIN);
                 break;
-            case R.id.homepage_recharge_tv://充值
-                recharge();
-                break;
-            case R.id.homepage_withdraw_tv://提现
-                withdraw();
-                break;
             case R.id.homepage_expect_raise_layout://看涨
                 expect(true);
                 break;
             case R.id.homepage_expect_fall_layout://看跌
                 expect(false);
-                break;
-            case R.id.homepage_master_more_tv://更多
-                if (mMasterMoreListener != null) {
-                    mMasterMoreListener.more();
-                }
                 break;
             case R.id.btn_timeline:
             case R.id.btn_kline5:
@@ -427,6 +398,13 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             case R.id.btn_kline30:
             case R.id.btn_kline60:
                 dataLineBtnOnClicked(v);
+                break;
+            case R.id.homepage_sign_btn://签到
+                if (isLogin()) {
+                    sign();
+                } else {
+                    openActivityForResult(LoginNewActivity.class, IntentItem.REQUEST_SIGN);
+                }
                 break;
             default:
                 break;
@@ -466,7 +444,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         if (isLogin()) {
             openBuildPositionActivity(raise);
         } else {
-            openActivityForResult(LoginNewActivity.class, IntentItem.REQUEST_LOGIN);
+            openActivityForResult(LoginNewActivity.class, IntentItem.REQUEST_LOGIN_FROM_BUILD_POSITION);
         }
     }
 
@@ -538,8 +516,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         getActivity().registerReceiver(mPriceReceiver, filter);
     }
 
-    private boolean masterRequested = false;
     private MarketEntity mMarketentity;
+
     class PriceReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -548,7 +526,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 vo.init();
                 mMarketentity = vo;
                 AppApplication.getInstance().setMarketEntity(vo);
-                requestMaster();
                 if (mCurDataLineFragment != null) {
                     String dataType = mCurDataLineFragment.getDataType();
                     String data = vo.getData(dataType);
@@ -582,13 +559,13 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private BroadcastReceiver mPositionListReceiver;
 
-    private void registerPositionListResevier(){
+    private void registerPositionListResevier() {
         mPositionListReceiver = new PositionListReceiver();
         IntentFilter filter = new IntentFilter(IntentItem.ACTION_POSITION_LIST);
         getActivity().registerReceiver(mPositionListReceiver, filter);
     }
 
-    class PositionListReceiver extends BroadcastReceiver{
+    class PositionListReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             mPositionInfoList = (List<PositionInfoEntity>) intent.getSerializableExtra(IntentItem.POSITION_LIST);
@@ -721,10 +698,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             public void onSuccess(UserEntity user) {
                 mUserEntity = user;
                 if (user != null && user.getObject() != null && !mIsLogOut) {
-                    mAccountInfoLayout.setVisibility(View.VISIBLE);
-                    mBalanceAmountTv.setText(String.valueOf(user.getObject().getFunds()));
-                    String couponNum = String.valueOf(user.getObject().getCouponAmount());
-                    mCashCouponTv.setText("现金券：" + couponNum);
+                    mCoinsLayout.setVisibility(View.VISIBLE);
+                    mCoinsNumTv.setText(String.valueOf(user.getObject().getFunds()));
                 }
             }
 
@@ -750,10 +725,10 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             LogZ.i("login receiver onReceive");
             registerPositionListResevier();
             getActivity().startService(new Intent(getActivity(), PositionService.class));
-            requestMaster();
             startUserTimer();
             startPositionListService();
             setLoginView();
+            requestProfitRank();
         }
     }
 
@@ -787,7 +762,9 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         return params;
     }
 
-    private void requestSystemBulletin(){
+    private SystemBulletinDialog mSystemBulletinDialog;
+
+    private void requestSystemBulletin() {
         CommunityApi communityApi = RetrofitUtils.createApi(CommunityApi.class);
         Call<SystemBulletinEntity> request = communityApi.systembulletin(getSystemBulletinParams());
         request.enqueue(new Callback<SystemBulletinEntity>() {
@@ -799,8 +776,11 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                     if (context == null) {
                         context = AppApplication.getInstance().getApplicationContext();
                     }
-                    SystemBulletinDialog dialog = new SystemBulletinDialog(context, entity);
-                    dialog.show();
+                    if (mSystemBulletinDialog != null && mSystemBulletinDialog.isShowing()) {
+                        mSystemBulletinDialog.dismiss();
+                    }
+                    mSystemBulletinDialog = new SystemBulletinDialog(context, entity);
+                    mSystemBulletinDialog.show();
                 }
             }
 
@@ -819,114 +799,61 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         return params;
     }
 
-    private void requestMaster(){
-        MasterResponseListener listener = new MasterResponseListener();
-        if (LoginConfig.getInstance().isLogin()) {
-            String organId = LoginConfig.getInstance().getOrganId() + "";
-            String id = LoginConfig.getInstance().getId();
-            MasterListManager.getInstance().getMastersWithLogined(organId, id, listener);
-        } else {
-            MasterListManager.getInstance().getMasters(listener);
-        }
-    }
-
-    class MasterResponseListener implements ResponseListener<MasterListEntity> {
-        @Override
-        public void success(MasterListEntity object) {
-            if (object != null && object.isSuccess()) {
-                if (object.getObject().isEmpty()) {
-                    mRececlerView.setVisibility(View.GONE);
-                    mMasterListEmptyTv.setVisibility(View.VISIBLE);
-                } else {
-                    mRececlerView.setVisibility(View.VISIBLE);
-                    mMasterListEmptyTv.setVisibility(View.GONE);
-                    int size = object.getObject().size();
-                    if (size <= 4) {
-                        mMasterAdapter.setDataList(object.getObject());
-                    } else {
-                        size = 4;
-                        List<MasterEntity> list = new ArrayList<>();
-                        for (int i = 0; i < size; i++) {
-                            list.add(object.getObject().get(i));
-                        }
-                    }
-                    ViewGroup.LayoutParams mParams = mRececlerView.getLayoutParams();
-                    mParams.height = UIUtil.dip2px(AppApplication.getInstance().getApplicationContext(), 48) * size;
-                    mRececlerView.setLayoutParams(mParams);
+    private void requestProfitRank() {
+        CommunityApi communityApi = RetrofitUtils.createApi(CommunityApi.class);
+        String token = ParamsUtil.getToken();
+        Call<RankResponse> request = communityApi.profitRank(token, getProfitRankParams());
+        request.enqueue(new Callback<RankResponse>() {
+            @Override
+            public void onResponse(Call<RankResponse> call, Response<RankResponse> response) {
+                RankResponse rankResponse = response.body();
+                if (rankResponse != null && rankResponse.getObject() != null) {
+                    mProfitRateTv.setText(rankResponse.getObject().getProfitRate() + "");
+                    mRankTv.setText(rankResponse.getObject().getRankNo() + "");
                 }
             }
-        }
 
-        @Override
-        public void error(String error) {
-            LogZ.e(error);
-        }
+            @Override
+            public void onFailure(Call<RankResponse> call, Throwable t) {
+
+            }
+        });
     }
 
-    class DataAdapter extends ListBaseAdapter<MasterEntity> {
+    private Map<String, String> getProfitRankParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.community.rankNo");
+        params.put("organ_id", LoginConfig.getInstance().getOrganId() + "");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
+    }
 
-        private LayoutInflater mLayoutInflater;
-
-        public DataAdapter(Context context) {
-            mLayoutInflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(mLayoutInflater.inflate(R.layout.item_homepage_master, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            MasterEntity item = mDataList.get(position);
-
-            ViewHolder viewHolder = (ViewHolder) holder;
-            setTagImWithPosition(viewHolder.rankTv, viewHolder.rankTv2, position);
-            viewHolder.nameTv.setText(item.getNickname());
-            viewHolder.profitTv.setText(ContractUtil.getDouble(item.getProfit(), 1) +"");
-            if (getContext() != null) {
-                Glide.with(getContext())
-                        .load(item.getHeadImg())
-                        .centerCrop()
-//                    .placeholder(R.drawable.loading_spinner)
-                        .crossFade()
-                        .into(viewHolder.avatarIm);
-            }
-        }
-
-        private void setTagImWithPosition(TextView rankTv, TextView rankTv2, int position) {
-            rankTv.setText((position + 1) + "");
-            if (position == 0) {
-                rankTv2.setBackgroundResource(R.mipmap.icon_rank_first);
-            } else if (position == 1) {
-                rankTv2.setBackgroundResource(R.mipmap.icon_rank_second);
-            } else if (position == 2) {
-                rankTv2.setBackgroundResource(R.mipmap.icon_rank_third);
-            } else if(position == 3) {
-                rankTv2.setText("4");
-                rankTv2.setBackgroundResource(R.mipmap.bg_circle_yellow);
-            }
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-
-            private TextView rankTv;
-            private TextView rankTv2;
-            private ImageView avatarIm;
-            private TextView profitTv;
-            private TextView nameTv;
-
-            public ViewHolder(View view) {
-                super(view);
-                rankTv = (TextView) view.findViewById(R.id.homepage_master_rank_tv);
-                rankTv2 = (TextView) view.findViewById(R.id.homepage_master_rank_tv_2);
-                avatarIm = (CircleImageView) view.findViewById(R.id.homepage_master_avatar_im);
-                profitTv = (TextView) view.findViewById(R.id.homepage_master_profit_tv);
-                nameTv = (TextView) view.findViewById(R.id.homepage_master_name_tv);
+    private void sign() {
+        UserApi userApi = RetrofitUtils.createApi(UserApi.class);
+        String token = ParamsUtil.getToken();
+        Call<CommonResponse> request = userApi.sign(token, getSignParams());
+        request.enqueue(new Callback<CommonResponse>() {
+            @Override
+            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+                CommonResponse commonResponse = response.body();
+                if (commonResponse != null) {
+                    Toast.makeText(getContext(), commonResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
 
+            @Override
+            public void onFailure(Call<CommonResponse> call, Throwable t) {
 
-        }
+            }
+        });
+    }
+
+    private Map<String, String> getSignParams() {
+        final Map<String, String> params = ParamsUtil.getCommonParams();
+        params.put("method", "gdiex.community.attendance");
+        params.put("organ_id", LoginConfig.getInstance().getOrganId() + "");
+        params.put("sign", ParamsUtil.sign(params));
+        return params;
     }
 
     private MasterMoreListener mMasterMoreListener;
@@ -939,10 +866,10 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         public void more();
     }
 
-    private BroadcastReceiver mNetworkChangeListener;
+    private BroadcastReceiver mNetworkChangeReceiver;
 
     private void registerNetworkChangeReceiver() {
-        mNetworkChangeListener = new NetworkChangeReceiver();
+        mNetworkChangeReceiver = new NetworkChangeReceiver();
         IntentFilter filter = new IntentFilter(IntentItem.ACTION_NETWORK_CHANGE);
         getActivity().registerReceiver(mLoginReceiver, filter);
     }

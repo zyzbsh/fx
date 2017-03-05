@@ -7,6 +7,7 @@ import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.FollowOrderCountEntity;
 import fxtrader.com.app.entity.MasterListEntity;
 import fxtrader.com.app.entity.ProfitListEntity;
+import fxtrader.com.app.entity.RankResponse;
 import fxtrader.com.app.entity.SaveClientResponse;
 import fxtrader.com.app.entity.SubscribeEntity;
 import fxtrader.com.app.entity.SubscribedPositionListEntity;
@@ -78,4 +79,7 @@ public interface CommunityApi {
     @FormUrlEncoded
     @POST("/api/v3/saveClientId")
     Call<SaveClientResponse> saveClientId(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);
+
+    @GET("/api/rankNo")
+    Call<RankResponse> profitRank(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
 }
