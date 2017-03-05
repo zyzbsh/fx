@@ -117,11 +117,11 @@ public class OrderDetailActivity extends BaseActivity implements View.OnClickLis
         String code = mPositionInfo.getContractCode();
         String queryParam = ContractUtil.getContractInfoMap().get(code).getQueryParam();
 
-        if (queryParam.equals(HttpConstant.PriceCode.YDHF)) {
-            mChangeStopPercentTv.setVisibility(View.INVISIBLE);
-        } else {
+//        if (queryParam.equals(HttpConstant.PriceCode.YDHF)) {
+//            mChangeStopPercentTv.setVisibility(View.INVISIBLE);
+//        } else {
             mChangeStopPercentTv.setVisibility(View.VISIBLE);
-        }
+//        }
 
         MarketEntity vo = AppApplication.getInstance().getMarketEntity();
         if (vo != null) {

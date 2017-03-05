@@ -65,16 +65,32 @@ public class MasterListManager {
         params.put("limit", String.valueOf(LIMIT_LOGINED));
         params.put("customerId", customerId);
         MarketEntity market = AppApplication.getInstance().getMarketEntity();
-        String ydRate = "10";
-        String hfRate = "10";
+        String agRate = "10";
+        String auRate = "10";
+        String oilRate = "10";
+        String tdagRate = "10";
+        String tdauRate = "10";
         if (market != null) {
-            PriceEntity ydPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDCL));
-            ydRate = ydPrice.getLatestPrice();
-            PriceEntity hfPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDHF));
-            hfRate = hfPrice.getLatestPrice();
+            PriceEntity agPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.AG));
+            agRate = agPrice.getLatestPrice();
+
+            PriceEntity auPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.AU));
+            auRate = auPrice.getLatestPrice();
+
+            PriceEntity oilPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.OIL));
+            oilRate = oilPrice.getLatestPrice();
+
+            PriceEntity tdagPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.TDAG));
+            tdagRate = tdagPrice.getLatestPrice();
+
+            PriceEntity tdauPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.TDAU));
+            tdauRate = tdauPrice.getLatestPrice();
         }
-        params.put("ydRate", ydRate);
-        params.put("hfRate", hfRate);
+        params.put("agRate", agRate);
+        params.put("auRate", auRate);
+        params.put("oilRate", oilRate);
+        params.put("tdagRate", tdagRate);
+        params.put("tdauRate", tdauRate);
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }
@@ -105,10 +121,20 @@ public class MasterListManager {
         params.put("organ_id", HttpConstant.DEFAULT_ORGAN_ID + "");
         params.put("limit", String.valueOf(LIMIT_UNLOGINED));
         MarketEntity market = AppApplication.getInstance().getMarketEntity();
-        PriceEntity ydPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDCL));
-        params.put("ydRate", ydPrice.getLatestPrice());
-        PriceEntity hfPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.YDHF));
-        params.put("hfRate", hfPrice.getLatestPrice());
+        PriceEntity agPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.AG));
+        params.put("agRate", agPrice.getLatestPrice());
+
+            PriceEntity auPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.AU));
+        params.put("auRate", auPrice.getLatestPrice());
+
+            PriceEntity oilPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.OIL));
+        params.put("oilRate", oilPrice.getLatestPrice());
+
+            PriceEntity tdagPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.TDAG));
+        params.put("tdagRate", tdagPrice.getLatestPrice());
+
+            PriceEntity tdauPrice = new PriceEntity(market.getData(HttpConstant.PriceCode.TDAU));
+        params.put("tdauRate", tdauPrice.getLatestPrice());
         params.put("sign", ParamsUtil.sign(params));
         return params;
     }

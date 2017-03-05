@@ -105,13 +105,13 @@ public class DataLineFragment extends BaseFragment{
         mYesterdayCloseTv = (TextView) view.findViewById(R.id.homepage_yesterday_open_tv);
         mTodayOpenTv = (TextView) view.findViewById(R.id.homepage_today_open_tv);
 
-        if (!mContractType.equals(HttpConstant.PriceCode.YDHF)) {
-            mContractPercentTv.setVisibility(View.GONE);
-            mContractProfitTv.setVisibility(View.GONE);
-        } else {
-            mContractPercentTv.setVisibility(View.VISIBLE);
-            mContractProfitTv.setVisibility(View.VISIBLE);
-        }
+//        if (!mContractType.equals(HttpConstant.PriceCode.YDHF)) {
+//            mContractPercentTv.setVisibility(View.GONE);
+//            mContractProfitTv.setVisibility(View.GONE);
+//        } else {
+//            mContractPercentTv.setVisibility(View.VISIBLE);
+//            mContractProfitTv.setVisibility(View.VISIBLE);
+//        }
     }
 
     private void initChartView(View view) {

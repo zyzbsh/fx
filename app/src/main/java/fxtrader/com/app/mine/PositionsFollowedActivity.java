@@ -347,12 +347,12 @@ public class PositionsFollowedActivity extends BaseActivity {
                     Intent intent;
                     ContractInfoEntity contractInfoEntity = ContractUtil.getContractInfoMap().get(contractCode);
                     String dataType = contractInfoEntity.getDataType();
-                    if (dataType.equals(HttpConstant.PriceCode.YDHF)) {
-                        intent = new Intent(mContext, HFBuildPositionActivity.class);
-                    } else {
-                        dataType = HttpConstant.PriceCode.YDCL;
+//                    if (dataType.equals(HttpConstant.PriceCode.YDHF)) {
+//                        intent = new Intent(mContext, HFBuildPositionActivity.class);
+//                    } else {
+//                        dataType = HttpConstant.PriceCode.YDCL;
                         intent = new Intent(mContext, BuildPositionActivity.class);
-                    }
+//                    }
                     intent.putExtra(IntentItem.ORDER_FOLLOWED, entity);
                     ContractEntity contractEntity = ContractUtil.getContractMap().get(dataType);
                     intent.putExtra(IntentItem.PRICE, entity.getLatestPrice());

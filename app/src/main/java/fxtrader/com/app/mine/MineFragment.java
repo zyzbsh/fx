@@ -109,7 +109,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
         int height = screenWidth / 3;
         setupLayoutHeight(view, R.id.mine_layout_1, height);
         setupLayoutHeight(view, R.id.mine_layout_2, height);
-        setupLayoutHeight(view, R.id.mine_layout_3, height);
+//        setupLayoutHeight(view, R.id.mine_layout_3, height);
     }
 
     private void setupLayoutHeight(View view, int layoutId, int height) {
