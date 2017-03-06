@@ -342,7 +342,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
                 targetPrice = latestPrice  - profit / profitAndLoss;
             }
             BigDecimal b = new BigDecimal(targetPrice);
-            double f = b.setScale(1, BigDecimal.ROUND_CEILING).doubleValue();
+            double f = b.setScale(2, BigDecimal.ROUND_CEILING).doubleValue();
             mTargetPriceTv.setText(String.valueOf(f));
         }
 
@@ -357,7 +357,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
                 stopLossPrice = latestPrice + loss / profitAndLoss;
             }
             BigDecimal b = new BigDecimal(stopLossPrice);
-            double f = b.setScale(1, BigDecimal.ROUND_CEILING).doubleValue();
+            double f = b.setScale(2, BigDecimal.ROUND_CEILING).doubleValue();
             mStopLossPriceTv.setText(String.valueOf(f));
         }
     }

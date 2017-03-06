@@ -14,18 +14,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"></LinearLayout>
 
     <TextView
         android:id="@+id/guide_start_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
         android:layout_above="@+id/guide_ll_point"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:text="开  始"
+        android:layout_marginBottom="6dp"
+        android:gravity="center"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:visibility="gone" />

@@ -69,6 +69,7 @@ import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.tools.UIUtil;
 import fxtrader.com.app.view.CircleImageView;
 import fxtrader.com.app.view.ProfitListPop;
+import fxtrader.com.app.view.SignSuccessDialog;
 import fxtrader.com.app.view.SystemBulletinDialog;
 import fxtrader.com.app.view.ctr.MainTitleProfitCtr;
 import retrofit2.Call;
@@ -837,7 +838,11 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
                 CommonResponse commonResponse = response.body();
                 if (commonResponse != null) {
-                    Toast.makeText(getContext(), commonResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (commonResponse.isSuccess()) {
+                        showSignSuccessDialog();
+                    } else {
+                        Toast.makeText(getContext(), commonResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -847,6 +852,12 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             }
         });
     }
+
+    private void showSignSuccessDialog(){
+        SignSuccessDialog dialog = new SignSuccessDialog(getContext());
+        dialog.show();
+    }
+
 
     private Map<String, String> getSignParams() {
         final Map<String, String> params = ParamsUtil.getCommonParams();

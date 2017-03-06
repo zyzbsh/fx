@@ -79,7 +79,7 @@
                     style="@style/FindTab"
                     android:clickable="false"
                     android:drawableLeft="@drawable/sel_tab_win_stream"
-                    android:text="@string/master_hot_list" />
+                    android:text="高手热点" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -94,7 +94,7 @@
                     style="@style/FindTab"
                     android:clickable="false"
                     android:drawableLeft="@drawable/sel_tab_profit"
-                    android:text="@string/profit_list" />
+                    android:text="昨日排名" />
             </RelativeLayout>
 
             <RelativeLayout

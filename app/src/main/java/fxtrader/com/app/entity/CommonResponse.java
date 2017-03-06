@@ -6,7 +6,7 @@ package fxtrader.com.app.entity;
 public class CommonResponse {
     private int code;
     private String message;
-    private boolean success;
+    private boolean success = false;
 
     public int getCode() {
         return code;

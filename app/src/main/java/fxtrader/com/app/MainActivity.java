@@ -1,23 +1,16 @@
 package fxtrader.com.app;
 
-import android.*;
 import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RemoteViews;
-
-import com.igexin.sdk.PushManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,14 +26,14 @@ import fxtrader.com.app.homepage.HomepageFragment;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
 import fxtrader.com.app.http.api.UserApi;
-import fxtrader.com.app.http.manager.GeTuiClientIdManager;
 import fxtrader.com.app.login.LoginNewActivity;
 import fxtrader.com.app.mine.MineFragment;
 import fxtrader.com.app.permission.IPermissionCheck;
 import fxtrader.com.app.permission.IPermissionRequest;
 import fxtrader.com.app.permission.PermissionChecker;
 import fxtrader.com.app.permission.PermissionRequester;
-import fxtrader.com.app.protection.ProtectionFragment;
+import fxtrader.com.app.td.ProtectionFragment;
+import fxtrader.com.app.td.TDFragment;
 import fxtrader.com.app.tools.GeTuiUtil;
 import fxtrader.com.app.tools.LogZ;
 import fxtrader.com.app.update.UpdateHelper;
@@ -176,7 +169,25 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 int size = mCheckedIdRecords.size();
                 mRadioGroup.check(mCheckedIdRecords.get(size - 1));
             }
-        } else {
+        } else if (R.id.main_tab_protection_btn == checkedId){
+            if (isLogin()) {
+                hideAllFragment(transaction);
+                checkTabBg(1);
+                if (mProtectionFragment == null) {
+                    mProtectionFragment = new TDFragment();
+                    transaction.add(R.id.main_content_layout, mProtectionFragment);
+                } else {
+                    transaction.show(mProtectionFragment);
+                }
+            } else {
+                Intent intent = new Intent(this, LoginNewActivity.class);
+                intent.putExtra(IntentItem.MINE, true);
+                startActivity(intent);
+                int size = mCheckedIdRecords.size();
+                mRadioGroup.check(mCheckedIdRecords.get(size - 1));
+            }
+
+        }else {
             mCheckedIdRecords.clear();
             hideAllFragment(transaction);
             if (R.id.main_tab_homepage_btn == checkedId) {
@@ -195,14 +206,6 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                     transaction.add(R.id.main_content_layout, mHomepageFragment);
                 } else {
                     transaction.show(mHomepageFragment);
-                }
-            } else if (R.id.main_tab_protection_btn == checkedId) {
-                checkTabBg(1);
-                if (mProtectionFragment == null) {
-                    mProtectionFragment = new ProtectionFragment();
-                    transaction.add(R.id.main_content_layout, mProtectionFragment);
-                } else {
-                    transaction.show(mProtectionFragment);
                 }
             } else if (R.id.main_tab_find_btn == checkedId) {
                 checkTabBg(2);
