@@ -179,6 +179,7 @@ public class MainActivity extends BaseActivity implements RadioGroup.OnCheckedCh
                 } else {
                     transaction.show(mProtectionFragment);
                 }
+                transaction.commit();
             } else {
                 Intent intent = new Intent(this, LoginNewActivity.class);
                 intent.putExtra(IntentItem.MINE, true);

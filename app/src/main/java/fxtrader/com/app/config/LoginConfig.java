@@ -82,18 +82,18 @@ public final class LoginConfig {
     }
 
     public boolean isLogin() {
-        long curTime = System.currentTimeMillis();
-        String recordTime = mSp.getString(TIME, "");
-        if (TextUtils.isEmpty(recordTime)) {
-            return false;
-        }
-        long time = Long.parseLong(recordTime);
-        if (curTime - time < 50 * 60 * 1000) {
+//        long curTime = System.currentTimeMillis();
+//        String recordTime = mSp.getString(TIME, "");
+//        if (TextUtils.isEmpty(recordTime)) {
+//            return false;
+//        }
+//        long time = Long.parseLong(recordTime);
+//        if (curTime - time < 50 * 60 * 1000) {
             String token = getToken();
             return !TextUtils.isEmpty(token);
-        } else {
-            return false;
-        }
+//        } else {
+//            return false;
+//        }
 
     }
 
