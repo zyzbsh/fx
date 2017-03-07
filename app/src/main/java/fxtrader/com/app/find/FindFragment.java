@@ -42,7 +42,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
 
     private MasterHotFragment mMasterHotFragment;
 
-    private ProfitFragment mProfitFragment;
+    private YesterdayRankingFragment mProfitFragment;
 
     private RedEnvelopeFragment mRedEnvelopeFragment;
 
@@ -50,9 +50,9 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
         INDEX_WIN_STREAM, INDEX_PROFIT, INDEX_RED_ENVELOPE
     }
 
-    private View[] mTabBgViews = new View[3];
+    private View[] mTabBgViews = new View[2];
 
-    private RadioButton[] mTabBtns = new RadioButton[3];
+    private RadioButton[] mTabBtns = new RadioButton[2];
 
     @Nullable
     @Override
@@ -132,11 +132,11 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
     private void initTabLayout(View view) {
         mTabBgViews[TabIndex.INDEX_WIN_STREAM.ordinal()] = view.findViewById(R.id.find_tab_bg_win_stream);
         mTabBgViews[TabIndex.INDEX_PROFIT.ordinal()] = view.findViewById(R.id.find_tab_bg_profit);
-        mTabBgViews[TabIndex.INDEX_RED_ENVELOPE.ordinal()] = view.findViewById(R.id.find_tab_bg_red_envelope);
+//        mTabBgViews[TabIndex.INDEX_RED_ENVELOPE.ordinal()] = view.findViewById(R.id.find_tab_bg_red_envelope);
 
         mTabBtns[TabIndex.INDEX_WIN_STREAM.ordinal()] = (RadioButton) view.findViewById(R.id.find_tab_win_stream_btn);
         mTabBtns[TabIndex.INDEX_PROFIT.ordinal()] = (RadioButton) view.findViewById(R.id.find_tab_profit_btn);
-        mTabBtns[TabIndex.INDEX_RED_ENVELOPE.ordinal()] = (RadioButton) view.findViewById(R.id.find_tab_red_envelope_btn);
+//        mTabBtns[TabIndex.INDEX_RED_ENVELOPE.ordinal()] = (RadioButton) view.findViewById(R.id.find_tab_red_envelope_btn);
 
         TabOnClickListener listener = new TabOnClickListener();
         mMasterView = view.findViewById(R.id.find_tab_win_stream_layout);
@@ -198,7 +198,7 @@ public class FindFragment extends BaseFragment implements View.OnClickListener, 
             }
         } else if (index == TabIndex.INDEX_PROFIT.ordinal()) {
             if (mProfitFragment == null) {
-                mProfitFragment = new ProfitFragment();
+                mProfitFragment = new YesterdayRankingFragment();
                 transaction.add(R.id.find_content_layout, mProfitFragment);
             } else {
                 transaction.show(mProfitFragment);

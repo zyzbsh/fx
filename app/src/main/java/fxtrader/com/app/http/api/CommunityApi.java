@@ -15,6 +15,8 @@ import fxtrader.com.app.entity.SubscribeListEntity;
 import fxtrader.com.app.entity.SubscribedOrderEntity;
 import fxtrader.com.app.entity.SystemBulletinEntity;
 import fxtrader.com.app.entity.WinerStreamListEntity;
+import fxtrader.com.app.entity.YesterdayRankResponse;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -82,4 +84,7 @@ public interface CommunityApi {
 
     @GET("/api/rankNo")
     Call<RankResponse> profitRank(@Header("Authorization") String authorization, @QueryMap Map<String, String> params);
+
+    @GET("/api/getAceRank")
+    Call<YesterdayRankResponse> getAceRank(@QueryMap Map<String, String> params);
 }
