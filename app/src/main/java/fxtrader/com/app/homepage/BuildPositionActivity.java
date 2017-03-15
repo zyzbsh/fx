@@ -73,21 +73,13 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
     private ContractInfoEntity mCurContractInfo;
 
-    private int mTicketId = 1;
-
     private TextView mContractNameTv;
 
     private TextView mSpecificationTv;
 
-    private TextView mHandChargeTv;
-
     private TextView mProfitAndLossTv;
 
     private TextView mLatestPriceTv;
-
-    private TextView mTargetPriceTv;
-
-    private TextView mStopLossPriceTv;
 
     private TextView mOkTv;
 
@@ -101,10 +93,6 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
     private ProfitAndLossView mStopLossView;
 
-    private int mTicketCount = 0;
-
-    private CheckBox mRedEnvelopeCb;
-
     private CheckBox mCouponCb;
 
     private TextView mCouponNumTv;
@@ -117,7 +105,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
     private TextView mMarginTv;
 
-    private TextView mFeeTv;
+    private TextView mFeeTv, mFeeFirstTv;
 
     private String mLatestPrice;
 
@@ -126,6 +114,10 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
     private CustomAdapter mAdapter;
 
     private int mDefaultPosition;
+
+    private TextView mSpendTv;
+
+    private TextView mFeeSumTv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -161,9 +153,8 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         initParams();
         initTitle();
         initContractInfo();
-        initInfoRec();
+//        initInfoRec();
         initSeekBar();
-        initRedEnvelope();
         initProfitAndLoss();
         initCouponLayout();
         initMarginLayout();
@@ -241,11 +232,9 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
 
     private void initContractInfo() {
         mSpecificationTv = (TextView) findViewById(R.id.dialog_build_specification_tv);
-        mHandChargeTv = (TextView) findViewById(R.id.dialog_build_unit_tv);
         mProfitAndLossTv = (TextView) findViewById(R.id.dialog_build_profit_and_loss_tv);
         mLatestPriceTv = (TextView) findViewById(R.id.dialog_build_price_latest_tv);
-        mTargetPriceTv = (TextView) findViewById(R.id.dialog_build_price_target_tv);
-        mStopLossPriceTv = (TextView) findViewById(R.id.dialog_build_price_stop_loss_tv);
+        mFeeFirstTv = (TextView) findViewById(R.id.dialog_build_fee_tv);
     }
 
     private void initInfoRec() {
@@ -310,13 +299,15 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
     private void initMarginLayout() {
         mMarginTv = (TextView) findViewById(R.id.dialog_buy_deposit_tv);
         mFeeTv = (TextView) findViewById(R.id.dialog_buy_fee_tv);
+        mSpendTv = (TextView) findViewById(R.id.dialog_build_spend_num_tv);
+        mFeeSumTv = (TextView) findViewById(R.id.dialog_build_sum_fee_num_tv);
     }
 
     private void setContractInfoLayout(ContractInfoEntity info) {
         mCurContractInfo = info;
-        mSpecificationTv.setText(info.getBaseNum() + info.getBaseUnit());
-        mHandChargeTv.setText(this.getString(R.string.margin_num, info.getMargin()));
+        mSpecificationTv.setText(info.getSpecification());
         mProfitAndLossTv.setText(String.valueOf(info.getPlRate()));
+        mFeeFirstTv.setText(info.getHandingCharge() + "");
     }
 
     private void setPriceLayout(String price) {
@@ -324,7 +315,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
             return;
         }
         mLatestPriceTv.setText(price);
-        setTargetAndStopLossTv(price);
+//        setTargetAndStopLossTv(price);
     }
 
     private void setTargetAndStopLossTv(String price) {
@@ -332,7 +323,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         double profitAndLoss = mCurContractInfo.getPlRate() * mCurContractInfo.getPlUnit();
 
         if (mStopProfitView.getPercent() == 0) {
-            mTargetPriceTv.setText("");
+//            mTargetPriceTv.setText("");
         } else {
             double profit = mCurContractInfo.getMargin() * mStopProfitView.getPercent() / 10.0;
             double targetPrice;
@@ -343,11 +334,11 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
             }
             BigDecimal b = new BigDecimal(targetPrice);
             double f = b.setScale(2, BigDecimal.ROUND_CEILING).doubleValue();
-            mTargetPriceTv.setText(String.valueOf(f));
+//            mTargetPriceTv.setText(String.valueOf(f));
         }
 
         if (mStopLossView.getPercent() == 0) {
-            mStopLossPriceTv.setText("");
+//            mStopLossPriceTv.setText("");
         } else {
             double loss = mCurContractInfo.getMargin() * mStopLossView.getPercent() / 10.0;
             double stopLossPrice;
@@ -358,7 +349,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
             }
             BigDecimal b = new BigDecimal(stopLossPrice);
             double f = b.setScale(2, BigDecimal.ROUND_CEILING).doubleValue();
-            mStopLossPriceTv.setText(String.valueOf(f));
+//            mStopLossPriceTv.setText(String.valueOf(f));
         }
     }
 
@@ -448,10 +439,6 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-    private void initRedEnvelope(){
-        mRedEnvelopeCb = (CheckBox) findViewById(R.id.dialog_build_red_envelope_cb);
-    }
-
     private void initProfitAndLoss() {
         mStopProfitView = (ProfitAndLossView) findViewById(R.id.dialog_build_stop_profit_layout);
         mStopLossView = (ProfitAndLossView) findViewById(R.id.dialog_build_stop_loss_layout);
@@ -491,6 +478,8 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         String fee = String.valueOf(f);
         mMarginTv.setText(getString(R.string.deposit_num, margin));
         mFeeTv.setText(getString(R.string.fee_num, fee));
+        mSpendTv.setText(margin + "金币");
+        mFeeSumTv.setText(fee + "金币");
     }
 
     private UserSubscribeEntity mUserSubscribeEntity;
@@ -503,6 +492,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
             mDealCount = mUserSubscribeEntity.getDealCount();
             mSeekBar.setProgress((mDealCount - DEFAULT_DEAL_COUNT) * 10);
             mTradeCountTv.setText(String.valueOf(mDealCount));
+            setMarginLayout();
         }
     }
 
@@ -696,7 +686,7 @@ public class BuildPositionActivity extends BaseActivity implements View.OnClickL
         }
         params.put("followMetalOrderId", orderId);
         params.put("organId", LoginConfig.getInstance().getOrganId() + "");
-        int sendRedEnvelope = mRedEnvelopeCb.isChecked() ? HttpConstant.RedPacketType.SEND : HttpConstant.RedPacketType.UNSEND;
+        int sendRedEnvelope = HttpConstant.RedPacketType.UNSEND;
         params.put("sendRedPacket", "" + sendRedEnvelope);
         params.put("sign", ParamsUtil.sign(params));
         return params;

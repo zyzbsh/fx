@@ -70,7 +70,7 @@
     <string name="buying_num">买入数量：%1$s</string>
     <string name="stop_profit">止盈</string>
     <string name="stop_loss">止损</string>
-    <string name="remind_build_position_dialog">您正在进行的是一种高风险的现货投资，可能会引起本金损失\n请您充分意识到风险的存在</string>
+    <string name="remind_build_position_dialog">您的本金可能会因为市场变动而产生损失，您应充分认识投资风险，\n谨慎下单</string>
     <string name="remind_build_position">投资有风险，交易需谨慎。最好止损，降低风险。\n注：1、暂不支持持仓过夜，收盘后将自动平仓。\n2、只能持仓一笔，平仓后才可建新单。</string>
     <string name="dialog_buy_profit_num">浮动盈亏：%1$s金币</string>
     <string name="dialog_buy_fee_num">手续费：%1$s金币/手</string>
