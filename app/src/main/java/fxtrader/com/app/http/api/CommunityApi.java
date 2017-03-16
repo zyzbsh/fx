@@ -71,6 +71,9 @@ public interface CommunityApi {
     @GET("/api/getBulletinBoards")
     Call<AdEntity> boards(@QueryMap Map<String, String> params);
 
+    @GET("/api/banner")
+    Call<AdEntity> banner(@QueryMap Map<String, String> params);
+
     @FormUrlEncoded
     @POST("/api/metalOrdersFollow")
     Call<CommonResponse> orderFollowed(@Header("Authorization") String authorization, @FieldMap Map<String, String> params);

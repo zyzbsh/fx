@@ -71,6 +71,8 @@ import fxtrader.com.app.view.CircleImageView;
 import fxtrader.com.app.view.ProfitListPop;
 import fxtrader.com.app.view.SignSuccessDialog;
 import fxtrader.com.app.view.SystemBulletinDialog;
+import fxtrader.com.app.view.ctr.BannerController;
+import fxtrader.com.app.view.ctr.BannerHpController;
 import fxtrader.com.app.view.ctr.MainTitleProfitCtr;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -96,8 +98,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private TextView mExpectFallDesTv;
 
-    private TextView mProfitRateTv;
-
     private TextView mRankTv;
 
     private ViewPager mViewPager;
@@ -122,6 +122,12 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
     private String mLatestPrice = "";
 
+    private ImageButton mSignBtn;
+
+    private BannerHpController mBannerController;
+
+    private LinearLayout mRankLayout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
@@ -136,6 +142,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         if (isLogin()) {
             mLoginTv.setVisibility(View.GONE);
             mCoinsLayout.setVisibility(View.VISIBLE);
+            mRankLayout.setVisibility(View.VISIBLE);
             startPositionListService();
             registerPositionListResevier();
             startPositionListService();
@@ -144,6 +151,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         } else {
             mLoginTv.setVisibility(View.VISIBLE);
             mCoinsLayout.setVisibility(View.GONE);
+            mRankLayout.setVisibility(View.GONE);
             mRankTv.setText("--");
         }
         registerNetworkChangeReceiver();
@@ -151,6 +159,8 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         requestParticipant();
         requestSystemBulletin();
     }
+
+
 
     @Override
     public void onDestroy() {
@@ -219,6 +229,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         stopUserTimer();
         mLoginTv.setVisibility(View.VISIBLE);
         mCoinsLayout.setVisibility(View.GONE);
+        mRankLayout.setVisibility(View.GONE);
         mRankTv.setText("--");
     }
 
@@ -227,9 +238,11 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         if (isLogin()) {
             mLoginTv.setVisibility(View.GONE);
             mCoinsLayout.setVisibility(View.VISIBLE);
+            mRankLayout.setVisibility(View.VISIBLE);
         } else {
             mLoginTv.setVisibility(View.VISIBLE);
             mCoinsLayout.setVisibility(View.GONE);
+            mRankLayout.setVisibility(View.GONE);
             mRankTv.setText("--");
         }
     }
@@ -241,6 +254,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         initExpectLayout(view);
         initViewPager(view);
         initLineBtn(view);
+        initBannerView(view);
     }
 
     private void initTitleProfitLayout(View view) {
@@ -262,9 +276,10 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         mLoginTv.setOnClickListener(this);
         mCoinsLayout = (LinearLayout) view.findViewById(R.id.homepage_coins_layout);
         mCoinsNumTv = (TextView) view.findViewById(R.id.homepage_coins_num_tv);
+        mRankLayout = (LinearLayout) view.findViewById(R.id.homepage_rank_layout);
         mRankTv = (TextView) view.findViewById(R.id.homepage_rank_num_tv);
-        mProfitRateTv = (TextView) view.findViewById(R.id.homepage_profit_rate_num_tv);
-        view.findViewById(R.id.homepage_sign_btn).setOnClickListener(this);
+        mSignBtn = (ImageButton) view.findViewById(R.id.homepage_sign_btn);
+        mSignBtn.setOnClickListener(this);
     }
 
     private void initSystemBulletinLayout(View view) {
@@ -303,6 +318,12 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
 
         btnLineType[0].performClick();
         btnLineBg[0].setVisibility(View.VISIBLE);
+    }
+
+    private void initBannerView(View view) {
+        View bannerView = view.findViewById(R.id.banner_layout);
+        mBannerController = new BannerHpController(getActivity(), bannerView);
+        mBannerController.init();
     }
 
     /**
@@ -700,6 +721,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                 mUserEntity = user;
                 if (user != null && user.getObject() != null && !mIsLogOut) {
                     mCoinsLayout.setVisibility(View.VISIBLE);
+                    mRankLayout.setVisibility(View.VISIBLE);
                     mCoinsNumTv.setText(String.valueOf(user.getObject().getFunds()));
                 }
             }
@@ -809,7 +831,6 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             public void onResponse(Call<RankResponse> call, Response<RankResponse> response) {
                 RankResponse rankResponse = response.body();
                 if (rankResponse != null && rankResponse.getObject() != null) {
-                    mProfitRateTv.setText(rankResponse.getObject().getProfitRate() + "");
                     mRankTv.setText(rankResponse.getObject().getRankNo() + "");
                 }
             }
@@ -843,6 +864,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                     } else {
                         Toast.makeText(getContext(), commonResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+                    mSignBtn.setVisibility(View.GONE);
                 }
             }
 
