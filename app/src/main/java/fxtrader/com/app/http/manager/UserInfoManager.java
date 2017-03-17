@@ -36,7 +36,15 @@ public class UserInfoManager {
             @Override
             public void onResponse(Call<UserEntity> call, Response<UserEntity> response) {
                 UserEntity entity = response.body();
-                listener.onSuccess(entity);
+                if (entity == null) {
+                    listener.onHttpFailure();
+                    return;
+                }
+                if (entity.isSuccess()) {
+                    listener.onSuccess(entity);
+                } else {
+                    listener.onError(entity.getMessage());
+                }
             }
 
             @Override
@@ -55,6 +63,7 @@ public class UserInfoManager {
 
     public interface UserInfoListener{
         public void onSuccess(UserEntity user);
+        public void onError(String msg);
         public void onHttpFailure();
     }
 }

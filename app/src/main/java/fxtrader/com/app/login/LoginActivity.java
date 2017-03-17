@@ -172,6 +172,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
 
             @Override
+            public void onError(String msg) {
+                mHandler.sendEmptyMessage(0);
+            }
+
+            @Override
             public void onHttpFailure() {
                 mHandler.sendEmptyMessage(0);
             }

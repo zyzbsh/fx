@@ -47,6 +47,7 @@ public final class IntentItem {
 
     public static final String POSITION_ID = "position_id";
     public static final String VIDEO_URL = "url_video";
+    public static final String WEB_URL = "url_web";
     public static final String AMOUNT = "amount";
 
 }

@@ -170,6 +170,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener{
             }
 
             @Override
+            public void onError(String msg) {
+                dismissProgressDialog();
+            }
+
+            @Override
             public void onHttpFailure() {
                 dismissProgressDialog();
             }

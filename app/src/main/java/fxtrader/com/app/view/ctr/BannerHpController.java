@@ -28,6 +28,7 @@ import fxtrader.com.app.R;
 import fxtrader.com.app.config.LoginConfig;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.AdEntity;
+import fxtrader.com.app.homepage.WebBroswerActivity;
 import fxtrader.com.app.homepage.WebVideoActivity;
 import fxtrader.com.app.http.ParamsUtil;
 import fxtrader.com.app.http.RetrofitUtils;
@@ -172,8 +173,8 @@ public class BannerHpController {
                         String videoUrl = entity.getContentUrl();
                         LogZ.i("videoUrl = " + videoUrl);
                         if (!TextUtils.isEmpty(videoUrl)) {
-                            Intent intent = new Intent(mActivity, WebVideoActivity.class);
-                            intent.putExtra(IntentItem.VIDEO_URL, videoUrl);
+                            Intent intent = new Intent(mActivity, WebBroswerActivity.class);
+                            intent.putExtra(IntentItem.WEB_URL, videoUrl);
                             mActivity.startActivity(intent);
                         }
                     }

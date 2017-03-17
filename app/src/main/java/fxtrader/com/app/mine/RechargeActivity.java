@@ -131,6 +131,11 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
                 }
 
                 @Override
+                public void onError(String msg) {
+                    dismissProgressDialog();
+                }
+
+                @Override
                 public void onHttpFailure() {
                     dismissProgressDialog();
                 }
@@ -169,6 +174,11 @@ public class RechargeActivity extends BaseActivity implements View.OnClickListen
             public void onSuccess(UserEntity user) {
                 mUserEntity = user;
                 setUserView();
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onError(String msg) {
                 dismissProgressDialog();
             }
 

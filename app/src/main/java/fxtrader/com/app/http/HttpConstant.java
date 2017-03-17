@@ -5,7 +5,8 @@ package fxtrader.com.app.http;
  */
 public final class HttpConstant {
 
-    public static String BASE_URL = "http://121.9.227.58:13516/";
+//    public static String BASE_URL = "http://121.9.227.58:13516/";
+    public static String BASE_URL = "http://authz.mn.ifxeasy.com";
 
     public static String TEST_URL = " http://125.88.152.51:15516/";
 

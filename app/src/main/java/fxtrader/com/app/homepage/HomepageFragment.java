@@ -35,6 +35,7 @@ import fxtrader.com.app.R;
 import fxtrader.com.app.adapter.ListBaseAdapter;
 import fxtrader.com.app.base.BaseFragment;
 import fxtrader.com.app.config.LoginConfig;
+import fxtrader.com.app.config.SignConfig;
 import fxtrader.com.app.constant.IntentItem;
 import fxtrader.com.app.entity.CommonResponse;
 import fxtrader.com.app.entity.ContractEntity;
@@ -280,6 +281,11 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
         mRankTv = (TextView) view.findViewById(R.id.homepage_rank_num_tv);
         mSignBtn = (ImageButton) view.findViewById(R.id.homepage_sign_btn);
         mSignBtn.setOnClickListener(this);
+        if (SignConfig.getInstance().isSigned()){
+            mSignBtn.setVisibility(View.GONE);
+        } else {
+            mSignBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initSystemBulletinLayout(View view) {
@@ -727,6 +733,10 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
             }
 
             @Override
+            public void onError(String msg) {
+            }
+
+            @Override
             public void onHttpFailure() {
 
             }
@@ -865,6 +875,7 @@ public class HomepageFragment extends BaseFragment implements View.OnClickListen
                         Toast.makeText(getContext(), commonResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     mSignBtn.setVisibility(View.GONE);
+                    SignConfig.getInstance().save();
                 }
             }
 

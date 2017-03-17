@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PathEffect;
-import android.graphics.PixelFormat;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.text.TextUtils;
@@ -24,7 +23,6 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import fxtrader.com.app.entity.OHLCEntity;
 
-import fxtrader.com.app.config.Config;
 //import fxtrader.com.app.request.DataRequest;
 import fxtrader.com.app.http.HttpConstant;
 import fxtrader.com.app.http.ParamsUtil;
@@ -619,15 +617,15 @@ public class NewMAChartView extends SurfaceView implements Callback {
 						} else {
 							time = DateTools.getCurrentData();
 						}
-						url = Config.GetTimeLine + "?contract=" + code
-								+ "&quotedate=" + time;
+//						url = HttpConstant.GetTimeLine + "?contract=" + code
+//								+ "&quotedate=" + time;
 						if (flag) {
 							flag = false;
 							requestTimeLine();
 						}
 					} else {
-						url = Config.GetKLine + "?contract=" + code + "&type="
-								+ lineType;
+//						url = HttpConstant.GetKLine + "?contract=" + code + "&type="
+//								+ lineType;
 						if (flag) {
 							flag = false;
 							requestCandleLine(lineType + "");
@@ -643,21 +641,6 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		if (TextUtils.isEmpty(mContractType)) {
 			return;
 		}
-//		Call<DataVo> repos = mDataLineApi.listTimeLine("AG", "60");
-//		repos.enqueue(new retrofit2.Callback<DataVo>() {
-//			@Override
-//			public void onResponse(Call<DataVo> call, Response<DataVo> response) {
-//				DataVo data = response.body();
-//				handleData(data);
-//				Log.i("zyu", data.toString());
-//				flag = true;
-//			}
-//			@Override
-//			public void onFailure(Call<DataVo> call, Throwable t) {
-//				flag = true;
-//				t.printStackTrace();
-//			}
-//		});
 		Call<DataVo> respon = mDataLineApi.listTLine(getTLineParams());
 		respon.enqueue(new retrofit2.Callback<DataVo>() {
 			@Override

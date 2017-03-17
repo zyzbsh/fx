@@ -415,6 +415,12 @@ public class PersonalInfoActivity extends BaseActivity implements View.OnClickLi
             }
 
             @Override
+            public void onError(String msg) {
+                showToastShort(msg);
+                dismissProgressDialog();
+            }
+
+            @Override
             public void onHttpFailure() {
                 dismissProgressDialog();
             }

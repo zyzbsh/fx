@@ -2,24 +2,19 @@ package fxtrader.com.app.homepage;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import java.util.Map;
-
 import fxtrader.com.app.R;
 import fxtrader.com.app.base.BaseActivity;
 import fxtrader.com.app.constant.IntentItem;
-import fxtrader.com.app.http.ParamsUtil;
-import fxtrader.com.app.tools.LogZ;
 
 /**
  * Created by zhangyuzhu on 2016/12/23.
  */
-public class WebVideoActivity extends BaseActivity {
+public class WebBroswerActivity extends BaseActivity {
 
     private WebView mWebView;
 
@@ -40,7 +35,7 @@ public class WebVideoActivity extends BaseActivity {
         mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setSupportZoom(true);
-        String url = getIntent().getStringExtra(IntentItem.VIDEO_URL);
+        String url = getIntent().getStringExtra(IntentItem.WEB_URL);
         mWebView.loadUrl(url);
     }
 }

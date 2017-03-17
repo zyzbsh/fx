@@ -20,10 +20,10 @@ public class SignSuccessDialog extends Dialog implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.dialog_info_remind_close_tv:
+            case R.id.dialog_sign_success_close_tv:
                 this.dismiss();
                 break;
-            case R.id.dialog_info_remind_bind_tv:
+            case R.id.dialog_sign_success_get_tv:
                 this.dismiss();
                 break;
             default:
