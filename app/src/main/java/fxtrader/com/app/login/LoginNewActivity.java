@@ -218,7 +218,7 @@ public class LoginNewActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void register() {
-        Intent intent = new Intent(this, LoginNewActivity.class);
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivityForResult(intent, IntentItem.REQUEST_REGISTER);
     }
 

@@ -70,19 +70,10 @@
             android:textStyle="bold"
             android:textColor="#f7e7a5"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text="温馨提示：为了您的账号安全，系统设定间隔6小时需重新输入密码"
-            android:textColor="#464646"
-            android:textSize="11sp" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:gravity="center">
 
             <TextView

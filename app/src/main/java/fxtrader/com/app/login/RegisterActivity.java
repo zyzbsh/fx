@@ -76,9 +76,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         mGetPhoneCodeTv.setOnClickListener(this);
         mSubmitTv.setOnClickListener(this);
-        mAccountEdt.setText("13539881187");
-        mPwdEdt.setText("123456");
-        mAgentEdt.setText("1");
+//        mAccountEdt.setText("13539881187");
+//        mPwdEdt.setText("123456");
+//        mAgentEdt.setText("1");
     }
 
     @Override
@@ -171,7 +171,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         params.put("method", "gdiex.users.register");
         params.put("telNumber", phoneNum);
         params.put("password", password);
-        params.put("agentId", agentId);
+        params.put("agentId", "2");
         params.put("registerIp", "");
         params.put("sign", ParamsUtil.sign(params));
         return params;

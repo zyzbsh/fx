@@ -34,6 +34,7 @@
             <EditText
                 android:id="@+id/register_agent_edt"
                 style="@style/RegisterEdt"
+                android:visibility="gone"
                 android:layout_marginTop="15dp"
                 android:hint="@string/hint_agent" />
 
