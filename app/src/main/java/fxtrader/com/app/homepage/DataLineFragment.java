@@ -45,6 +45,8 @@ public class DataLineFragment extends BaseFragment{
 
     private ImageView mArrowIm;
 
+    private ImageView mClosedIm;
+
     private TextView mContractPercentTv;
 
     private TextView mContractProfitTv;
@@ -98,8 +100,7 @@ public class DataLineFragment extends BaseFragment{
         mContractTv = (TextView) view.findViewById(R.id.homepage_contract_tv);
         mLatestPriceTv = (TextView) view.findViewById(R.id.homepage_contract_latest_price_tv);
         mArrowIm = (ImageView) view.findViewById(R.id.homepage_contract_arrow_im);
-        mContractPercentTv = (TextView) view.findViewById(R.id.homepage_contract_percent_tv);
-        mContractProfitTv = (TextView) view.findViewById(R.id.homepage_contract_profit_tv);
+        mClosedIm = (ImageView) view.findViewById(R.id.homepage_contract_closed_im);
         mHighestTv = (TextView) view.findViewById(R.id.homepage_highest_tv);
         mLowestTv = (TextView) view.findViewById(R.id.homepage_lowest_tv);
         mYesterdayCloseTv = (TextView) view.findViewById(R.id.homepage_yesterday_open_tv);
@@ -147,14 +148,17 @@ public class DataLineFragment extends BaseFragment{
             mContractTv.setText(mContractName);
             if (priceEntity.isMarketOpen()) {
                 mLatestPriceTv.setText(priceEntity.getLatestPrice());
-                mArrowIm.setVisibility(View.VISIBLE);
-                mChartView.setVisibility(View.VISIBLE);
-                mHideLayout.setVisibility(View.GONE);
+//                mArrowIm.setVisibility(View.VISIBLE);
+//                mChartView.setVisibility(View.VISIBLE);
+//                mHideLayout.setVisibility(View.GONE);
+                mClosedIm.setVisibility(View.GONE);
             } else {
-                mLatestPriceTv.setText("休市");
-                mArrowIm.setVisibility(View.GONE);
-                mChartView.setVisibility(View.GONE);
-                mHideLayout.setVisibility(View.VISIBLE);
+                mLatestPriceTv.setText(priceEntity.getLatestPrice());
+//                mLatestPriceTv.setText("休市");
+//                mArrowIm.setVisibility(View.GONE);
+//                mChartView.setVisibility(View.GONE);
+//                mHideLayout.setVisibility(View.VISIBLE);
+                mClosedIm.setVisibility(View.VISIBLE);
             }
             mTodayOpenTv.setText(activity.getString(R.string.today_open_num, priceEntity.getOpenPrice()));
             mYesterdayCloseTv.setText(activity.getString(R.string.yesterday_close_num, priceEntity.getLastClosePrice()));

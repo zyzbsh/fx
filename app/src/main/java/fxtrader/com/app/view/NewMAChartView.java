@@ -18,6 +18,8 @@ import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -36,6 +38,7 @@ import fxtrader.com.app.tools.StringUtil;
 import fxtrader.com.app.entity.DataVo;
 import fxtrader.com.app.entity.MACandleChartVO;
 import fxtrader.com.app.entity.MAChartVO;
+import fxtrader.com.app.tools.UIUtil;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -65,7 +68,7 @@ public class NewMAChartView extends SurfaceView implements Callback {
 	private final static int Color_Blue2 = Color.rgb(106, 191, 255);
 
 	private Paint textPaint, gridPaint, linePaint, mPaintPositive,
-			mPaintNegative, horizontalLinePaint;
+			mPaintNegative, horizontalLinePaint, crossPaint;
 
 	private MAChartVO mLineChart = null;
 	private MACandleChartVO mCandleChart = null;
@@ -138,6 +141,12 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		linePaint.setStrokeWidth(RATIO * 2.5f);
 		linePaint.setColor(Color_Red);
 		linePaint.setAntiAlias(true);
+
+		crossPaint = new Paint();
+		crossPaint.setStrokeWidth(RATIO * 0.5f);
+		crossPaint.setColor(Color.BLACK);
+		crossPaint.setAntiAlias(true);
+		crossPaint.setTextSize(UIUtil.dip2px(getContext(), 10));
 
 		horizontalLinePaint = new Paint();
 		horizontalLinePaint.setColor(Color_Red);
@@ -233,6 +242,13 @@ public class NewMAChartView extends SurfaceView implements Callback {
 							.getHeight()));
 					canvas.drawLine(ptFirst.x, ptFirst.y, valueX, valueY,
 							linePaint);
+					if (mClicked) {
+						if (xMove >= ptFirst.x && xMove < valueX) {
+							float yValue = (xMove - ptFirst.x) * (valueY - ptFirst.y) / (valueX - ptFirst.x) + ptFirst.y;
+							float price = -(yValue / (canvas.getHeight()) * (mChartVO.getMaxPrice() - mChartVO.getMinPrice())) + mChartVO.getMaxPrice();
+							drawCrossCursor(canvas, xMove, yValue, DecimalTools.formatFloatThree(price) + "");
+						}
+					}
 				} else {
 					if (isUp) {
 						count += (0.3 * RATIO);
@@ -267,6 +283,25 @@ public class NewMAChartView extends SurfaceView implements Callback {
 				}
 			}
 		}
+	}
+
+	/**
+	 * 画十字光标
+	 */
+	private void drawCrossCursor(Canvas canvas, float x, float y, String price){
+		float ySize = (this.getHeight() - 60f) / 80f;
+			canvas.drawLine(0, y, this.getRight() - 10, y, crossPaint);
+			canvas.drawLine(x, 10f, x, this.getBottom() - 50f, crossPaint);
+			float xWidth = ((this.getHeight() - 50f) - yMove) / ySize + 200f;
+
+			canvas.drawText(price, 0, y - 5, crossPaint);
+
+			float xSize = (this.getRight() - 125f) / 92;
+			float timeSize = (xMove / xSize) - xSize;
+			int size = (int) timeSize;
+//			if (size < lineData.size()) {
+//				canvas.drawText("测试" + "", xMove - 20f, this.getHeight() - 35f, linePaint);
+//			}
 	}
 
 	private int mSumWidth = 36;
@@ -790,4 +825,24 @@ public class NewMAChartView extends SurfaceView implements Callback {
 		this.curentPrice = price;
 	}
 
+
+	private float xMove, yMove;
+	private boolean mClicked = false;
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		super.onTouchEvent(event);
+		switch (event.getAction()) {
+			case MotionEvent.ACTION_UP:
+				if (!mClicked) {
+					mClicked = true;
+				} else {
+					mClicked = false;
+				}
+				xMove = event.getX();
+				yMove = event.getY();
+				super.invalidate();
+				break;
+		}
+		return true;
+	}
 }
